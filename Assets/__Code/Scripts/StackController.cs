@@ -1,140 +1,143 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using System;
 using UnityEngine;
 using UnityUtils;
 
 public class StackController : MonoBehaviour
 {
-    [SerializeField]
-    private Transform containHexagonStack;
-    [SerializeField]
-    private Transform hexagonStack;
-    [SerializeField]
-    private PlayerHexagon playerHexagon;
+    public static Action OnStackPlaced;
+    public static Action<GridHexagon> OnStackPlacedOnGridHexagon;
 
-    [Header("Player Hexagon Colors")]
     [SerializeField]
-    private Color[] colors;
+    private LayerMask playerHexagonLayerMask;
     [SerializeField]
-    private Vector2Int hexagonClampf;
+    private LayerMask gridHexagonLayerMask;
+    [SerializeField]
+    private LayerMask groundLayerMask;
 
-    private void Start()
+    private HexagonStack stackContact;
+    private Vector3 originPosStackContact;
+
+    private GridHexagon gridHexagonContact;
+
+    private void Update()
     {
-        GenerateStacks();
+        Controlling();
     }
 
-    //private void Genereting()
-    //{
-    //    foreach (Transform stack in stacks) { TransformExtensions.DestroyChildrenImmediate(stack); }
-
-    //    foreach (Transform stack in stacks)
-    //    {
-    //        int numberOfCell = Random.Range(1, 4);
-
-    //        for(int i = 0; i <= numberOfCell; i++)
-    //        {
-    //            Vector3 pos = new Vector3(stack.position.x, stack.position.y + i * 0.2f, stack.position.z);
-    //            Instantiate(playerCell,pos, Quaternion.identity, stack);
-    //        }
-    //    }
-    //}
-
-    private void GenerateStacks()
+    private void Controlling()
     {
-        for (int i = 0; i < containHexagonStack.childCount; i++)
+        if(Input.GetMouseButtonDown(0))
         {
-            GenerateStack(containHexagonStack.GetChild(i));
+            //Input All Collider diffirent PlayerHexagon Close
+            ControlMouseDown();
+        }
+        else if(Input.GetMouseButton(0) && stackContact != null)
+        {
+            //Input All Collider PlayerHexagon Close
+            ControlMouseDrag();
+        }
+        else if (Input.GetMouseButtonUp(0) && stackContact != null) 
+        {
+            ControlMouseUp();
         }
     }
 
-    private void GenerateStack(Transform stack)
+    private void ControlMouseDown()
     {
-        Transform insHexagonStack = Instantiate(hexagonStack, stack.position, Quaternion.identity, stack);
-        insHexagonStack.name = $"Hexagon Stack"; //{stack.GetSiblingIndex()}
-
-        //Color stackColor = colors[Random.Range(0, colors.Length)];
-
-        const int NUMBER_COLOR_IN_STACK = 3;
-
-        Color[] colors = GetRandomColors(NUMBER_COLOR_IN_STACK);
-        int numberOfHexagon = Random.Range(hexagonClampf.x, hexagonClampf.y);
-        Debug.Log("Number Of Hexagon " + numberOfHexagon);
-        int[] arrHexagon = GetRandomHexagons(numberOfHexagon, NUMBER_COLOR_IN_STACK);
-        Debug.Log(arrHexagon[0] + " " + arrHexagon[1]);
-
-        //for (int i = 0; i < numberOfHexagon; i++)
-        //{
-        //    Vector3 localPos = Vector3.up * i * 0.2f;
-        //    Vector3 pos = insHexagonStack.TransformPoint(localPos);
-        //    PlayerHexagon insPlayerHexagon = Instantiate(playerHexagon, pos, Quaternion.identity, insHexagonStack);
-        //    insPlayerHexagon.Color = stackColor;
-        //}
-
-        int amount = 0;
-        for(int i = 0; i < arrHexagon.Length; i++)
+        RaycastHit hit;
+        Physics.Raycast(GetRayFromMouseClicked(), out hit, 500, playerHexagonLayerMask);
+        
+        if (hit.collider == null)
         {
-            Color color = colors[i];
-            for (int j = 0; j < arrHexagon[i]; j++)
-            {
-                amount++;
-                Vector3 localPos = Vector3.up * amount * 0.2f;
-                Vector3 pos = insHexagonStack.TransformPoint(localPos);
-                PlayerHexagon insPlayerHexagon = Instantiate(playerHexagon, pos, Quaternion.identity, insHexagonStack);
-                insPlayerHexagon.Color = color;
-            } 
-                
+            Debug.Log("Not detected any hexagon");
+            return;
+        }
+
+        stackContact = hit.collider.GetComponent<PlayerHexagon>().HexagonStack;
+        originPosStackContact = stackContact.transform.position;
+    }
+
+    private void ControlMouseDrag()
+    {
+        RaycastHit hit;
+        Physics.Raycast(GetRayFromMouseClicked(), out hit, 500, gridHexagonLayerMask);
+
+        if(hit.collider == null)
+        {
+            DraggingAboveGround();
+        }
+        else
+        {
+            DraggingAboveGridHexagon(hit);
         }
     }
 
-    //Each stack have many than one color
-    private Color[] GetRandomColors(int numberOfColor)
+    private void DraggingAboveGround()
     {
-        List<Color> listColors = new List<Color>();
-        listColors.AddRange(colors);
+        RaycastHit hit;
+        Physics.Raycast(GetRayFromMouseClicked(), out hit, 500, groundLayerMask);
 
-        List<Color> listResults = new List<Color>();
-        while (numberOfColor > 0)
+        if (hit.collider == null)
         {
-            numberOfColor--;
-
-            if (listColors.Count <= 0) 
-                break;
-
-            Color color = listColors.OrderBy(x => Random.value).First();
-            listColors.Remove(color);
-            listResults.Add(color);
+            return;
         }
 
-        return listResults.ToArray();
+        Vector3 stackTargetPos = hit.point.With(y: 2);
+        //Smooth move stack to stackTargetPos
+        stackContact.transform.position = Vector3.MoveTowards(stackContact.transform.position, stackTargetPos, Time.deltaTime * 30);
+        gridHexagonContact = null;
     }
 
-    //Hexagons same color
-    private int[] GetRandomHexagons(int totalHexagon, int numberSplit)
+    private void DraggingAboveGridHexagon(RaycastHit hit)
     {
-        int[] arrHexagon = new int[numberSplit];
-        for(int i = 0; i < numberSplit; i++)
+        GridHexagon gridHexagon = hit.collider.GetComponent<GridHexagon>();
+        if(gridHexagon.IsOccupied)
         {
-            if (totalHexagon < 0)
-            {
-                Debug.LogError("Something wrong");
-            }
-            else if (totalHexagon == 0)
-            {
-                arrHexagon[i] = 0;
-            }
-            else if(i == numberSplit - 1)
-            {
-                arrHexagon[i] = totalHexagon;
-                totalHexagon = 0;
-            }
-            else
-            {
-                arrHexagon[i] = Random.Range(0, totalHexagon);
-                totalHexagon -= arrHexagon[i];
-            }
+            DraggingAboveGridHexagonOccupied();
+        }
+        else
+        {
+            DraggingAboveGridHexagonNonOccupied(gridHexagon);
+        }
+    }
+
+    private void DraggingAboveGridHexagonOccupied()
+    {
+        DraggingAboveGround();
+    }
+
+    private void DraggingAboveGridHexagonNonOccupied(GridHexagon gridHexagon)
+    {
+        Vector3 stackTargetPos = gridHexagon.transform.position.With(y: 2);
+        stackContact.transform.position = Vector3.MoveTowards(stackContact.transform.position, stackTargetPos, Time.deltaTime * 30);
+
+        gridHexagonContact = gridHexagon;
+    }
+
+    private void ControlMouseUp()
+    {
+        if(gridHexagonContact)
+        {
+            stackContact.transform.position = gridHexagonContact.transform.position.With(y: 0.2f);
+            stackContact.transform.SetParent(gridHexagonContact.transform);
+            stackContact.PlaceOnGridHexagon();
+            gridHexagonContact.SetStackOfCell(stackContact);            
+
+            OnStackPlaced?.Invoke();
+            OnStackPlacedOnGridHexagon?.Invoke(gridHexagonContact);
+
+            gridHexagonContact = null;
+        }
+        else
+        {
+            stackContact.transform.position = originPosStackContact;
         }
 
-        return arrHexagon;
+        stackContact = null;
+    }
+
+    private Ray GetRayFromMouseClicked()
+    {
+        return Camera.main.ScreenPointToRay(Input.mousePosition);
     }
 }

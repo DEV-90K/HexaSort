@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7158004514980430669}
   - component: {fileID: 6123079906495696104}
   - component: {fileID: 8294922368738064418}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,8 +92,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4460975818716973738}
-  m_Layer: 0
-  m_Name: GroundHexagon
+  - component: {fileID: 1111096987040468340}
+  - component: {fileID: 1692352543497795278}
+  m_Layer: 8
+  m_Name: GridHexagon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -115,3 +117,37 @@ Transform:
   - {fileID: 7158004514980430669}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!64 &1111096987040468340
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8028568557206398073}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -4575734979276873811, guid: cb88a0944a8fdc64898c2164ca18fa4e, type: 3}
+--- !u!114 &1692352543497795278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8028568557206398073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8c8acb32afca2a46b0f52ea8a1c2fef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

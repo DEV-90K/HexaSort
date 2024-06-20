@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8566039154786119454}
   - component: {fileID: 3279104925502294356}
-  m_Layer: 0
+  - component: {fileID: 7134767596597297414}
+  m_Layer: 7
   m_Name: PlayerHexagon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46,6 +47,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderer: {fileID: 2588829635925838130}
+  collider: {fileID: 7134767596597297414}
+--- !u!64 &7134767596597297414
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5322175448801328496}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -4575734979276873811, guid: cb88a0944a8fdc64898c2164ca18fa4e, type: 3}
 --- !u!1 &5889420442748632010
 GameObject:
   m_ObjectHideFlags: 0
@@ -57,8 +81,7 @@ GameObject:
   - component: {fileID: 2098193959291187496}
   - component: {fileID: 558379119509635855}
   - component: {fileID: 2588829635925838130}
-  - component: {fileID: 120647518106030670}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -130,24 +153,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &120647518106030670
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5889420442748632010}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.7320509, y: 0.19999999, z: 1.9422327}
-  m_Center: {x: 0, y: 0, z: 0}

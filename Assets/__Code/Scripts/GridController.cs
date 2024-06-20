@@ -24,7 +24,7 @@ public class GridController : MonoBehaviour
 
     private void Generating()
     {
-        TransformExtensions.DestroyChildrenImmediate(transform);
+        transform.DestroyChildrenImmediate();
         Vector3 cellCenter = grid.CellToWorld(new Vector3Int(1, 0, 0));
         for(int xSwizzle = -gridSize; xSwizzle <= gridSize; xSwizzle++)
         {
