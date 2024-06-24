@@ -45,6 +45,13 @@ public class PlayerHexagon : MonoBehaviour
         LeanTween.moveLocal(gameObject, localPos, 0.2f)
             .setEaseInOutSine()
             .setDelay(delay);
+
+        Vector3 direction = (localPos - transform.localPosition).With(y: 0).normalized;
+        Vector3 rotationAxis = Vector3.Cross(Vector3.up, direction);
+
+        LeanTween.rotateAround(gameObject, rotationAxis, 180, 0.2f)
+            .setEaseInOutSine()
+            .setDelay(delay);
     }
 
     public void TweenVanish(float offsetDelayTime)
