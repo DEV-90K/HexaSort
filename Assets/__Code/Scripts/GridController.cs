@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using UnityEditor;
 using UnityUtils;
 
-public class GridController : MonoBehaviour
+//#if UNITY_EDITOR
+using UnityEngine;
+
+public class GridController : MonoBehaviour //Only using inside of the Editor. At product only load Prefab Level contain Grid
 {
     [SerializeField]
     private Grid grid;
@@ -37,9 +40,17 @@ public class GridController : MonoBehaviour
                     continue;
                 }
 
+                //1
                 Transform instance = Instantiate(hexagon, transform);
                 instance.position = cellPos;
+
+                //2
+                //GameObject gridCellIns = (GameObject)PrefabUtility.InstantiatePrefab(hexagon);
+                //gridCellIns.transform.SetParent(transform);
+                //gridCellIns.transform.position = cellPos;
+                //gridCellIns.transform.rotation = Quaternion.identity;
             }
         }
     }
 }
+//#endif

@@ -2075,7 +2075,7 @@ GameObject:
   - component: {fileID: 1015358139}
   - component: {fileID: 1015358138}
   m_Layer: 11
-  m_Name: Gui Canvas
+  m_Name: GUI Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2093,8 +2093,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1398043654}
   - {fileID: 63738334}
+  - {fileID: 1398043654}
   m_Father: {fileID: 545383841}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2893,6 +2893,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1639941842}
+  - component: {fileID: 1639941843}
+  - component: {fileID: 1639941845}
+  - component: {fileID: 1639941844}
   m_Layer: 0
   m_Name: GUI Manager
   m_TagString: Untagged
@@ -2915,6 +2918,46 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1681613252}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1639941843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1639941841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 645ed6554e05e9941a9702431a4c12fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  popupManager: {fileID: 0}
+  screenManager: {fileID: 0}
+--- !u!114 &1639941844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1639941841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9ef8e2036f50054db3aabb48e494f94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  screenRoot: {fileID: 63738334}
+--- !u!114 &1639941845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1639941841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 297ac59a1fb133c4794b6939805afce4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  popupRoot: {fileID: 1398043654}
 --- !u!1 &1646912165
 GameObject:
   m_ObjectHideFlags: 0
@@ -3041,8 +3084,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1474444472}
-  - {fileID: 914015369}
   - {fileID: 1639941842}
+  - {fileID: 914015369}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1682170485

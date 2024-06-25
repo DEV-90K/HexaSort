@@ -1,8 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEditor;
 using UnityEngine;
-using UnityUtils;
 
 public class StackMerger : MonoBehaviour
 {
@@ -31,11 +32,10 @@ public class StackMerger : MonoBehaviour
         while (listGridHexagonNeedUpdate.Count > 0)
         {
             GridHexagon merge = listGridHexagonNeedUpdate[listGridHexagonNeedUpdate.Count - 1];
-            Debug.Log(merge.GetInstanceID());
+
             listGridHexagonNeedUpdate.Remove(merge);
             if(merge.IsOccupied)
                 yield return IE_CheckForMerge(merge);
-            Debug.Log("2222");
         }
     }
 
@@ -56,7 +56,6 @@ public class StackMerger : MonoBehaviour
         //End
 
         //Check if one of those neighbors or multiple of them have the same top hexagon color [Do these neighbors have the same top hex colors]
-
         List<GridHexagon> neighborGridHexagonSameTopColor = GetHexagonStackOfNeighborSameTopColor(listNeighborGridHexagons, topColorOfStackAtGridHexagon);
 
         if (neighborGridHexagonSameTopColor.Count <= 0)
@@ -66,37 +65,38 @@ public class StackMerger : MonoBehaviour
         }
         else
         {
-            listGridHexagonNeedUpdate.AddRange(neighborGridHexagonSameTopColor);
+            listGridHexagonNeedUpdate.AddRange(neighborGridHexagonSameTopColor); // [1]
         }
         //End
 
-        List<PlayerHexagon> listPlayerHexagonMerge = GetPlayerHexagonNeedMerge(topColorOfStackAtGridHexagon, neighborGridHexagonSameTopColor);
-        RemovePlayerHexagonFromOldStack(neighborGridHexagonSameTopColor, listPlayerHexagonMerge);
-
         //Merge action
         //Merge solution 1: Merge neighbor cells towards this cell {merge everything inside current grid hexagon}
-        MergePlayerHexagon(stackHexagon, listPlayerHexagonMerge);
-        yield return new WaitForSeconds(0.2f + listPlayerHexagonMerge.Count * 0.01f); //0.2f time anim + 0.01 time delay.setDelay(transform.GetSiblingIndex() * 0.01f);
+        //List<PlayerHexagon> listPlayerHexagonMerge = GetPlayerHexagonNeedMerge(topColorOfStackAtGridHexagon, neighborGridHexagonSameTopColor);
+        //RemovePlayerHexagonFromOldStack(neighborGridHexagonSameTopColor, listPlayerHexagonMerge);
+        //MergePlayerHexagon(stackHexagon, listPlayerHexagonMerge);
+        //yield return new WaitForSeconds(0.2f + listPlayerHexagonMerge.Count * 0.01f); //0.2f time anim + 0.01 time delay.setDelay(transform.GetSiblingIndex() * 0.01f);
+
         //Merge solution 2: Merge everyting on the cell that has the lowest amount of that smame hexagon color or the one that has a bigger amount [using the one that has a smaller amount is actually better]
-        //Check stack completed when >= 10 similar hexagons
-        List<PlayerHexagon> listPlayerHexagonSimilarColor = GetPlayerHexagonSimilarColor(stackHexagon, topColorOfStackAtGridHexagon);
-        if (listPlayerHexagonSimilarColor.Count >= 10)
-        {
-            yield return IE_RemovePlayerHexagonsFromStack(listPlayerHexagonSimilarColor, stackHexagon);
-            //After delete some PlayerHexagon from stack so need recheck
-            //if (gridHexagon.IsOccupied)
-            //    listGridHexagonNeedUpdate.Add(gridHexagon);
-            Debug.Log("here");
-            listGridHexagonNeedUpdate.Add(gridHexagon);
-        }
-        //Check and update neighbor cells
-        //repeat processing
-        //foreach(GridHexagon gridHex in listNeighborGridHexagons)
+        //neighborGridHexagonSameTopColor = UpdateNeighborGridHexagonSameTopColor_S2(gridHexagon, neighborGridHexagonSameTopColor).ToList();
+        //gridHexagon = neighborGridHexagonSameTopColor[^1];
+        //neighborGridHexagonSameTopColor.Remove(gridHexagon);
+        //stackHexagon = gridHexagon.StackOfCell;
+        //topColorOfStackAtGridHexagon = stackHexagon.GetTopHexagonColor();
+
+        //Merge solution 3: Target Merge craete stack have One Color if can. Get Current Grid is center of merge process 
+        yield return IE_AlgorithmMerge_3(gridHexagon, neighborGridHexagonSameTopColor);
+        //neighborGridHexagonSameTopColor = UpdateNeighborGridHexagonSameTopColor_S3(gridHexagon, neighborGridHexagonSameTopColor);
+        //yield return IE_MergePlayerHexagonsToStack(stackHexagon, neighborGridHexagonSameTopColor);
+
+        ////Check stack completed when >= 10 similar hexagons
+        //List<PlayerHexagon> listPlayerHexagonSimilarColor = GetPlayerHexagonSimilarColor_V2(stackHexagon, topColorOfStackAtGridHexagon);
+        //if (listPlayerHexagonSimilarColor.Count >= 10)
         //{
-        //    if(gridHex.IsOccupied)
-        //    {
-        //        listGridHexagonNeedUpdate.Add(gridHex);
-        //    }
+        //    yield return IE_RemovePlayerHexagonsFromStack_v2(listPlayerHexagonSimilarColor, stackHexagon);
+        //    //After delete some PlayerHexagon from stack so need recheck
+        //    //if (gridHexagon.IsOccupied)
+        //    //    listGridHexagonNeedUpdate.Add(gridHexagon);
+        //    listGridHexagonNeedUpdate.Add(gridHexagon);
         //}
     }
 
@@ -110,8 +110,7 @@ public class StackMerger : MonoBehaviour
         {            
             PlayerHexagon playerHexagon = listPlayerHexagonSimilarColor[0];
             playerHexagon.SetParent(null);
-            playerHexagon.TweenVanish(offsetDelayTime);
-            //DestroyImmediate(playerHexagon.gameObject);
+            playerHexagon.TweenVanish(offsetDelayTime);            
             offsetDelayTime += 0.01f;
 
             stackHexagon.RemovePlayerHexagon(playerHexagon);
@@ -119,6 +118,58 @@ public class StackMerger : MonoBehaviour
         }
 
         yield return new WaitForSeconds(0.2f + (numberOfPlayerHexagon + 1) * 0.01f);
+    }
+
+    private IEnumerator IE_RemovePlayerHexagonsFromStack_v2(HexagonStack stackHexagon)
+    {
+        List<PlayerHexagon> listPlayerHexagonSimilarColor = GetPlayerHexagonSimilarColor_V2(stackHexagon);
+        Debug.Log("RemovePlayerHexagonsFromStack" + listPlayerHexagonSimilarColor.Count);
+        int numberOfPlayerHexagon = listPlayerHexagonSimilarColor.Count;
+        if (numberOfPlayerHexagon < 10) 
+            yield break;
+
+        float offsetDelayTime = 0;
+        //Remove bottom to top
+        while (listPlayerHexagonSimilarColor.Count > 0)
+        {
+            PlayerHexagon playerHexagon = listPlayerHexagonSimilarColor[0];
+            playerHexagon.SetParent(null);
+            playerHexagon.TweenVanish(offsetDelayTime);
+            offsetDelayTime += 0.01f;
+
+            stackHexagon.RemovePlayerHexagon(playerHexagon);
+            listPlayerHexagonSimilarColor.RemoveAt(0);
+        }
+
+        yield return new WaitForSeconds(0.2f + (numberOfPlayerHexagon + 1) * 0.01f);
+    }
+
+    private List<PlayerHexagon> GetPlayerHexagonSimilarColor_V2(HexagonStack stackHexagon)
+    {
+        Color color = stackHexagon.GetTopHexagonColor();
+        List<PlayerHexagon> playerHexagons = new List<PlayerHexagon>();
+        for (int i = stackHexagon.Hexagons.Count - 1; i >= 0; i--)
+        {
+            if (stackHexagon.Hexagons[i].Color == color)
+            {
+                playerHexagons.Add(stackHexagon.Hexagons[i]);
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return playerHexagons;
+    }
+        
+
+    private IEnumerator IE_MergePlayerHexagonsToStack(HexagonStack stackHexagon, List<GridHexagon> neighborGridHexagon)
+    {
+        List<PlayerHexagon> listPlayerHexagonMerge = GetPlayerHexagonNeedMerge(stackHexagon.GetTopHexagonColor(), neighborGridHexagon);
+        RemovePlayerHexagonFromOldStack(neighborGridHexagon, listPlayerHexagonMerge);
+        MergePlayerHexagon(stackHexagon, listPlayerHexagonMerge);
+        yield return new WaitForSeconds(0.2f + listPlayerHexagonMerge.Count * 0.01f + 0.01f);
     }
 
     private List<PlayerHexagon> GetPlayerHexagonSimilarColor(HexagonStack stackHexagon, Color topColorOfStackAtGridHexagon)
@@ -141,7 +192,7 @@ public class StackMerger : MonoBehaviour
 
     private void MergePlayerHexagon(HexagonStack stackHexagon, List<PlayerHexagon> listPlayerHexagonMerge)
     {
-        float yOfCurrentGridHexagon = stackHexagon.Hexagons.Count * 0.2f;
+        float yOfCurrentGridHexagon = stackHexagon.Hexagons.Count * 0.2f + 0.2f; //0.2f of GridHexagon
         for (int i = 0; i < listPlayerHexagonMerge.Count; i++)
         {
             PlayerHexagon playerHexagon = listPlayerHexagonMerge[i];
@@ -230,5 +281,147 @@ public class StackMerger : MonoBehaviour
         }
 
         return listNeighborGridHexagons;
+    }
+
+    private List<GridHexagon> UpdateNeighborGridHexagonSameTopColor_S2(GridHexagon gridHexagon, List<GridHexagon> neighborGridHexagonSameTopColor)
+    {
+        //Add gridHexagon to list
+        //Compare and by number simillar color
+        //Compare and by number of top color
+        //List<GridHexagon> listTest = new List<GridHexagon>();
+        //listTest.AddRange(neighborGridHexagonSameTopColor);
+        //listTest.Add(gridHexagon);
+
+        //listTest.OrderByDescending(gridHex => gridHex.StackOfCell.GetNumberSimilarColor()).ThenBy(gridHex => gridHex.StackOfCell.GetNumberTopPlayerHexagonSameColor());
+        //return listTest;
+
+        //Add gridHexagon to list
+        List<GridHexagon> allGridHexagon = new List<GridHexagon>();
+        allGridHexagon.AddRange(neighborGridHexagonSameTopColor);
+        allGridHexagon.Add(gridHexagon);
+
+        return allGridHexagon
+            //Compare and by number simillar color
+            .OrderByDescending(gridHex => gridHex.StackOfCell.GetNumberSimilarColor())
+            //Compare and by number of top color
+            .ThenBy(gridHex => gridHex.StackOfCell.GetNumberTopPlayerHexagonSameColor())
+            .ToList();
+    }
+
+    //private IEnumerator UpdateNeighborGridHexagonSameTopColor_S3(GridHexagon gridHexagon, List<GridHexagon> neighborGridHexagonSameTopColor)
+    //{
+    //    Debug.Log("UpdateNeighborGridHexagonSameTopColor_S3");
+    //    //At [1] ensure all neighbor already add for loop merge
+    //    //Test case all neighbor have similar color > 1, current == 1 => Merge all inside Curr Grid
+    //    //Test case all neighbor have similar color > 1, current > 1 => Merge all inside Curr Grid
+    //    //Test case all neighbor have similar color == 1, current == 1 => Merge all inside Curr Grid
+    //    //Test case all neighbor have similar color == 1, current > 1 => Merge (all - 1) inside current => Merge current to the remaing Neigbor (add Remaining to last of listGridHexagonNeedUpdate)
+    //    //Test case all have similar color > 1. Only one neighbor == 1 => Merge all inside Curr Grid and continue merge inside neibor == 1
+
+    //    //List<GridHexagon> neighborClone = new List<GridHexagon>();
+    //    //neighborClone.AddRange(neighborGridHexagonSameTopColor);
+
+    //    List<GridHexagon> listOne = GetNeighborGridHexagonHaveOneSimilarColor(neighborGridHexagonSameTopColor);
+    //    List<GridHexagon> listThanOne = GetNeighborGridHexagonHaveThanOneSimilarColor(neighborGridHexagonSameTopColor);
+
+    //    if(listThanOne.Count == neighborGridHexagonSameTopColor.Count)
+    //    {
+    //        return listThanOne;
+    //    }
+    //    else if(listOne.Count == neighborGridHexagonSameTopColor.Count)
+    //    {
+    //        if(gridHexagon.StackOfCell.GetNumberSimilarColor() > 1)
+    //        {
+    //            GridHexagon firstGridHex = listOne[0];
+    //            listOne.RemoveAt(0);
+    //            listGridHexagonNeedUpdate.Add(firstGridHex);
+    //        }
+    //        return listOne;
+    //    }
+    //}
+
+    private IEnumerator IE_AlgorithmMerge_3(GridHexagon gridHexagon, List<GridHexagon> neighborGridHexagonSameTopColor)
+    {
+        //At [1] ensure all neighbor already add for loop merge
+        //Test case all neighbor have similar color > 1, current == 1 => Merge all inside Curr Grid
+        //Test case all neighbor have similar color > 1, current > 1 => Merge all inside Curr Grid
+        //Test case all neighbor have similar color == 1, current == 1 => Merge all inside Curr Grid
+        //Test case all neighbor have similar color == 1, current > 1 => Merge (all - 1) inside current => Merge current to the remaing Neigbor (add Remaining to last of listGridHexagonNeedUpdate)
+        //Test case than 1 neighbor > 1 and than 1 neibor == 1, current == 1 => Merge all inside Curr Grid
+        //Test case than 1 neighbor > 1 and than 1 neibor == 1, current > 1 => Merge (all - 1 neighbor = 1) inside Curr Grid => (add Remaining to last of listGridHexagonNeedUpdate)
+
+        //List<GridHexagon> neighborClone = new List<GridHexagon>();
+        //neighborClone.AddRange(neighborGridHexagonSameTopColor);
+
+        HexagonStack stack = gridHexagon.StackOfCell;
+
+        List<GridHexagon> listOne = GetNeighborGridHexagonHaveOneSimilarColor(neighborGridHexagonSameTopColor);
+        List<GridHexagon> listThanOne = GetNeighborGridHexagonHaveThanOneSimilarColor(neighborGridHexagonSameTopColor);
+
+        if (listThanOne.Count == neighborGridHexagonSameTopColor.Count)
+        {
+            yield return IE_MergePlayerHexagonsToStack(stack, listThanOne);
+        }
+        else if (listOne.Count == neighborGridHexagonSameTopColor.Count)
+        {
+            if (stack.GetNumberSimilarColor() > 1)
+            {
+                GridHexagon firstGridHex = listOne[0];
+                listOne.RemoveAt(0);
+                yield return IE_MergePlayerHexagonsToStack(stack, listOne);
+                listGridHexagonNeedUpdate.Add(firstGridHex);
+                yield break; //Process continue with firstGridHex;
+            }
+            else
+            {
+                yield return IE_MergePlayerHexagonsToStack(stack, listOne);
+            }
+        }
+        else
+        {
+            if (stack.GetNumberSimilarColor() > 1)
+            {
+                GridHexagon firstGridHexOneSimilar = listOne[0];
+                neighborGridHexagonSameTopColor.Remove(firstGridHexOneSimilar);
+                yield return IE_MergePlayerHexagonsToStack(stack, neighborGridHexagonSameTopColor);
+                listGridHexagonNeedUpdate.Add(firstGridHexOneSimilar);
+                yield break;
+            }  
+            else
+            {
+                yield return IE_MergePlayerHexagonsToStack(stack, neighborGridHexagonSameTopColor);
+            }
+        }
+
+        yield return IE_RemovePlayerHexagonsFromStack_v2(stack);
+        listGridHexagonNeedUpdate.Add(gridHexagon);
+    }
+
+    private List<GridHexagon> GetNeighborGridHexagonHaveOneSimilarColor(List<GridHexagon> neighborGridHexagonSameTopColor)
+    {
+        List<GridHexagon> gridHexagons = new List<GridHexagon>();
+        foreach (GridHexagon gridHexagon in neighborGridHexagonSameTopColor)
+        {
+            if (gridHexagon.StackOfCell.GetNumberSimilarColor() == 1)
+            {  
+                gridHexagons.Add(gridHexagon);
+            }
+        }
+
+        return gridHexagons;
+    }
+
+    private List<GridHexagon> GetNeighborGridHexagonHaveThanOneSimilarColor(List<GridHexagon> neighborGridHexagonSameTopColor)
+    {
+        List<GridHexagon> gridHexagons = new List<GridHexagon>();
+        foreach (GridHexagon gridHexagon in neighborGridHexagonSameTopColor)
+        {
+            if (gridHexagon.StackOfCell.GetNumberSimilarColor() > 1)
+            {
+                gridHexagons.Add(gridHexagon);
+            }
+        }
+
+        return gridHexagons;
     }
 }

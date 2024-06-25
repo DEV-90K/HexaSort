@@ -82,7 +82,7 @@ public class StackController : MonoBehaviour
             return;
         }
 
-        Vector3 stackTargetPos = hit.point.With(y: 2);
+        Vector3 stackTargetPos = hit.point.With(y: 1.5f);
         //Smooth move stack to stackTargetPos
         stackContact.transform.position = Vector3.MoveTowards(stackContact.transform.position, stackTargetPos, Time.deltaTime * 30);
         gridHexagonContact = null;
@@ -108,9 +108,21 @@ public class StackController : MonoBehaviour
 
     private void DraggingAboveGridHexagonNonOccupied(GridHexagon gridHexagon)
     {
-        Vector3 stackTargetPos = gridHexagon.transform.position.With(y: 2);
-        stackContact.transform.position = Vector3.MoveTowards(stackContact.transform.position, stackTargetPos, Time.deltaTime * 30);
+        //Move solution 1
+        //Vector3 stackTargetPos = gridHexagon.transform.position.With(y: 1.5f);
+        //stackContact.transform.position = Vector3.MoveTowards(stackContact.transform.position, stackTargetPos, Time.deltaTime * 30);
+        //Move solution 2
+        RaycastHit hit;
+        Physics.Raycast(GetRayFromMouseClicked(), out hit, 500, gridHexagonLayerMask);
 
+        if (hit.collider == null)
+        {
+            return;
+        }
+
+        Vector3 stackTargetPos = hit.point.With(y: 1.5f);        
+        stackContact.transform.position = Vector3.MoveTowards(stackContact.transform.position, stackTargetPos, Time.deltaTime * 30);
+        ///
         gridHexagonContact = gridHexagon;
     }
 
@@ -118,7 +130,7 @@ public class StackController : MonoBehaviour
     {
         if(gridHexagonContact)
         {
-            stackContact.transform.position = gridHexagonContact.transform.position.With(y: 0.2f);
+            stackContact.transform.position = gridHexagonContact.transform.position.With(y: 0f);
             stackContact.transform.SetParent(gridHexagonContact.transform);
             stackContact.PlaceOnGridHexagon();
             gridHexagonContact.SetStackOfCell(stackContact);            

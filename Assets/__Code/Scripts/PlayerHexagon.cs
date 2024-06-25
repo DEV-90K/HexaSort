@@ -40,7 +40,7 @@ public class PlayerHexagon : MonoBehaviour
     public void MoveToGridHexagon(Vector3 localPos)
     {
         LeanTween.cancel(gameObject);
-        float delay = transform.GetSiblingIndex() * 0.01f;
+        float delay = transform.GetSiblingIndex() * 0.01f + 0.01f; //0.01f of GridHexagon
 
         LeanTween.moveLocal(gameObject, localPos, 0.2f)
             .setEaseInOutSine()
