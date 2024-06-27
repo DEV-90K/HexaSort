@@ -1,18 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Newtonsoft.Json;
 
-public class LevelData : MonoBehaviour
+public class LevelData
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public int ID { get; private set; }
+    public int IDGrid { get; private set; }
+    public int Goal { get; private set; }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    [JsonIgnore]
+    public GridData Grid { get; private set; }
 }
+

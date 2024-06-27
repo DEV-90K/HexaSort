@@ -1,18 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class GridHexagonData : MonoBehaviour
+public class GridHexagonData
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public GridHexagonState State; //NONE, UNLOCK
+    public int Row { get; private set; }
+    public int Column { get; private set; }
+    public StackHexagonData StackHexagon { get; private set; }
+    public HexagonData Hexagon { get; private set; } //Prototype
+}
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+public class GridHexagonLockData
+{
+    public int Goal {  get; private set; }
+    public GridHexagonData GridHexagonData { get; private set; }
+}
+
+public enum GridHexagonState
+{
+    NONE,
+    UNLOCK,
+    LOCK_BY_GOAL,
+    LOCK_BY_ADS
 }
