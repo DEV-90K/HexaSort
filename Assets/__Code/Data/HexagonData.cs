@@ -1,4 +1,4 @@
 public class HexagonData
 {
-    public string Color { get; private set; }
+    public string HexColor { get; private set; }
 }

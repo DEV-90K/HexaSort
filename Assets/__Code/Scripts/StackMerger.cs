@@ -34,7 +34,7 @@ public class StackMerger : MonoBehaviour
             GridHexagon merge = listGridHexagonNeedUpdate[listGridHexagonNeedUpdate.Count - 1];
 
             listGridHexagonNeedUpdate.Remove(merge);
-            if(merge.IsOccupied)
+            if(merge.CheckOccupied())
                 yield return IE_CheckForMerge(merge);
         }
     }
@@ -274,7 +274,7 @@ public class StackMerger : MonoBehaviour
         {
             GridHexagon neighborGridHexagon = collider.GetComponent<GridHexagon>();
 
-            if (neighborGridHexagon.IsOccupied == false) continue;
+            if (neighborGridHexagon.CheckOccupied() == false) continue;
             if (neighborGridHexagon == gridHexagon) continue;
 
             listNeighborGridHexagons.Add(neighborGridHexagon);            

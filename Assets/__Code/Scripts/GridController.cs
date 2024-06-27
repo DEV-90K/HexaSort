@@ -41,8 +41,10 @@ public class GridController : MonoBehaviour //Only using inside of the Editor. A
                 }
 
                 //1
-                Transform instance = Instantiate(hexagon, transform);
-                instance.position = cellPos;
+                //Transform instance = Instantiate(hexagon, transform);
+                //instance.position = cellPos;
+                GridHexagon instance = PoolManager.Spawn<GridHexagon>(PoolType.GRID_HEXAGON, cellPos, Quaternion.identity);
+                instance.transform.SetParent(transform);
 
                 //2
                 //GameObject gridCellIns = (GameObject)PrefabUtility.InstantiatePrefab(hexagon);

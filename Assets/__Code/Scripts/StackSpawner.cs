@@ -6,7 +6,7 @@ using UnityEngine;
 public class StackSpawner : MonoBehaviour
 {
     [SerializeField]
-    private Transform containHexagonStack;
+    private Transform[] pointSpawns;
     [SerializeField]
     private StackHexagon hexagonStack;
     [SerializeField]
@@ -25,15 +25,18 @@ public class StackSpawner : MonoBehaviour
 
     public void GenerateStacks()
     {
-        for (int i = 0; i < containHexagonStack.childCount; i++)
+        for (int i = 0; i < pointSpawns.Length; i++)
         {
-            GenerateStack(containHexagonStack.GetChild(i));
+            GenerateStack(pointSpawns[i]);
         }
     }
 
     private void GenerateStack(Transform stack)
     {
-        StackHexagon insHexagonStack = Instantiate(hexagonStack, stack.position, Quaternion.identity, stack);
+        //TEST
+        //StackHexagon insHexagonStack = Instantiate(hexagonStack, stack.position, Quaternion.identity, stack);
+        StackHexagon insHexagonStack = PoolManager.Spawn<StackHexagon>(PoolType.STACK_HEXAGON, stack.position, Quaternion.identity);
+        insHexagonStack.transform.SetParent(stack);
         insHexagonStack.name = $"Hexagon Stack"; //{stack.GetSiblingIndex()}
 
         const int NUMBER_COLOR_IN_STACK = 2;
@@ -51,8 +54,12 @@ public class StackSpawner : MonoBehaviour
                 amount++;
                 Vector3 localPos = Vector3.up * amount * 0.2f;
                 Vector3 pos = insHexagonStack.transform.TransformPoint(localPos);
-                Hexagon insPlayerHexagon = Instantiate(playerHexagon, pos, Quaternion.identity, insHexagonStack.transform);
-                insPlayerHexagon.Color = color;
+                //TEST
+                //Hexagon insPlayerHexagon = Instantiate(playerHexagon, pos, Quaternion.identity, insHexagonStack.transform);
+                Hexagon insPlayerHexagon = PoolManager.Spawn<Hexagon>(PoolType.HEXAGON, pos, Quaternion.identity);
+                insPlayerHexagon.OnSetUp();
+                insPlayerHexagon.Color = color;                
+                insPlayerHexagon.SetParent(insHexagonStack.transform);
                 insPlayerHexagon.Configure(insHexagonStack);
                 insHexagonStack.AddPlayerHexagon(insPlayerHexagon);
             }

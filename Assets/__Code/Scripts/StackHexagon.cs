@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityUtils;
 
-public class StackHexagon : MonoBehaviour
+public class StackHexagon : PoolMember
 {
     public List<Hexagon> Hexagons { get; private set; }
 
@@ -94,7 +94,12 @@ public class StackHexagon : MonoBehaviour
     {
         Hexagons.Remove(playerHexagon);
 
+        //TEST
         if (Hexagons.Count <= 0)
-            DestroyImmediate(gameObject);
+        {
+            //DestroyImmediate(gameObject);
+            Debug.Log("Despawn: " + GetInstanceID());
+            PoolManager.Despawn(this);
+        }
     }
 }

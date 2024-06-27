@@ -91,7 +91,7 @@ public class StackController : MonoBehaviour
     private void DraggingAboveGridHexagon(RaycastHit hit)
     {
         GridHexagon gridHexagon = hit.collider.GetComponent<GridHexagon>();
-        if(gridHexagon.IsOccupied)
+        if(gridHexagon.CheckOccupied())
         {
             DraggingAboveGridHexagonOccupied();
         }

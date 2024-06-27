@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityUtils;
 
-public class Hexagon : MonoBehaviour
+public class Hexagon : PoolMember
 {
     [SerializeField]
     private new Renderer renderer;
@@ -15,6 +15,13 @@ public class Hexagon : MonoBehaviour
     {
         get => renderer.material.color;
         set => renderer.material.color = value;
+    }
+
+    public void OnSetUp()
+    {
+        transform.localScale = Vector3.one;
+        EnableCollider();
+
     }
 
     public void Configure(StackHexagon hexStack)
@@ -60,8 +67,12 @@ public class Hexagon : MonoBehaviour
         LeanTween.scale(gameObject, Vector3.zero, 0.2f)
             .setEaseInBack()
             .setDelay(offsetDelayTime)
-            .setOnComplete(() => 
-                DestroyImmediate(gameObject)
+            .setOnComplete(() =>
+                {
+                    //TEST
+                    //DestroyImmediate(gameObject)
+                    PoolManager.Despawn(this);
+                }
              );
     }
 }

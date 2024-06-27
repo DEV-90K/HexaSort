@@ -3,8 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
-public class GridHexagon : MonoBehaviour
+public class GridHexagon : PoolMember
 {
     [SerializeField]
     private Hexagon playerHexagonPrefab;
@@ -12,15 +11,30 @@ public class GridHexagon : MonoBehaviour
     [SerializeField]
     private Color[] hexagonColors;
     public StackHexagon StackOfCell { get; private set; }
-    public bool IsOccupied 
-    {  get => StackOfCell != null; 
-       private set { } 
-    }
+    //public bool IsOccupied 
+    //{
+    //    get => IsOccupied(); 
+    //   private set { } 
+    //}
 
     private void Start()
     {
         if(hexagonColors.Length > 0)
             GenerateInitialHexagonStack();
+    }
+
+    public bool CheckOccupied()
+    {
+        if (StackOfCell == null)
+            return false;
+
+        if(StackOfCell.gameObject.activeSelf == false)
+        {
+            StackOfCell = null;
+            return false;
+        }
+
+        return true;
     }
 
     public void SetStackOfCell(StackHexagon stack)
@@ -48,6 +62,7 @@ public class GridHexagon : MonoBehaviour
             Vector3 spawnPosition = StackOfCell.transform.TransformPoint(Vector3.up * i * 0.2f);
 
             Hexagon hexagonIns = Instantiate(playerHexagonPrefab, spawnPosition, Quaternion.identity);
+            //Hexagon hexagonIns = PoolManager.Spawn<Hexagon>(PoolType.HEXAGON, spawnPosition, Quaternion.identity);
             hexagonIns.Color = hexagonColors[i];
 
             StackOfCell.AddPlayerHexagon(hexagonIns);

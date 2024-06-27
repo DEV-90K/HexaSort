@@ -1,10 +1,43 @@
+using Mul21_Lib;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public enum GameState
 {
-    private void Awake()
+    LOADING,
+    PLAYING,
+    PAUSE,
+    FINISH
+}
+
+public class GameManager : PersistentMonoSingleton<PlayerDataManager>
+{
+    public static Action<GameState> OnChangeState;
+    private static GameState state;
+
+    public static void ChangeState(GameState newState)
+    {
+        GameManager.state = newState;
+        OnChangeState?.Invoke(GameManager.state);
+    }
+
+    public static bool IsState(GameState state) => GameManager.state == state;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        SetUp();
+    }
+
+    private void Start()
+    {
+        ChangeState(GameState.LOADING);
+    }
+
+    private void SetUp()
     {
         //tranh viec nguoi choi cham da diem vao man hinh
         Input.multiTouchEnabled = false;
