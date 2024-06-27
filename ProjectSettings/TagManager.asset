@@ -12,12 +12,12 @@ TagManager:
   - Water
   - UI
   - 
+  - PlayerHexagon
+  - GridHexagon
+  - Ground
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - GUI
+  - Overlap GUI
   - 
   - 
   - 
