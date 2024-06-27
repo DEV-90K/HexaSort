@@ -7,11 +7,11 @@ using UnityEngine;
 public class GridHexagon : MonoBehaviour
 {
     [SerializeField]
-    private PlayerHexagon playerHexagonPrefab;
+    private Hexagon playerHexagonPrefab;
 
     [SerializeField]
     private Color[] hexagonColors;
-    public HexagonStack StackOfCell { get; private set; }
+    public StackHexagon StackOfCell { get; private set; }
     public bool IsOccupied 
     {  get => StackOfCell != null; 
        private set { } 
@@ -23,7 +23,7 @@ public class GridHexagon : MonoBehaviour
             GenerateInitialHexagonStack();
     }
 
-    public void SetStackOfCell(HexagonStack stack)
+    public void SetStackOfCell(StackHexagon stack)
     {
         StackOfCell = stack;
     }
@@ -39,7 +39,7 @@ public class GridHexagon : MonoBehaviour
             DestroyImmediate(tf.gameObject);
         }
 
-        StackOfCell = new GameObject("Level Generate Stack").AddComponent<HexagonStack>();
+        StackOfCell = new GameObject("Level Generate Stack").AddComponent<StackHexagon>();
         StackOfCell.transform.SetParent(transform);
         StackOfCell.transform.localPosition = Vector3.zero;
 
@@ -47,7 +47,7 @@ public class GridHexagon : MonoBehaviour
         {
             Vector3 spawnPosition = StackOfCell.transform.TransformPoint(Vector3.up * i * 0.2f);
 
-            PlayerHexagon hexagonIns = Instantiate(playerHexagonPrefab, spawnPosition, Quaternion.identity);
+            Hexagon hexagonIns = Instantiate(playerHexagonPrefab, spawnPosition, Quaternion.identity);
             hexagonIns.Color = hexagonColors[i];
 
             StackOfCell.AddPlayerHexagon(hexagonIns);

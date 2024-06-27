@@ -8,9 +8,9 @@ public class StackSpawner : MonoBehaviour
     [SerializeField]
     private Transform containHexagonStack;
     [SerializeField]
-    private HexagonStack hexagonStack;
+    private StackHexagon hexagonStack;
     [SerializeField]
-    private PlayerHexagon playerHexagon;
+    private Hexagon playerHexagon;
 
     [Header("Player Hexagon Colors")]
     [SerializeField]
@@ -33,7 +33,7 @@ public class StackSpawner : MonoBehaviour
 
     private void GenerateStack(Transform stack)
     {
-        HexagonStack insHexagonStack = Instantiate(hexagonStack, stack.position, Quaternion.identity, stack);
+        StackHexagon insHexagonStack = Instantiate(hexagonStack, stack.position, Quaternion.identity, stack);
         insHexagonStack.name = $"Hexagon Stack"; //{stack.GetSiblingIndex()}
 
         const int NUMBER_COLOR_IN_STACK = 2;
@@ -51,7 +51,7 @@ public class StackSpawner : MonoBehaviour
                 amount++;
                 Vector3 localPos = Vector3.up * amount * 0.2f;
                 Vector3 pos = insHexagonStack.transform.TransformPoint(localPos);
-                PlayerHexagon insPlayerHexagon = Instantiate(playerHexagon, pos, Quaternion.identity, insHexagonStack.transform);
+                Hexagon insPlayerHexagon = Instantiate(playerHexagon, pos, Quaternion.identity, insHexagonStack.transform);
                 insPlayerHexagon.Color = color;
                 insPlayerHexagon.Configure(insHexagonStack);
                 insHexagonStack.AddPlayerHexagon(insPlayerHexagon);

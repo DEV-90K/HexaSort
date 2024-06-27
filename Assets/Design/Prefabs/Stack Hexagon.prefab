@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 100814966484662350}
-  - component: {fileID: 8779554067860319993}
+  - component: {fileID: 1421524477317019889}
   m_Layer: 0
-  m_Name: Hexagon Stack
+  m_Name: Stack Hexagon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8779554067860319993
+--- !u!114 &1421524477317019889
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,6 +41,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 9017731516966959366}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1682935a6f03bd947b50f3402b749660, type: 3}
+  m_Script: {fileID: 11500000, guid: 46b77a179d5c93644abb5ac4e4bc0429, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

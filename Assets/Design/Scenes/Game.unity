@@ -168,8 +168,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   containHexagonStack: {fileID: 997135572}
-  hexagonStack: {fileID: 8779554067860319993, guid: 6781c8713805f6e439366faa82bfbbec, type: 3}
-  playerHexagon: {fileID: 3279104925502294356, guid: 7f99a515520a5e2469c415a0a3191801, type: 3}
+  hexagonStack: {fileID: 1421524477317019889, guid: 6781c8713805f6e439366faa82bfbbec, type: 3}
+  playerHexagon: {fileID: 7853804604023892965, guid: 7f99a515520a5e2469c415a0a3191801, type: 3}
   colors:
   - {r: 0.12941177, g: 0.6117647, b: 0.5647059, a: 0}
   - {r: 1, g: 0.33333337, b: 0.8763132, a: 0}

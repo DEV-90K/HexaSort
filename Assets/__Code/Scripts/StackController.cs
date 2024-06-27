@@ -14,7 +14,7 @@ public class StackController : MonoBehaviour
     [SerializeField]
     private LayerMask groundLayerMask;
 
-    private HexagonStack stackContact;
+    private StackHexagon stackContact;
     private Vector3 originPosStackContact;
 
     private GridHexagon gridHexagonContact;
@@ -28,12 +28,12 @@ public class StackController : MonoBehaviour
     {
         if(Input.GetMouseButtonDown(0))
         {
-            //Input All Collider diffirent PlayerHexagon Close
+            //Input All Collider diffirent Hexagon Close
             ControlMouseDown();
         }
         else if(Input.GetMouseButton(0) && stackContact != null)
         {
-            //Input All Collider PlayerHexagon Close
+            //Input All Collider Hexagon Close
             ControlMouseDrag();
         }
         else if (Input.GetMouseButtonUp(0) && stackContact != null) 
@@ -53,7 +53,7 @@ public class StackController : MonoBehaviour
             return;
         }
 
-        stackContact = hit.collider.GetComponent<PlayerHexagon>().HexagonStack;
+        stackContact = hit.collider.GetComponent<Hexagon>().HexagonStack;
         originPosStackContact = stackContact.transform.position;
     }
 

@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityUtils;
 
-public class HexagonStack : MonoBehaviour
+public class StackHexagon : MonoBehaviour
 {
-    public List<PlayerHexagon> Hexagons { get; private set; }
+    public List<Hexagon> Hexagons { get; private set; }
 
     private void Start()
     {
@@ -17,7 +17,7 @@ public class HexagonStack : MonoBehaviour
     {
         for(int i = 0; i < transform.childCount; i++)
         {
-            PlayerHexagon playerHexagon = transform.GetChild(i).GetComponent<PlayerHexagon>();
+            Hexagon playerHexagon = transform.GetChild(i).GetComponent<Hexagon>();
             AddPlayerHexagon(playerHexagon);
         }
 
@@ -65,11 +65,11 @@ public class HexagonStack : MonoBehaviour
         return amount;
     }
 
-    public void AddPlayerHexagon(PlayerHexagon playerHexagon)
+    public void AddPlayerHexagon(Hexagon playerHexagon)
     {
         if(Hexagons == null)
         {  
-            Hexagons = new List<PlayerHexagon>();
+            Hexagons = new List<Hexagon>();
         }
 
         Hexagons.Add(playerHexagon);
@@ -83,14 +83,14 @@ public class HexagonStack : MonoBehaviour
 
     public void PlaceOnGridHexagon()
     {
-        foreach(PlayerHexagon playerHexagon in Hexagons)
+        foreach(Hexagon playerHexagon in Hexagons)
         {
             playerHexagon.DisableCollider();
         }
     }
 
-    public bool CheckContainPlayerHexagon(PlayerHexagon playerHexagon) => Hexagons.Contains(playerHexagon);
-    public void RemovePlayerHexagon(PlayerHexagon playerHexagon)
+    public bool CheckContainPlayerHexagon(Hexagon playerHexagon) => Hexagons.Contains(playerHexagon);
+    public void RemovePlayerHexagon(Hexagon playerHexagon)
     {
         Hexagons.Remove(playerHexagon);
 

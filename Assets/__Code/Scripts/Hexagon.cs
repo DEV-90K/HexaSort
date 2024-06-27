@@ -4,20 +4,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityUtils;
 
-public class PlayerHexagon : MonoBehaviour
+public class Hexagon : MonoBehaviour
 {
     [SerializeField]
     private new Renderer renderer;
     [SerializeField]
     private new Collider collider;
-    public HexagonStack HexagonStack { get; private set; }
+    public StackHexagon HexagonStack { get; private set; }
     public Color Color
     {
         get => renderer.material.color;
         set => renderer.material.color = value;
     }
 
-    public void Configure(HexagonStack hexStack)
+    public void Configure(StackHexagon hexStack)
     {
         HexagonStack = hexStack;
     }
