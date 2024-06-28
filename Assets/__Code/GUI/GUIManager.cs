@@ -10,6 +10,13 @@ public class GUIManager : MonoSingleton<GUIManager>
     [SerializeField]
     private ScreenManager screenManager;
 
+    protected override void Awake()
+    {
+        base.Awake();
+        popupManager = GetComponent<PopupManager>();
+        screenManager = GetComponent<ScreenManager>();
+    }
+
     public T ShowScreen<T>(params object[] paras) where T : ScreenBase
     {
         ScreenBase screen = screenManager.GetScreen<T>();

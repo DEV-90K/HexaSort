@@ -22,7 +22,7 @@ public class PopupManager : MonoBehaviour
 
         for (var i = popupRoot.childCount - 1; i >= 0; i--)
         {
-            UnityEngine.Object.Destroy(popupRoot.GetChild(i));
+            UnityEngine.Object.Destroy(popupRoot.GetChild(i).gameObject);
         }
 
         cachePopups.Clear();

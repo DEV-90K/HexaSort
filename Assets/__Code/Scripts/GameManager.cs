@@ -1,8 +1,5 @@
 using Mul21_Lib;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public enum GameState
@@ -35,6 +32,13 @@ public class GameManager : PersistentMonoSingleton<PlayerDataManager>
     private void Start()
     {
         ChangeState(GameState.LOADING);
+        //InvokeExtensions.Invoke(this, () => Debug.Log("Oke"), 2f);
+        //OR
+        this.Invoke(() =>
+        {
+            Debug.Log("Game Manager Invoke");
+            GUIManager.instance.ShowScreen<ScreenLevel>();
+        }, 2f);
     }
 
     private void SetUp()

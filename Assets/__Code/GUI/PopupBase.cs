@@ -29,11 +29,11 @@ public class PopupBase : MonoBehaviour
 
     public void OnSetup()
     {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 
     public void OnInit(object[] paras)
     {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 }

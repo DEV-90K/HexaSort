@@ -31,7 +31,7 @@ public class ScreenManager : MonoBehaviour
 
         for (var i = screenRoot.childCount - 1; i >= 0; i--)
         {
-            Object.Destroy(screenRoot.GetChild(i));
+            Object.Destroy(screenRoot.GetChild(i).gameObject);
         }
 
         cacheScreens.Clear();
