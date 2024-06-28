@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityUtils;
 
 public class StackMerger : MonoBehaviour
 {
@@ -150,7 +151,11 @@ public class StackMerger : MonoBehaviour
         List<Hexagon> playerHexagons = new List<Hexagon>();
         for (int i = stackHexagon.Hexagons.Count - 1; i >= 0; i--)
         {
-            if (stackHexagon.Hexagons[i].Color == color)
+            //if (stackHexagon.Hexagons[i].Color == color)
+            //{
+            //    playerHexagons.Add(stackHexagon.Hexagons[i]);
+            //}
+            if(ColorUtils.ColorEquals(stackHexagon.Hexagons[i].Color, color))
             {
                 playerHexagons.Add(stackHexagon.Hexagons[i]);
             }
@@ -177,7 +182,11 @@ public class StackMerger : MonoBehaviour
         List<Hexagon> playerHexagons = new List<Hexagon>();
         for(int i = stackHexagon.Hexagons.Count - 1; i >= 0; i--)
         {
-            if (stackHexagon.Hexagons[i].Color == topColorOfStackAtGridHexagon)
+            //if (stackHexagon.Hexagons[i].Color == topColorOfStackAtGridHexagon)
+            //{
+            //    playerHexagons.Add(stackHexagon.Hexagons[i]);
+            //}
+            if(ColorUtils.ColorEquals(stackHexagon.Hexagons[i].Color, topColorOfStackAtGridHexagon))
             {
                 playerHexagons.Add(stackHexagon.Hexagons[i]);
             }
@@ -235,7 +244,13 @@ public class StackMerger : MonoBehaviour
             for (int i = hexagonStack.Hexagons.Count - 1; i >= 0; i--)
             {
                 Hexagon playerHexagon = hexagonStack.Hexagons[i];
-                if (playerHexagon.Color == topColorOfStackAtGridHexagon)
+                //if (playerHexagon.Color == topColorOfStackAtGridHexagon)
+                //{
+                //    listPlayerHexagonMerge.Add(playerHexagon);
+                //    playerHexagon.SetParent(null);
+                //}
+
+                if(ColorUtils.ColorEquals(playerHexagon.Color, topColorOfStackAtGridHexagon))
                 {
                     listPlayerHexagonMerge.Add(playerHexagon);
                     playerHexagon.SetParent(null);
@@ -251,8 +266,16 @@ public class StackMerger : MonoBehaviour
         //Get List Neighbor have stack have same top color
         List<GridHexagon> neighborGridHexagonSameTopColor = new List<GridHexagon>();
         foreach (GridHexagon neighborGridHexagon in listNeighborGridHexagons)
-        {
-            if (neighborGridHexagon.StackOfCell.GetTopHexagonColor() == topColorOfStackAtGridHexagon)
+        {            
+            Debug.Log("neighborGridHexagon");
+
+            //if (neighborGridHexagon.StackOfCell.GetTopHexagonColor() == topColorOfStackAtGridHexagon)
+            //{
+            //    neighborGridHexagonSameTopColor.Add(neighborGridHexagon);
+            //}
+            Color color1 = neighborGridHexagon.StackOfCell.GetTopHexagonColor();
+            Color color2 = topColorOfStackAtGridHexagon;
+            if (ColorUtils.ColorEquals(color1, color2))
             {
                 neighborGridHexagonSameTopColor.Add(neighborGridHexagon);
             }
@@ -274,8 +297,14 @@ public class StackMerger : MonoBehaviour
         {
             GridHexagon neighborGridHexagon = collider.GetComponent<GridHexagon>();
 
-            if (neighborGridHexagon.CheckOccupied() == false) continue;
-            if (neighborGridHexagon == gridHexagon) continue;
+            if (neighborGridHexagon.CheckOccupied() == false)
+            {
+                continue;
+            }
+            if (neighborGridHexagon == gridHexagon)
+            {
+                continue;
+            }
 
             listNeighborGridHexagons.Add(neighborGridHexagon);            
         }

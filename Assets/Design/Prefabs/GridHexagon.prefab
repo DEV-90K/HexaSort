@@ -255,4 +255,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolType: 2
   playerHexagonPrefab: {fileID: 0}
+  renderer: {fileID: 8294922368738064418}
   hexagonColors: []

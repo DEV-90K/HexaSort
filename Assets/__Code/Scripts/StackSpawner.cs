@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,10 +42,12 @@ public class StackSpawner : MonoBehaviour
 
         const int NUMBER_COLOR_IN_STACK = 2;
 
-        Color[] colors = GetRandomColors(NUMBER_COLOR_IN_STACK);
+        Color[] colors = GetRandomColors(NUMBER_COLOR_IN_STACK);        
+
         int numberOfHexagon = Random.Range(hexagonClampf.x, hexagonClampf.y);
         int[] arrHexagon = GetRandomHexagons(numberOfHexagon, NUMBER_COLOR_IN_STACK);
         int amount = 0;
+        List<string> hexColors = new List<string>();
 
         for (int i = 0; i < arrHexagon.Length; i++)
         {
@@ -62,8 +65,12 @@ public class StackSpawner : MonoBehaviour
                 insPlayerHexagon.SetParent(insHexagonStack.transform);
                 insPlayerHexagon.Configure(insHexagonStack);
                 insHexagonStack.AddPlayerHexagon(insPlayerHexagon);
+
+                hexColors.Add(ColorUtility.ToHtmlStringRGB(color));
             }
         }
+
+        //Debug.Log(JsonConvert.SerializeObject(hexColors.ToArray()));
     }
 
     //Each stack have many than one color

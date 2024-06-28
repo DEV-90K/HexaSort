@@ -13,13 +13,38 @@ public class StackHexagon : PoolMember
         //OnInitialize();
     }
 
-    public void OnInitialize()
+    public void OnInitialize(StackHexagonData data)
     {
-        for(int i = 0; i < transform.childCount; i++)
+        Debug.Log("Stack Hexagon Data");
+        data.DebugLogObject();
+        List<Color> colors = new List<Color>();
+        for (int i = 0; i < data.HexColors.Length; i++)
         {
-            Hexagon playerHexagon = transform.GetChild(i).GetComponent<Hexagon>();
-            AddPlayerHexagon(playerHexagon);
+            if (ColorUtility.TryParseHtmlString(data.HexColors[i], out Color color))
+            {
+                colors.Add(color);
+            }
         }
+
+        Color[] hexagonColors = colors.ToArray();
+
+        for (int i = 0; i < hexagonColors.Length; i++)
+        {
+            Vector3 spawnPosition = transform.TransformPoint(Vector3.up * i * 0.2f);
+
+            Hexagon hexagonIns = PoolManager.Spawn<Hexagon>(PoolType.HEXAGON, spawnPosition, Quaternion.identity);
+            hexagonIns.SetParent(transform);
+            hexagonIns.OnSetUp();
+            hexagonIns.Color = hexagonColors[i];
+            hexagonIns.Configure(this);
+            AddPlayerHexagon(hexagonIns);
+        }
+
+        //for (int i = 0; i < transform.childCount; i++)
+        //{
+        //    Hexagon playerHexagon = transform.GetChild(i).GetComponent<Hexagon>();
+        //    AddPlayerHexagon(playerHexagon);
+        //}
 
         PlaceOnGridHexagon();
     }

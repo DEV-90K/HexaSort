@@ -18,7 +18,7 @@ public class GameManager : PersistentMonoSingleton<PlayerDataManager>
     public static void ChangeState(GameState newState)
     {
         GameManager.state = newState;
-        OnChangeState?.Invoke(GameManager.state);
+        //OnChangeState?.Invoke(GameManager.state);
     }
 
     public static bool IsState(GameState state) => GameManager.state == state;

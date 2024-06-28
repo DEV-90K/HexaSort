@@ -9,7 +9,15 @@ public class GridHexagon : PoolMember
     private Hexagon playerHexagonPrefab;
 
     [SerializeField]
+    private new Renderer renderer;
+
+    [SerializeField]
     private Color[] hexagonColors;
+    public Color Color
+    {
+        get => renderer.material.color;
+        set => renderer.material.color = value;
+    }
     public StackHexagon StackOfCell { get; private set; }
     //public bool IsOccupied 
     //{
@@ -19,8 +27,22 @@ public class GridHexagon : PoolMember
 
     private void Start()
     {
-        if(hexagonColors.Length > 0)
-            GenerateInitialHexagonStack();
+        //if(hexagonColors.Length > 0)
+        //    GenerateInitialHexagonStack();
+    }
+
+    public void OnInitialize(GridHexagonData gridHexagon, IGridPortability gridPortability)
+    {
+        Vector3 cellPos = gridPortability.ConvertToWorldPos(new Vector3Int(gridHexagon.Row, gridHexagon.Column, 0));
+        transform.position = cellPos;
+
+        if(ColorUtility.TryParseHtmlString(gridHexagon.HexColor, out Color color))
+        {
+            Color = color;
+        }
+
+        if(gridHexagon.StackHexagon != null)
+            GenerateInitialHexagonStack(gridHexagon.StackHexagon);
     }
 
     public bool CheckOccupied()
@@ -42,30 +64,40 @@ public class GridHexagon : PoolMember
         StackOfCell = stack;
     }
 
-    private void GenerateInitialHexagonStack()
+    //private void GenerateInitialHexagonStack()
+    //{
+
+    //    // One Renderer Child and One Hexagon Stack is child of GridHexagon
+    //    //while(transform.childCount > 1)
+    //    //{
+    //    //    Transform tf = transform.GetChild(1);
+    //    //    tf.SetParent(null);
+    //    //    DestroyImmediate(tf.gameObject);
+    //    //}
+
+    //    StackOfCell = new GameObject("Level Generate Stack").AddComponent<StackHexagon>();
+    //    StackOfCell.transform.SetParent(transform);
+    //    StackOfCell.transform.localPosition = Vector3.zero;
+
+    //    for(int i = 0; i < hexagonColors.Length; i++)
+    //    {
+    //        Vector3 spawnPosition = StackOfCell.transform.TransformPoint(Vector3.up * i * 0.2f);
+
+    //        Hexagon hexagonIns = Instantiate(playerHexagonPrefab, spawnPosition, Quaternion.identity);
+    //        //Hexagon hexagonIns = PoolManager.Spawn<Hexagon>(PoolType.HEXAGON, spawnPosition, Quaternion.identity);
+    //        hexagonIns.Color = hexagonColors[i];
+
+    //        StackOfCell.AddPlayerHexagon(hexagonIns);
+    //    }
+    //}
+
+    private void GenerateInitialHexagonStack(StackHexagonData stackHexagonDatas)
     {
-
-        // One Renderer Child and One Hexagon Stack is child of GridHexagon
-        while(transform.childCount > 1)
-        {
-            Transform tf = transform.GetChild(1);
-            tf.SetParent(null);
-            DestroyImmediate(tf.gameObject);
-        }
-
-        StackOfCell = new GameObject("Level Generate Stack").AddComponent<StackHexagon>();
+        StackHexagon stackHexagon = PoolManager.Spawn<StackHexagon>(PoolType.STACK_HEXAGON, Vector3.zero, Quaternion.identity);
+        StackOfCell = stackHexagon;
         StackOfCell.transform.SetParent(transform);
         StackOfCell.transform.localPosition = Vector3.zero;
 
-        for(int i = 0; i < hexagonColors.Length; i++)
-        {
-            Vector3 spawnPosition = StackOfCell.transform.TransformPoint(Vector3.up * i * 0.2f);
-
-            Hexagon hexagonIns = Instantiate(playerHexagonPrefab, spawnPosition, Quaternion.identity);
-            //Hexagon hexagonIns = PoolManager.Spawn<Hexagon>(PoolType.HEXAGON, spawnPosition, Quaternion.identity);
-            hexagonIns.Color = hexagonColors[i];
-
-            StackOfCell.AddPlayerHexagon(hexagonIns);
-        }
+        stackHexagon.OnInitialize(stackHexagonDatas);
     }
 }

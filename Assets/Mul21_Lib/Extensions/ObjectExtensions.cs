@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace UnityUtils
@@ -6,14 +7,14 @@ namespace UnityUtils
     {
         public static T CopyObject<T>(this T obj)
         {
-            string json = JsonUtility.ToJson(obj);
-            T newObject = JsonUtility.FromJson<T>(json);
+            string json = JsonConvert.SerializeObject(obj);
+            T newObject = JsonConvert.DeserializeObject<T>(json);
             return newObject;
         }  
         
         public static void DebugLogObject<T>(this T obj)
         {
-            string json = JsonUtility.ToJson(obj);
+            string json = JsonConvert.SerializeObject(obj);
             Debug.Log(typeof(T) + " " + json);
         }
     }
