@@ -245,6 +245,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b380d53271f1da744bf9676569cbe8b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canReused: 0
+  txtRatio: {fileID: 5913150706835963418}
+  imgFill: {fileID: 8603619327087058964}
+  btnReplay: {fileID: 7290110096259980760}
 --- !u!1 &3428038280540343443
 GameObject:
   m_ObjectHideFlags: 0

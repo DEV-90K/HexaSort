@@ -35,8 +35,6 @@ public class PopupManager : MonoBehaviour
 
         if(popup.canReused) 
             cachePopups.Add(typeof(T), popup);
-        else
-            cachePopups.Add(typeof(T), null);
 
         return popup as T;
     }

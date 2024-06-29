@@ -8,15 +8,8 @@ public class StackHexagon : PoolMember
 {
     public List<Hexagon> Hexagons { get; private set; }
 
-    private void Start()
+    public void OnInit(StackHexagonData data)
     {
-        //OnInitialize();
-    }
-
-    public void OnInitialize(StackHexagonData data)
-    {
-        Debug.Log("Stack Hexagon Data");
-        data.DebugLogObject();
         List<Color> colors = new List<Color>();
         for (int i = 0; i < data.HexColors.Length; i++)
         {
@@ -30,11 +23,11 @@ public class StackHexagon : PoolMember
 
         for (int i = 0; i < hexagonColors.Length; i++)
         {
-            Vector3 spawnPosition = transform.TransformPoint(Vector3.up * i * 0.2f);
+            Vector3 spawnPosition = transform.TransformPoint(Vector3.up * (i + 1) * 0.2f);
 
             Hexagon hexagonIns = PoolManager.Spawn<Hexagon>(PoolType.HEXAGON, spawnPosition, Quaternion.identity);
-            hexagonIns.SetParent(transform);
             hexagonIns.OnSetUp();
+            hexagonIns.SetParent(transform);
             hexagonIns.Color = hexagonColors[i];
             hexagonIns.Configure(this);
             AddPlayerHexagon(hexagonIns);
@@ -49,9 +42,13 @@ public class StackHexagon : PoolMember
         PlaceOnGridHexagon();
     }
 
+    public void OnResert()
+    {
+        Hexagons = null;
+    }
+
     public int GetNumberSimilarColor()
     {
-        Debug.Log("GetNumberSimilarColor");
         if(Hexagons == null && Hexagons.Count == 0)
         {
             Debug.LogError("No Hexagon in stack " + gameObject.GetInstanceID());
@@ -66,7 +63,7 @@ public class StackHexagon : PoolMember
                 amount++;
             }
         }
-        Debug.Log("Amount: " + amount);
+
         return amount;
     }
 
@@ -126,5 +123,53 @@ public class StackHexagon : PoolMember
             Debug.Log("Despawn: " + GetInstanceID());
             PoolManager.Despawn(this);
         }
+    }
+
+    public void CollectImmediate()
+    {
+        if(Hexagons != null)
+        {
+            for(int i = 0; i < Hexagons.Count; i++)
+            {
+                Hexagons[i].CollectImmediate();
+            }
+        }
+
+        OnResert();
+        PoolManager.Despawn(this);
+    }
+
+    public void CollectPlayerHexagon(System.Action callback = null)
+    {
+        if (Hexagons.Count <= 0)
+        {
+            Debug.LogWarning("Cannot Collect");
+            return;
+        }
+
+        StartCoroutine(IE_CollectPlayerHexagon(callback));
+    }
+
+    private IEnumerator IE_CollectPlayerHexagon(System.Action callback)
+    {
+        int numberOfPlayerHexagon = Hexagons.Count;
+        float offsetDelayTime = 0;
+        //Remove bottom to top
+        while (Hexagons.Count > 0)
+        {
+            Hexagon playerHexagon = Hexagons[0];
+            playerHexagon.SetParent(null);
+            //playerHexagon.TweenVanishFinish(offsetDelayTime);
+            playerHexagon.TweenVanish(offsetDelayTime);
+            offsetDelayTime += 0.01f;
+
+            //stackHexagon.RemovePlayerHexagon(playerHexagon);
+            Hexagons.RemoveAt(0);
+        }
+
+        yield return new WaitForSeconds(0.2f + (numberOfPlayerHexagon + 1) * 0.01f);
+        callback?.Invoke();
+        OnResert();
+        PoolManager.Despawn(this);
     }
 }

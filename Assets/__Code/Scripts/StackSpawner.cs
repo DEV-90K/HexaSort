@@ -19,20 +19,13 @@ public class StackSpawner : MonoBehaviour
     [SerializeField]
     private Vector2Int hexagonClampf;
 
-    //private void Start()
-    //{
-    //    GenerateStacks();
-    //}
-
-    public void GenerateStacks()
+    public StackHexagon SpawnStack(StackHexagonData stackHexagonDatas)
     {
-        for (int i = 0; i < pointSpawns.Length; i++)
-        {
-            GenerateStack(pointSpawns[i]);
-        }
+        StackHexagon stackHexagon = PoolManager.Spawn<StackHexagon>(PoolType.STACK_HEXAGON, Vector3.zero, Quaternion.identity);
+        return stackHexagon;
     }
 
-    private void GenerateStack(Transform stack)
+    public StackHexagon SpawnStack(Transform stack)
     {
         //TEST
         //StackHexagon insHexagonStack = Instantiate(hexagonStack, stack.position, Quaternion.identity, stack);
@@ -71,6 +64,8 @@ public class StackSpawner : MonoBehaviour
         }
 
         //Debug.Log(JsonConvert.SerializeObject(hexColors.ToArray()));
+
+        return insHexagonStack;
     }
 
     //Each stack have many than one color

@@ -10,35 +10,24 @@ public enum GameState
     FINISH
 }
 
-public class GameManager : PersistentMonoSingleton<PlayerDataManager>
+public class GameManager : PersistentMonoSingleton<GameManager>
 {
     public static Action<GameState> OnChangeState;
-    private static GameState state;
+    private GameState state;
 
-    public static void ChangeState(GameState newState)
+    public void ChangeState(GameState newState)
     {
-        GameManager.state = newState;
+        state = newState;
         //OnChangeState?.Invoke(GameManager.state);
     }
 
-    public static bool IsState(GameState state) => GameManager.state == state;
+    public bool IsState(GameState state) => this.state == state;
 
     protected override void Awake()
     {
         base.Awake();
         SetUp();
-    }
-
-    private void Start()
-    {
         ChangeState(GameState.LOADING);
-        //InvokeExtensions.Invoke(this, () => Debug.Log("Oke"), 2f);
-        //OR
-        this.Invoke(() =>
-        {
-            Debug.Log("Game Manager Invoke");
-            GUIManager.instance.ShowScreen<ScreenLevel>();
-        }, 2f);
     }
 
     private void SetUp()

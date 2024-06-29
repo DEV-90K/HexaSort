@@ -43,8 +43,6 @@ public class ScreenManager : MonoBehaviour
 
         if (screen.canReused)
             cacheScreens.Add(typeof(T), screen);
-        else
-            cacheScreens.Add(typeof(T), null);
 
         return screen as T;
     }

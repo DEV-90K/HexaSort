@@ -6,6 +6,8 @@ using UnityUtils;
 
 public class Hexagon : PoolMember
 {
+    public static Action OnVanish;
+
     [SerializeField]
     private new Renderer renderer;
     [SerializeField]
@@ -21,7 +23,6 @@ public class Hexagon : PoolMember
     {
         transform.localScale = Vector3.one;
         EnableCollider();
-
     }
 
     public void Configure(StackHexagon hexStack)
@@ -69,10 +70,42 @@ public class Hexagon : PoolMember
             .setDelay(offsetDelayTime)
             .setOnComplete(() =>
                 {
-                    //TEST
-                    //DestroyImmediate(gameObject)
+                    Collect();
+                }
+             );
+    }
+
+    public void TweenVanishFinish(float offsetDelayTime)
+    {
+        LeanTween.cancel(gameObject);
+        LeanTween.scale(gameObject, Vector3.zero, 0.2f)
+            .setEaseInBack()
+            .setDelay(offsetDelayTime)
+            .setOnComplete(() =>
+                {
+                    OnResert();
                     PoolManager.Despawn(this);
                 }
              );
+    }
+
+    public void OnResert()
+    {
+        transform.localScale = Vector3.one;
+        EnableCollider();
+        HexagonStack = null;
+    }
+
+    public void CollectImmediate()
+    {
+        OnResert();
+        PoolManager.Despawn(this);
+    }
+
+    public void Collect()
+    {
+        OnResert();
+        OnVanish?.Invoke();
+        PoolManager.Despawn(this);
     }
 }

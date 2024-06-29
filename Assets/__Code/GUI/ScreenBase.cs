@@ -11,7 +11,7 @@ public class ScreenBase : MonoBehaviour
     private RectTransform m_RectTransform;
     //private float m_OffsetY = 0f;
 
-    protected void Awake()
+    protected virtual void Awake()
     {
         m_RectTransform = GetComponent<RectTransform>();
     }
@@ -53,7 +53,7 @@ public class ScreenBase : MonoBehaviour
         }
     }
 
-    public void OnInit(object[] paras)
+    public virtual void OnInit(params object[] paras)
     {
         //throw new NotImplementedException();
     }

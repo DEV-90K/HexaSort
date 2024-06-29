@@ -8,6 +8,8 @@ using UnityUtils;
 
 public class StackMerger : MonoBehaviour
 {
+    public static Action OnStackMergeCompleted;
+
     [SerializeField]
     private LayerMask gridHexagonLayerMask;
 
@@ -24,7 +26,8 @@ public class StackMerger : MonoBehaviour
     }
     private void StackController_OnStackPlacedOnGridHexagon(GridHexagon gridHexagon)
     {
-        StartCoroutine(IE_OnStackPlacedOnGridHexagon(gridHexagon));
+        Debug.Log("StackController_OnStackPlacedOnGridHexagon");
+        StartCoroutine(IE_OnStackPlacedOnGridHexagon(gridHexagon));        
     }
 
     private IEnumerator IE_OnStackPlacedOnGridHexagon(GridHexagon gridHexagon)
@@ -32,16 +35,21 @@ public class StackMerger : MonoBehaviour
         listGridHexagonNeedUpdate.Add(gridHexagon);
         while (listGridHexagonNeedUpdate.Count > 0)
         {
+            Debug.Log("In");
             GridHexagon merge = listGridHexagonNeedUpdate[listGridHexagonNeedUpdate.Count - 1];
-
             listGridHexagonNeedUpdate.Remove(merge);
+
             if(merge.CheckOccupied())
+            {
                 yield return IE_CheckForMerge(merge);
+            }
         }
+        Debug.Log("Out");
+        OnStackMergeCompleted?.Invoke();
     }
 
     private IEnumerator IE_CheckForMerge(GridHexagon gridHexagon)
-    {
+    {  
         //Get Top Color of Stack
         StackHexagon stackHexagon = gridHexagon.StackOfCell;
         Color topColorOfStackAtGridHexagon = stackHexagon.GetTopHexagonColor();
@@ -86,6 +94,7 @@ public class StackMerger : MonoBehaviour
 
         //Merge solution 3: Target Merge craete stack have One Color if can. Get Current Grid is center of merge process 
         yield return IE_AlgorithmMerge_3(gridHexagon, neighborGridHexagonSameTopColor);
+        Debug.Log("Yiel completed");
         //neighborGridHexagonSameTopColor = UpdateNeighborGridHexagonSameTopColor_S3(gridHexagon, neighborGridHexagonSameTopColor);
         //yield return IE_MergePlayerHexagonsToStack(stackHexagon, neighborGridHexagonSameTopColor);
 
@@ -123,8 +132,7 @@ public class StackMerger : MonoBehaviour
 
     private IEnumerator IE_RemovePlayerHexagonsFromStack_v2(StackHexagon stackHexagon)
     {
-        List<Hexagon> listPlayerHexagonSimilarColor = GetPlayerHexagonSimilarColor_V2(stackHexagon);
-        Debug.Log("RemovePlayerHexagonsFromStack" + listPlayerHexagonSimilarColor.Count);
+        List<Hexagon> listPlayerHexagonSimilarColor = GetPlayerHexagonSimilarColor_V2(stackHexagon);        
         int numberOfPlayerHexagon = listPlayerHexagonSimilarColor.Count;
         if (numberOfPlayerHexagon < 10) 
             yield break;
@@ -142,7 +150,7 @@ public class StackMerger : MonoBehaviour
             listPlayerHexagonSimilarColor.RemoveAt(0);
         }
 
-        yield return new WaitForSeconds(0.2f + (numberOfPlayerHexagon + 1) * 0.01f);
+        yield return new WaitForSeconds(0.2f + (numberOfPlayerHexagon + 1) * 0.01f);        
     }
 
     private List<Hexagon> GetPlayerHexagonSimilarColor_V2(StackHexagon stackHexagon)
@@ -267,12 +275,6 @@ public class StackMerger : MonoBehaviour
         List<GridHexagon> neighborGridHexagonSameTopColor = new List<GridHexagon>();
         foreach (GridHexagon neighborGridHexagon in listNeighborGridHexagons)
         {            
-            Debug.Log("neighborGridHexagon");
-
-            //if (neighborGridHexagon.StackOfCell.GetTopHexagonColor() == topColorOfStackAtGridHexagon)
-            //{
-            //    neighborGridHexagonSameTopColor.Add(neighborGridHexagon);
-            //}
             Color color1 = neighborGridHexagon.StackOfCell.GetTopHexagonColor();
             Color color2 = topColorOfStackAtGridHexagon;
             if (ColorUtils.ColorEquals(color1, color2))
@@ -423,6 +425,7 @@ public class StackMerger : MonoBehaviour
         }
 
         yield return IE_RemovePlayerHexagonsFromStack_v2(stack);
+        Debug.Log("ReAdd");
         listGridHexagonNeedUpdate.Add(gridHexagon);
     }
 
