@@ -62,7 +62,10 @@ public class StackController : MonoBehaviour
         RaycastHit hit;
         Physics.Raycast(GetRayFromMouseClicked(), out hit, 500, gridHexagonLayerMask);
 
-        if(hit.collider == null)
+        if (gridHexagonContact != null)
+            gridHexagonContact.ShowColor();
+
+        if (hit.collider == null)
         {
             DraggingAboveGround();
         }
@@ -91,6 +94,7 @@ public class StackController : MonoBehaviour
     private void DraggingAboveGridHexagon(RaycastHit hit)
     {
         GridHexagon gridHexagon = hit.collider.GetComponent<GridHexagon>();
+
         if(gridHexagon.CheckOccupied())
         {
             DraggingAboveGridHexagonOccupied();
@@ -122,13 +126,18 @@ public class StackController : MonoBehaviour
 
         Vector3 stackTargetPos = hit.point.With(y: 1.5f);        
         stackContact.transform.position = Vector3.MoveTowards(stackContact.transform.position, stackTargetPos, Time.deltaTime * 30);
-        ///
+
+        gridHexagon.ShowColorContact();
         gridHexagonContact = gridHexagon;
+
     }
 
     private void ControlMouseUp()
     {
-        if(gridHexagonContact)
+        if (gridHexagonContact != null)
+            gridHexagonContact.ShowColor();
+
+        if (gridHexagonContact)
         {
             stackContact.transform.position = gridHexagonContact.transform.position.With(y: 0f);
             stackContact.transform.SetParent(gridHexagonContact.transform);
