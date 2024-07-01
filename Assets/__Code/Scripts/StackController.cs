@@ -139,7 +139,7 @@ public class StackController : MonoBehaviour
 
         if (gridHexagonContact)
         {
-            stackContact.transform.position = gridHexagonContact.transform.position.With(y: 0f);
+            stackContact.transform.position = gridHexagonContact.transform.position.With(y: 0.2f);
             stackContact.transform.SetParent(gridHexagonContact.transform);
             stackContact.PlaceOnGridHexagon();
             gridHexagonContact.SetStackOfCell(stackContact);            

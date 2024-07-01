@@ -6,14 +6,17 @@ using UnityUtils;
 
 public class StackHexagon : PoolMember
 {
+    [SerializeField]
+    private CanvasStackHexagon canvasStack;
     public List<Hexagon> Hexagons { get; private set; }
 
     public void OnInit(StackHexagonData data)
     {
         List<Color> colors = new List<Color>();
-        for (int i = 0; i < data.HexColors.Length; i++)
+        for (int i = 0; i < data.IDHexes.Length; i++)
         {
-            if (ColorUtility.TryParseHtmlString(data.HexColors[i], out Color color))
+            HexagonData hexData = ResourceManager.Instance.GetHexagonDataByID(data.IDHexes[i]);
+            if (ColorUtility.TryParseHtmlString(hexData.HexColor, out Color color))
             {
                 colors.Add(color);
             }
@@ -23,7 +26,7 @@ public class StackHexagon : PoolMember
 
         for (int i = 0; i < hexagonColors.Length; i++)
         {
-            Vector3 spawnPosition = transform.TransformPoint(Vector3.up * (i + 1) * 0.2f);
+            Vector3 spawnPosition = transform.TransformPoint(Vector3.up * i * 0.2f);
 
             Hexagon hexagonIns = PoolManager.Spawn<Hexagon>(PoolType.HEXAGON, spawnPosition, Quaternion.identity);
             hexagonIns.OnSetUp();
@@ -31,12 +34,13 @@ public class StackHexagon : PoolMember
             hexagonIns.Color = hexagonColors[i];
             hexagonIns.Configure(this);
             AddPlayerHexagon(hexagonIns);
-        }       
+        }
     }
 
     public void OnResert()
     {
         Hexagons = null;
+        ShowCanvas();
     }
 
     public int GetNumberSimilarColor()
@@ -88,6 +92,8 @@ public class StackHexagon : PoolMember
 
         Hexagons.Add(playerHexagon);
         playerHexagon.SetParent(transform);
+
+        UpdateCanvas();
     }
 
     public Color GetTopHexagonColor()
@@ -115,6 +121,8 @@ public class StackHexagon : PoolMember
             Debug.Log("Despawn: " + GetInstanceID());
             PoolManager.Despawn(this);
         }
+
+        UpdateCanvas();
     }
 
     public void CollectImmediate()
@@ -159,9 +167,52 @@ public class StackHexagon : PoolMember
             Hexagons.RemoveAt(0);
         }
 
-        yield return new WaitForSeconds(0.2f + (numberOfPlayerHexagon + 1) * 0.01f);
+        yield return new WaitForSeconds(0.2f + (numberOfPlayerHexagon - 1) * 0.01f);
         callback?.Invoke();
         OnResert();
         PoolManager.Despawn(this);
     }
+
+    #region Canvas   
+    private void UpdateCanvas()
+    {
+        if (Hexagons == null || Hexagons.Count == 0)
+        {
+            return;
+        }
+
+        int amount = 0;
+        Color color = GetTopHexagonColor();                
+
+        for (int i = Hexagons.Count - 1; i >= 0; i--)
+        {
+            if(ColorUtils.ColorEquals(color, Hexagons[i].Color))
+            {
+                amount++;
+            }
+        }
+
+        canvasStack.transform.position = transform.position + Vector3.up * (Hexagons.Count -1) * 0.2f + Vector3.up * 0.11f;
+        canvasStack.UpdateTxtNumber(amount);
+    }
+
+    //When merge and remove completed
+    public void ShowCanvas()
+    {
+        if (Hexagons == null || Hexagons.Count == 0)
+        {
+            return;
+        }
+
+        canvasStack.gameObject.SetActive(true);
+        UpdateCanvas();
+    }
+
+    //When in processing merge and remove > 10;
+    public void HideCanvas()
+    {
+        canvasStack.gameObject.SetActive(false);
+    }
+
+    #endregion Canvas
 }

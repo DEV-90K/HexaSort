@@ -45,21 +45,21 @@ public class Hexagon : PoolMember
         collider.enabled = true;
     }
 
-    public void MoveToGridHexagon(Vector3 localPos)
+    public void MoveToGridHexagon(Vector3 localPos, float delayTime)
     {
         LeanTween.cancel(gameObject);
         float delay = transform.GetSiblingIndex() * 0.01f + 0.01f; //0.01f of GridHexagon
 
         LeanTween.moveLocal(gameObject, localPos, 0.2f)
             .setEaseInOutSine()
-            .setDelay(delay);
+            .setDelay(delayTime);
 
         Vector3 direction = (localPos - transform.localPosition).With(y: 0).normalized;
         Vector3 rotationAxis = Vector3.Cross(Vector3.up, direction);
 
         LeanTween.rotateAround(gameObject, rotationAxis, 180, 0.2f)
             .setEaseInOutSine()
-            .setDelay(delay);
+            .setDelay(delayTime);
     }
 
     public void TweenVanish(float offsetDelayTime)
@@ -71,20 +71,6 @@ public class Hexagon : PoolMember
             .setOnComplete(() =>
                 {
                     Collect();
-                }
-             );
-    }
-
-    public void TweenVanishFinish(float offsetDelayTime)
-    {
-        LeanTween.cancel(gameObject);
-        LeanTween.scale(gameObject, Vector3.zero, 0.2f)
-            .setEaseInBack()
-            .setDelay(offsetDelayTime)
-            .setOnComplete(() =>
-                {
-                    OnResert();
-                    PoolManager.Despawn(this);
                 }
              );
     }

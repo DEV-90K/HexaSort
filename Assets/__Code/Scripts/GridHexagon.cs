@@ -28,13 +28,15 @@ public class GridHexagon : PoolMember
         Vector3 cellPos = gridPortability.ConvertToWorldPos(new Vector3Int(gridHexagon.Row, gridHexagon.Column, 0));
         transform.position = cellPos;
 
-        if(ColorUtility.TryParseHtmlString(gridHexagon.HexColor, out Color color))
+        HexagonData hexData = ResourceManager.Instance.GetHexagonDataByID(gridHexagon.IDHex);
+
+        if (ColorUtility.TryParseHtmlString(hexData.HexColor, out Color color))
         {
             cacheColor = color;
             Color = color;
         }
 
-        if(gridHexagon.StackHexagon != null)
+        if (gridHexagon.StackHexagon != null)
             GenerateInitialHexagonStack(gridHexagon.StackHexagon);
     }
 
@@ -82,10 +84,10 @@ public class GridHexagon : PoolMember
 
     private void GenerateInitialHexagonStack(StackHexagonData stackHexagonDatas)
     {
-        StackHexagon stackHexagon = PoolManager.Spawn<StackHexagon>(PoolType.STACK_HEXAGON, Vector3.zero, Quaternion.identity);
+        StackHexagon stackHexagon = PoolManager.Spawn<StackHexagon>(PoolType.STACK_HEXAGON, Vector3.zero , Quaternion.identity);
         StackOfCell = stackHexagon;
         StackOfCell.transform.SetParent(transform);
-        StackOfCell.transform.localPosition = Vector3.zero;
+        StackOfCell.transform.localPosition = Vector3.up * 0.2f;
 
         stackHexagon.OnInit(stackHexagonDatas);
         stackHexagon.PlaceOnGridHexagon();

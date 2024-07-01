@@ -1,5 +1,3 @@
-using Newtonsoft.Json;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -12,6 +10,22 @@ public class StackRandomSpawner : StackSpawner
     private Color[] colors;
     [SerializeField]
     private Vector2Int hexagonClampf;
+
+    private void Start()
+    {
+        HexagonData[] datas = ResourceManager.Instance.GetAllHexagonData();
+        List<Color> listColors = new List<Color>();
+        foreach (HexagonData data in datas) 
+        {
+            if (data.ID == 1) continue; //1 is color of grid
+            if(ColorUtility.TryParseHtmlString(data.HexColor, out Color color))
+            {
+                listColors.Add(color);
+            }
+        }
+
+        colors = listColors.ToArray();
+    }
 
     public override StackHexagon Spawn(Transform stack)
     {

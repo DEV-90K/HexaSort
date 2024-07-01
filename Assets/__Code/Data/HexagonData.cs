@@ -1,25 +1,19 @@
+using Newtonsoft.Json;
 using System.Data;
 
-public enum HexagonType
-{
-    NONE,
-    BLUE,
-    RED,
-    PURPLE,
-    YELLOW
-}
 public class HexagonData
 {
     public HexagonData()
     {
     }
-
-    public HexagonType Type { get; private set; }
+    [JsonProperty]
+    public int ID { get; private set; }
+    [JsonProperty]
     public string HexColor { get; private set; }
 
-    public HexagonData(HexagonType type, string hexColor)
+    public HexagonData(int id, string hexColor)
     {
-        Type = type;
+        ID = id;
         HexColor = hexColor;
     }
 }

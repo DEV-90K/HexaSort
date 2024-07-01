@@ -10,17 +10,17 @@ public class GridHexagonData
     public int Column { get; private set; }
 
     [JsonProperty]
-    public string HexColor { get; private set; }
+    public int IDHex { get; private set; }
 
     [JsonProperty]
     public StackHexagonData StackHexagon { get; private set; }
 
-    public GridHexagonData(GridHexagonState state, int row, int column, string hexColor, StackHexagonData stackHexagon)
+    public GridHexagonData(GridHexagonState state, int row, int column, int idHex, StackHexagonData stackHexagon)
     {
         State = state;
         Row = row;
         Column = column;
-        HexColor = hexColor;
+        IDHex = idHex;
         StackHexagon = stackHexagon;
     }
 
@@ -32,13 +32,14 @@ public class GridHexagonData
 public class GridHexagonLockData
 {
     public int Goal {  get; private set; }
-    public string HexColor { get; private set; }
+    [JsonProperty]
+    public int IDHex { get; private set; }
     public GridHexagonData GridHexagonData { get; private set; }
 
-    public GridHexagonLockData(int goal, string hexColor, GridHexagonData gridHexagonData)
+    public GridHexagonLockData(int goal, int idHex, GridHexagonData gridHexagonData)
     {
         Goal = goal;
-        HexColor = hexColor;
+        IDHex = idHex;
         GridHexagonData = gridHexagonData;
     }
 

@@ -28,15 +28,15 @@ public class LevelManager : MonoSingleton<LevelManager>
     private int amountHexagon = 0;
     private LevelState levelState = LevelState.NONE;
 
-    private void Start()
-    {
-        levelState = LevelState.NONE;
+    //private void Start()
+    //{
+    //    levelState = LevelState.NONE;
 
-        Hexagon.OnVanish += Hexagon_OnVanish;
-        StackMerger.OnStackMergeCompleted += StackMerge_OnStackMergeCompleted;
+    //    Hexagon.OnVanish += Hexagon_OnVanish;
+    //    StackMerger.OnStackMergeCompleted += StackMerge_OnStackMergeCompleted;
 
-        InitTestLevel();
-    }
+    //    InitTestLevel();
+    //}
 
     private void OnDestroy()
     {
