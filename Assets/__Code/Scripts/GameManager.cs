@@ -40,11 +40,11 @@ public class GameManager : PersistentMonoSingleton<GameManager>
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
 
         //xu tai tho
-        int maxScreenHeight = 1280;
-        float ratio = (float)Screen.currentResolution.width / (float)Screen.currentResolution.height;
-        if (Screen.currentResolution.height > maxScreenHeight)
-        {
-            Screen.SetResolution(Mathf.RoundToInt(ratio * (float)maxScreenHeight), maxScreenHeight, true);
-        }
+        //int maxScreenHeight = 1280;
+        //float ratio = (float)Screen.currentResolution.width / (float)Screen.currentResolution.height;
+        //if (Screen.currentResolution.height > maxScreenHeight)
+        //{
+        //    Screen.SetResolution(Mathf.RoundToInt(ratio * (float)maxScreenHeight), maxScreenHeight, true);
+        //}
     }
 }

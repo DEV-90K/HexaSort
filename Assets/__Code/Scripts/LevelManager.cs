@@ -79,13 +79,17 @@ public class LevelManager : MonoSingleton<LevelManager>
     public void OnFinish()
     {
         Debug.Log("OnFinish");
+        if (levelState == LevelState.FINISHED)
+            return;
+
         levelState = LevelState.FINISHED;
 
         _gridManager.CollectOccupied();
         _stackManager.CollectRandomed();
+        _sceenLevel.OnChangeHexagon(_presenterData.Goal);
         _sceenLevel.Hide();
 
-        //Invoke(nameof(InitTestLevel), 1f);
+        Invoke(nameof(InitTestLevel), 1f);
     }
 
     //Test Case Wrong: In Process Merge and Remove

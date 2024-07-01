@@ -425,7 +425,6 @@ public class StackMerger : MonoBehaviour
         }
 
         yield return IE_RemovePlayerHexagonsFromStack_v2(stack);
-        Debug.Log("ReAdd");
         listGridHexagonNeedUpdate.Add(gridHexagon);
     }
 

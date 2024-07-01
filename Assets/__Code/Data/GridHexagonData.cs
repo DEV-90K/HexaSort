@@ -8,9 +8,10 @@ public class GridHexagonData
     public int Row { get; private set; }
     [JsonProperty]
     public int Column { get; private set; }
-    //public HexagonData Hexagon { get; private set; } //Prototype
+
     [JsonProperty]
     public string HexColor { get; private set; }
+
     [JsonProperty]
     public StackHexagonData StackHexagon { get; private set; }
 

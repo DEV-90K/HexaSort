@@ -65,6 +65,13 @@ public class GridHexagon : PoolMember
             return false;
         }
 
+        if(StackOfCell.Hexagons == null)
+        {
+            StackOfCell.CollectImmediate();
+            StackOfCell = null;
+            return false;
+        }
+
         return true;
     }
 
@@ -81,6 +88,7 @@ public class GridHexagon : PoolMember
         StackOfCell.transform.localPosition = Vector3.zero;
 
         stackHexagon.OnInit(stackHexagonDatas);
+        stackHexagon.PlaceOnGridHexagon();
     }
 
     public void ShowColor()

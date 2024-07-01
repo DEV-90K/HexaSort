@@ -14,6 +14,7 @@ public class ScreenBase : MonoBehaviour
     protected virtual void Awake()
     {
         m_RectTransform = GetComponent<RectTransform>();
+        OnSetup();
     }
 
     public virtual void Show()
@@ -37,11 +38,11 @@ public class ScreenBase : MonoBehaviour
         }
     }
 
-    public void OnSetup()
+    private void OnSetup()
     {
         // xu ly tai tho
         float ratio = (float)Screen.height / (float)Screen.width;
-        if (ratio > 2.1f)
+        if (ratio > 1920/1080f)
         {
             Vector2 leftBottom = m_RectTransform.offsetMin;
             Vector2 rightTop = m_RectTransform.offsetMax;

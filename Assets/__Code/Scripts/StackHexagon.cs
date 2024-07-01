@@ -31,15 +31,7 @@ public class StackHexagon : PoolMember
             hexagonIns.Color = hexagonColors[i];
             hexagonIns.Configure(this);
             AddPlayerHexagon(hexagonIns);
-        }
-
-        //for (int i = 0; i < transform.childCount; i++)
-        //{
-        //    Hexagon playerHexagon = transform.GetChild(i).GetComponent<Hexagon>();
-        //    AddPlayerHexagon(playerHexagon);
-        //}
-
-        PlaceOnGridHexagon();
+        }       
     }
 
     public void OnResert()

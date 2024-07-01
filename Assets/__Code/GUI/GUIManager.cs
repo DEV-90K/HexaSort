@@ -21,7 +21,7 @@ public class GUIManager : MonoSingleton<GUIManager>
     {
         ScreenBase screen = screenManager.GetScreen<T>();
 
-        screen.OnSetup();
+        //screen.OnSetup();
         screen.OnInit(paras);
         screen.Show();
         

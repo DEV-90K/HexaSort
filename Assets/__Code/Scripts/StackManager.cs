@@ -8,13 +8,27 @@ public class StackManager : MonoBehaviour
     private Transform[] pointSpawns;
 
     [SerializeField]
+    private StackRandomSpawner randomSpawner;
+    [SerializeField]
+    private StackDataSpawner dataSpawner;
+
     private StackSpawner stackSpawner;
 
     private List<StackHexagon> stackHexagons;
     private List<StackHexagon> stackCollects;
 
     private const int NUMBER_OF_STACK = 3;
-    private int stackCount = 0;    
+    private int stackCount = 0;
+
+    private void OnEnable()
+    {
+        StackController.OnStackPlaced += StackController_OnStackPlaced;
+    }
+
+    private void OnDisable()
+    {
+        StackController.OnStackPlaced -= StackController_OnStackPlaced;
+    }
 
     private void Awake()
     {
@@ -24,7 +38,16 @@ public class StackManager : MonoBehaviour
 
     public void OnInit()
     {
-        StackController.OnStackPlaced += StackController_OnStackPlaced;
+        //StackController.OnStackPlaced += StackController_OnStackPlaced;        
+        stackSpawner = randomSpawner;
+        GenerateStacks();
+    }
+
+    public void OnInit(StackQueueData stackData)
+    {
+        //stackSpawner = stackStagegySpawners[1];
+        stackSpawner = dataSpawner;
+        dataSpawner.OnInit(stackData);
         GenerateStacks();
     }
 
@@ -32,7 +55,7 @@ public class StackManager : MonoBehaviour
     {
         stackCount = 0;
         stackHexagons = new List<StackHexagon>();
-        StackController.OnStackPlaced -= StackController_OnStackPlaced;
+        //StackController.OnStackPlaced -= StackController_OnStackPlaced;
     }
 
     private void StackController_OnStackPlaced()
@@ -41,9 +64,9 @@ public class StackManager : MonoBehaviour
 
         if(stackCount == NUMBER_OF_STACK)
         {
-            stackCount = 0;
-            //stackSpawner.GenerateStacks();
-            stackHexagons = new List<StackHexagon>();
+            OnResert();
+
+
             GenerateStacks();
         }
     }
@@ -53,7 +76,7 @@ public class StackManager : MonoBehaviour
         stackHexagons.Clear();
         for (int i = 0; i < pointSpawns.Length; i++)
         {
-           StackHexagon stack = stackSpawner.SpawnStack(pointSpawns[i]);
+           StackHexagon stack = stackSpawner.Spawn(pointSpawns[i]);
            stackHexagons.Add(stack);
         }
     }
