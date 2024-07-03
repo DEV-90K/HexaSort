@@ -30,6 +30,11 @@ public class StackMerger : MonoBehaviour
         StartCoroutine(IE_OnStackPlacedOnGridHexagon(gridHexagon));        
     }
 
+    public void OnStackPlacedOnGridHexagon(GridHexagon gridHexagon)
+    {
+        StartCoroutine(IE_OnStackPlacedOnGridHexagon(gridHexagon));
+    }
+
     private IEnumerator IE_OnStackPlacedOnGridHexagon(GridHexagon gridHexagon)
     {
         listGridHexagonNeedUpdate.Add(gridHexagon);

@@ -32,7 +32,7 @@ public class PopupBase : MonoBehaviour
         //throw new NotImplementedException();
     }
 
-    public void OnInit(object[] paras)
+    public virtual void OnInit(object[] paras)
     {
         //throw new NotImplementedException();
     }

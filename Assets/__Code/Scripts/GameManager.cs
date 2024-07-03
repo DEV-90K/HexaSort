@@ -4,6 +4,7 @@ using UnityEngine;
 
 public enum GameState
 {
+    NONE,
     LOADING,
     PLAYING,
     PAUSE,
@@ -18,7 +19,8 @@ public class GameManager : PersistentMonoSingleton<GameManager>
     public void ChangeState(GameState newState)
     {
         state = newState;
-        //OnChangeState?.Invoke(GameManager.state);
+        Debug.Log("GameState Change: " + EnumUtils.ParseString(state));
+        OnChangeState?.Invoke(state);
     }
 
     public bool IsState(GameState state) => this.state == state;
@@ -27,6 +29,11 @@ public class GameManager : PersistentMonoSingleton<GameManager>
     {
         base.Awake();
         SetUp();
+        ChangeState(GameState.NONE);
+    }
+
+    private void Start()
+    {
         ChangeState(GameState.LOADING);
     }
 

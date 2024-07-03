@@ -35,6 +35,21 @@ public class GridManager : MonoBehaviour, IGridPortability
         _gridControl.OnInit(gridHexagons);
     }
 
+    public GridHexagon[] GetGridHexagonContainStack()
+    {
+        List<GridHexagon> gridHexagons = new List<GridHexagon> ();
+
+        foreach (GridHexagon grid in _gridHexagons)
+        {
+            if(grid.CheckOccupied())
+            {
+                gridHexagons.Add(grid);
+            }
+        }
+
+        return gridHexagons.ToArray();
+    }
+
     public void CollectOccupied()
     {
         _gridControl.Collect();

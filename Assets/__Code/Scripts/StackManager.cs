@@ -2,16 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StackManager : MonoBehaviour
+public interface IStackOnPlaced
 {
+    public void OnStackPlaced();
+}
+
+public class StackManager : MonoBehaviour, IStackOnPlaced
+{    
     [SerializeField]
     private Transform[] pointSpawns;
+
+    [SerializeField]
+    private StackController stackController;
+    [SerializeField]
+    private StackMerger stackMerger;
 
     [SerializeField]
     private StackRandomSpawner randomSpawner;
     [SerializeField]
     private StackDataSpawner dataSpawner;
-
     private StackSpawner stackSpawner;
 
     private List<StackHexagon> stackHexagons;
@@ -20,32 +29,21 @@ public class StackManager : MonoBehaviour
     private const int NUMBER_OF_STACK = 3;
     private int stackCount = 0;
 
-    private void OnEnable()
-    {
-        StackController.OnStackPlaced += StackController_OnStackPlaced;
-    }
-
-    private void OnDisable()
-    {
-        StackController.OnStackPlaced -= StackController_OnStackPlaced;
-    }
-
     private void Awake()
     {
         stackCount = 0;
         stackHexagons = new List<StackHexagon>();
+        stackController.OnInit(this);
     }
 
     public void OnInit()
-    {
-        //StackController.OnStackPlaced += StackController_OnStackPlaced;        
+    {      
         stackSpawner = randomSpawner;
         GenerateStacks();
     }
 
     public void OnInit(StackQueueData stackData)
     {
-        //stackSpawner = stackStagegySpawners[1];
         stackSpawner = dataSpawner;
         dataSpawner.OnInit(stackData);
         GenerateStacks();
@@ -55,20 +53,27 @@ public class StackManager : MonoBehaviour
     {
         stackCount = 0;
         stackHexagons = new List<StackHexagon>();
-        //StackController.OnStackPlaced -= StackController_OnStackPlaced;
     }
 
-    private void StackController_OnStackPlaced()
+    public void OnStackPlaced()
     {
         stackCount++;
 
-        if(stackCount == NUMBER_OF_STACK)
+        if (stackCount == NUMBER_OF_STACK)
         {
             OnResert();
-
-
             GenerateStacks();
         }
+    }
+
+    public void ReGenerateStacks()
+    {
+        foreach(StackHexagon stack in stackHexagons)
+        {
+            stack.CollectImmediate();
+        }
+
+        GenerateStacks();
     }
 
     private void GenerateStacks()
@@ -101,5 +106,20 @@ public class StackManager : MonoBehaviour
         }
 
         OnResert();
+    }
+
+    public void DisableByBooster()
+    {
+        stackController.enabled = false;
+    }
+
+    public void EnableByBooster()
+    {
+        stackController.enabled = true;
+    }
+
+    public void MergeStackIntoGrid(GridHexagon grid)
+    {
+        stackMerger.OnStackPlacedOnGridHexagon(grid);
     }
 }

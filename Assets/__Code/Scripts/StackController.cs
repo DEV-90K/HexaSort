@@ -4,7 +4,6 @@ using UnityUtils;
 
 public class StackController : MonoBehaviour
 {
-    public static Action OnStackPlaced;
     public static Action<GridHexagon> OnStackPlacedOnGridHexagon;
 
     [SerializeField]
@@ -14,10 +13,16 @@ public class StackController : MonoBehaviour
     [SerializeField]
     private LayerMask groundLayerMask;
 
-    private StackHexagon stackContact;
-    private Vector3 originPosStackContact;
+    private IStackOnPlaced _stackPlaceable;
 
+    private Vector3 originPosStackContact;
+    private StackHexagon stackContact;
     private GridHexagon gridHexagonContact;
+
+    public void OnInit(IStackOnPlaced stackPlaceable)
+    {
+        _stackPlaceable = stackPlaceable;
+    }
 
     private void Update()
     {
@@ -142,9 +147,10 @@ public class StackController : MonoBehaviour
             stackContact.transform.position = gridHexagonContact.transform.position.With(y: 0.2f);
             stackContact.transform.SetParent(gridHexagonContact.transform);
             stackContact.PlaceOnGridHexagon();
-            gridHexagonContact.SetStackOfCell(stackContact);            
+            gridHexagonContact.SetStackOfCell(stackContact);
 
-            OnStackPlaced?.Invoke();
+            //OnStackPlaced?.Invoke();
+            _stackPlaceable.OnStackPlaced();
             OnStackPlacedOnGridHexagon?.Invoke(gridHexagonContact);
 
             gridHexagonContact = null;

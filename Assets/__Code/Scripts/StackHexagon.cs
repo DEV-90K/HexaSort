@@ -101,6 +101,11 @@ public class StackHexagon : PoolMember
         return Hexagons[^1].Color;
     }
 
+    public Vector3 GetTopPositon()
+    {
+        return canvasStack.transform.position;
+    }
+
     public void PlaceOnGridHexagon()
     {
         foreach(Hexagon playerHexagon in Hexagons)
@@ -150,7 +155,7 @@ public class StackHexagon : PoolMember
         StartCoroutine(IE_CollectPlayerHexagon(callback));
     }
 
-    private IEnumerator IE_CollectPlayerHexagon(System.Action callback)
+    public IEnumerator IE_CollectPlayerHexagon(System.Action callback = null)
     {
         int numberOfPlayerHexagon = Hexagons.Count;
         float offsetDelayTime = 0;

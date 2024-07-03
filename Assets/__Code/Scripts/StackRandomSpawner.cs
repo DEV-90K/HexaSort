@@ -39,24 +39,17 @@ public class StackRandomSpawner : StackSpawner
         int numberOfHexagon = Random.Range(hexagonClampf.x, hexagonClampf.y);
         int[] arrHexagon = GetRandomHexagons(numberOfHexagon, NUMBER_COLOR_IN_STACK);
         int amount = 0;
-        List<string> hexColors = new List<string>();
-
-        Debug.Log("Hexagon at: " + stack.GetSiblingIndex());
         for (int i = 0; i < arrHexagon.Length; i++)
         {
             Color color = colors[i];
             for (int j = 0; j < arrHexagon[i]; j++)
             {
-                amount++;
                 Vector3 localPos = Vector3.up * amount * 0.2f;
                 Vector3 pos = insHexagonStack.transform.TransformPoint(localPos);
-
                 Hexagon insPlayerHexagon = SpawnHexagon(insHexagonStack, color, pos);
-                hexColors.Add( "#" +ColorUtility.ToHtmlStringRGB(color));
+                amount++;
             }
         }
-
-        hexColors.DebugLogObject();
 
         return insHexagonStack;
     }

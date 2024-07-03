@@ -23,8 +23,8 @@ public class GUIManager : MonoSingleton<GUIManager>
 
         //screen.OnSetup();
         screen.OnInit(paras);
-        screen.Show();
-        
+        screen.Show();       
+
         return screen as T;
     }
 

@@ -21,27 +21,45 @@ public class LevelManager : MonoSingleton<LevelManager>
     [SerializeField]
     private StackManager _stackManager;
 
+    [SerializeField]
+    private Hammer _hammer;
+
     private LevelData _levelData;
     private LevelPresenterData _presenterData;
-    private ScreenLevel _sceenLevel;
 
     private int amountHexagon = 0;
     private LevelState levelState = LevelState.NONE;
 
-    //private void Start()
-    //{
-    //    levelState = LevelState.NONE;
-
-    //    Hexagon.OnVanish += Hexagon_OnVanish;
-    //    StackMerger.OnStackMergeCompleted += StackMerge_OnStackMergeCompleted;
-
-    //    InitTestLevel();
-    //}
-
-    private void OnDestroy()
+    private void OnEnable()
     {
-        Hexagon.OnVanish -= Hexagon_OnVanish;
+        StackMerger.OnStackMergeCompleted += StackMerge_OnStackMergeCompleted;
+    }
+
+    private void OnDisable()
+    {
         StackMerger.OnStackMergeCompleted -= StackMerge_OnStackMergeCompleted;
+    }
+
+    private void Start()
+    {
+        levelState = LevelState.NONE;     
+        _hammer.gameObject.SetActive(false);
+        InitTestLevel();
+    }
+
+    public LevelPresenterData GetPresenterData()
+    {
+        return _presenterData;
+    }
+
+    public int GetAmountHexagon()
+    {
+        return amountHexagon;
+    }
+
+    public void UpdateAmountHexagon(int amount)
+    {
+        amountHexagon = amount;
     }
 
     private void InitTestLevel()
@@ -63,9 +81,8 @@ public class LevelManager : MonoSingleton<LevelManager>
         _gridManager.OnInit(levelData.Grid);
         _stackManager.OnInit();
 
-        _sceenLevel = GUIManager.Instance.ShowScreen<ScreenLevel>(presenterData);
-
-        levelState = LevelState.PLAYING;
+        GUIManager.Instance.ShowScreen<ScreenLevel>(presenterData);
+        levelState = LevelState.PLAYING;        
     }
 
     public void OnReplay()
@@ -86,29 +103,112 @@ public class LevelManager : MonoSingleton<LevelManager>
 
         _gridManager.CollectOccupied();
         _stackManager.CollectRandomed();
-        _sceenLevel.OnChangeHexagon(_presenterData.Goal);
-        _sceenLevel.Hide();
 
         Invoke(nameof(InitTestLevel), 1f);
     }
 
-    //Test Case Wrong: In Process Merge and Remove
-    private void Hexagon_OnVanish()
+    #region Boost Hammer
+    public void EnterBoostHammer()
     {
-        if(levelState != LevelState.PLAYING)
+        GridHexagon[] gridHexagons = _gridManager.GetGridHexagonContainStack();
+        foreach (GridHexagon grid in gridHexagons)
         {
-            return;
+            if(grid.CheckOccupied())
+            {
+                foreach(Hexagon hex in grid.StackOfCell.Hexagons)
+                {
+                    hex.EnableCollider();
+                }
+            }
         }
 
-        if(amountHexagon >= _presenterData.Goal)
-        {
-            amountHexagon = _presenterData.Goal;
-        }
-        else 
-            amountHexagon += 1;
-
-        _sceenLevel.OnChangeHexagon(amountHexagon);
+        _stackManager.DisableByBooster();
     }
+
+    public void OnBoostHammer(Hexagon hexagon)
+    {
+        StartCoroutine(IE_OnBoostHammer(hexagon));
+    }
+    private IEnumerator IE_OnBoostHammer(Hexagon hexagon)
+    {
+        StackHexagon stackHexagon = hexagon.HexagonStack;
+        Vector3 hammerPos = stackHexagon.GetTopPositon();
+        _hammer.gameObject.SetActive(true);
+        _hammer.transform.position = hammerPos;
+        yield return _hammer.IE_HummerAction();
+        yield return stackHexagon.IE_CollectPlayerHexagon();
+        _hammer.gameObject.SetActive(false);
+    }
+
+    public void ExitBoostHammer()
+    {        
+        GridHexagon[] gridHexagons = _gridManager.GetGridHexagonContainStack();
+        foreach (GridHexagon grid in gridHexagons)
+        {
+            if (grid.CheckOccupied())
+            {
+                foreach (Hexagon hex in grid.StackOfCell.Hexagons)
+                {
+                    hex.DisableCollider();
+                }
+            }
+        }
+
+        _stackManager.EnableByBooster();
+    }
+    #endregion Boost Hammer
+
+    #region Boost Swap
+    public void EnterBoostSwap()
+    {
+        Debug.Log("EnterBoostSwap");
+
+        GridHexagon[] gridHexagons = _gridManager.GetGridHexagonContainStack();
+        foreach (GridHexagon grid in gridHexagons)
+        {
+            if (grid.CheckOccupied())
+            {
+                foreach (Hexagon hex in grid.StackOfCell.Hexagons)
+                {
+                    hex.EnableCollider();
+                }
+            }
+        }
+
+        _stackManager.DisableByBooster();
+    }
+
+    public void OnBoostSwap(GridHexagon grid)
+    {
+        //_stackManager.Mer
+        _stackManager.MergeStackIntoGrid(grid);
+    }
+
+    public void ExitBoostSwap()
+    {
+        Debug.Log("ExitBoostSwap");
+        GridHexagon[] gridHexagons = _gridManager.GetGridHexagonContainStack();
+        foreach (GridHexagon grid in gridHexagons)
+        {
+            if (grid.CheckOccupied())
+            {
+                foreach (Hexagon hex in grid.StackOfCell.Hexagons)
+                {
+                    hex.DisableCollider();
+                }
+            }
+        }
+
+        _stackManager.EnableByBooster();
+    }
+    #endregion Boost Swap
+
+    #region Boost Refresh
+    public void OnBoostRefresh()
+    {
+        _stackManager.ReGenerateStacks();
+    }
+    #endregion Boost Refresh
 
     private void StackMerge_OnStackMergeCompleted()
     {

@@ -17,5 +17,10 @@ namespace UnityUtils
             string json = JsonConvert.SerializeObject(obj);
             Debug.Log(typeof(T) + " " + json);
         }
+
+        public static bool CompareObject(this GameObject obj, GameObject objCompare)
+        {
+            return GameObject.ReferenceEquals(obj, objCompare);
+        }
     }
 }

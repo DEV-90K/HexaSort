@@ -23,15 +23,16 @@ public class ChallengeManager : MonoSingleton<ChallengeManager>
     private int amountHexagon = 0;
     private ChalleneState challeneState = ChalleneState.NONE;
 
-    private void Start()
-    {
-        challeneState = ChalleneState.NONE;
+    //private void Start()
+    //{
+    //    challeneState = ChalleneState.NONE;
 
-        Hexagon.OnVanish += Hexagon_OnVanish;
-        StackMerger.OnStackMergeCompleted += StackMerge_OnStackMergeCompleted;
+    //    Hexagon.OnVanish += Hexagon_OnVanish;
+    //    StackMerger.OnStackMergeCompleted += StackMerge_OnStackMergeCompleted;
 
-        InitChallengeTest();
-    }
+    //    InitChallengeTest();
+    //    GameManager.Instance.ChangeState(GameState.PLAYING);
+    //}
 
     private void OnDestroy()
     {

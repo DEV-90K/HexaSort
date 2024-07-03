@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityUtils;
 
 public class ScreenManager : MonoBehaviour
 {
@@ -8,14 +9,6 @@ public class ScreenManager : MonoBehaviour
     private Transform screenRoot;
 
     private ScreenBase[] _screenPrefabs;
-
-    private ScreenBase _currentScreen;
-
-    public ScreenBase CurrentScreen
-    {
-        get { return _currentScreen; }
-        private set { _currentScreen = value; }
-    }
 
     private Dictionary<System.Type, ScreenBase> screens = new Dictionary<System.Type, ScreenBase>();
     private Dictionary<System.Type, ScreenBase> cacheScreens = new Dictionary<System.Type, ScreenBase>();
@@ -39,11 +32,8 @@ public class ScreenManager : MonoBehaviour
 
     public T CreateScreen<T>() where T : ScreenBase
     {
-        ScreenBase screen = Instantiate(GetPrefab<T>(), screenRoot);
-
-        if (screen.canReused)
-            cacheScreens.Add(typeof(T), screen);
-
+        ScreenBase screen = Instantiate(GetPrefab<T>(), screenRoot);        
+        cacheScreens[typeof(T)] = screen;
         return screen as T;
     }
 
@@ -57,23 +47,9 @@ public class ScreenManager : MonoBehaviour
         return cacheScreens[typeof(T)] as T;
     }
 
-    public List<T> GetScreensShowed<T>() where T : ScreenBase
-    {
-        List<T> list = new List<T>();
-        foreach (KeyValuePair<System.Type, ScreenBase> item in cacheScreens)
-        {
-            if (item.Value != null && item.Value.gameObject.activeInHierarchy)
-            {
-                list.Add(item.Value as T);
-            }
-        }
-
-        return list;
-    }
-
     public bool CheckScreenShowed<T>() where T : ScreenBase
     {
-        if(CheckScreen<T>() && cacheScreens[typeof(T)].gameObject.activeInHierarchy)
+        if(CheckScreen<T>() && CheckScreenShowedFromCache<T>())
         {
             return true;
         }
@@ -81,6 +57,13 @@ public class ScreenManager : MonoBehaviour
         return false;
     }
 
+    private bool CheckScreenShowedFromCache<T>() where T : ScreenBase
+    {
+        System.Type type = typeof(T);
+        return cacheScreens[type].gameObject.activeSelf;
+    }
+
+    //Check Screen Cache or not
     private bool CheckScreen<T>() where T : ScreenBase
     {
         System.Type type = typeof(T);
