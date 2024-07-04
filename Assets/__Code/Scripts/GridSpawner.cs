@@ -15,27 +15,6 @@ public class GridSpawner : MonoBehaviour
         this.iGrid = iGrid;
     }
 
-    public void AutoSpawn()
-    {
-        LevelData levelData = ResourceManager.Instance.GetLevelByID();
-        SpawnByLevelData(levelData);
-    }
-
-    public void SpawnByLevelData(LevelData levelData)
-    {
-        levelData.DebugLogObject();
-        GridHexagonData[] gridHexagonDatas = levelData.Grid.GridHexagonDatas;
-        //transform.DestroyChildrenImmediate(); //No need because pool remove
-
-        for (int i = 0; i < gridHexagonDatas.Length; i++)
-        {
-            //Vector3 cellPos = grid.CellToWorld(new Vector3Int(gridHexagon.Row, gridHexagon.Column, 0));
-            GridHexagon instance = PoolManager.Spawn<GridHexagon>(PoolType.GRID_HEXAGON, Vector3.zero, Quaternion.identity);
-            instance.transform.SetParent(transform);
-            instance.OnInitialize(gridHexagonDatas[i], iGrid);
-        }
-    }
-
     public GridHexagon[] Spawn(GridData grid)
     {
         GridHexagonData[] gridHexagonDatas = grid.GridHexagonDatas;
@@ -43,9 +22,7 @@ public class GridSpawner : MonoBehaviour
         for (int i = 0; i < gridHexagonDatas.Length; i++)
         {
             GridHexagon instance = PoolManager.Spawn<GridHexagon>(PoolType.GRID_HEXAGON, Vector3.zero, Quaternion.identity);
-            //instance.transform.SetParent(transform);
             instance.OnInitialize(gridHexagonDatas[i], iGrid);
-
             gridHexagons[i] = instance;
         }
 

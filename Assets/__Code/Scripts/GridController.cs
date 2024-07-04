@@ -44,7 +44,7 @@ public class GridController : MonoBehaviour //Only using inside of the Editor. A
         {
             foreach (GridHexagon grid in gridHexagons)
             {
-                PoolManager.Despawn(grid);
+                grid.CollectImmediate();
             }
             
             OnResert();

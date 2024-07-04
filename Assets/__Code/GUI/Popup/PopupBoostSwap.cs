@@ -193,7 +193,7 @@ public class PopupBoostSwap : PopupBase
 
         if (gridSwap)
         {
-            stackContact.transform.position = gridSwap.transform.position.With(y: 0.2f);
+            stackContact.transform.position = gridSwap.transform.position.With(y: GameConstants.HexagonConstants.HEIGHT);
             stackContact.transform.SetParent(gridSwap.transform);
 
             gridSwap.SetStackOfCell(stackContact);

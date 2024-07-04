@@ -26,7 +26,7 @@ public class StackHexagon : PoolMember
 
         for (int i = 0; i < hexagonColors.Length; i++)
         {
-            Vector3 spawnPosition = transform.TransformPoint(Vector3.up * i * 0.2f);
+            Vector3 spawnPosition = transform.TransformPoint(Vector3.up * i * GameConstants.HexagonConstants.HEIGHT);
 
             Hexagon hexagonIns = PoolManager.Spawn<Hexagon>(PoolType.HEXAGON, spawnPosition, Quaternion.identity);
             hexagonIns.OnSetUp();
@@ -166,13 +166,13 @@ public class StackHexagon : PoolMember
             playerHexagon.SetParent(null);
             //playerHexagon.TweenVanishFinish(offsetDelayTime);
             playerHexagon.TweenVanish(offsetDelayTime);
-            offsetDelayTime += 0.01f;
+            offsetDelayTime += GameConstants.HexagonConstants.TIME_DELAY;
 
             //stackHexagon.RemovePlayerHexagon(playerHexagon);
             Hexagons.RemoveAt(0);
         }
 
-        yield return new WaitForSeconds(0.2f + (numberOfPlayerHexagon - 1) * 0.01f);
+        yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM + (numberOfPlayerHexagon - 1) * GameConstants.HexagonConstants.TIME_DELAY);
         callback?.Invoke();
         OnResert();
         PoolManager.Despawn(this);
@@ -197,7 +197,7 @@ public class StackHexagon : PoolMember
             }
         }
 
-        canvasStack.transform.position = transform.position + Vector3.up * (Hexagons.Count -1) * 0.2f + Vector3.up * 0.11f;
+        canvasStack.transform.position = transform.position + Vector3.up * (Hexagons.Count -1) * GameConstants.HexagonConstants.HEIGHT + Vector3.up * (GameConstants.HexagonConstants.HEIGHT/2f + 0.01f);
         canvasStack.UpdateTxtNumber(amount);
     }
 

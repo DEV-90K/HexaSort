@@ -44,7 +44,7 @@ public class StackRandomSpawner : StackSpawner
             Color color = colors[i];
             for (int j = 0; j < arrHexagon[i]; j++)
             {
-                Vector3 localPos = Vector3.up * amount * 0.2f;
+                Vector3 localPos = Vector3.up * amount * GameConstants.HexagonConstants.HEIGHT;
                 Vector3 pos = insHexagonStack.transform.TransformPoint(localPos);
                 Hexagon insPlayerHexagon = SpawnHexagon(insHexagonStack, color, pos);
                 amount++;

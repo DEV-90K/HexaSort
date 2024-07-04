@@ -48,16 +48,16 @@ public class Hexagon : PoolMember
     public void MoveToGridHexagon(Vector3 localPos, float delayTime)
     {
         LeanTween.cancel(gameObject);
-        float delay = transform.GetSiblingIndex() * 0.01f + 0.01f; //0.01f of GridHexagon
+        //float delay = transform.GetSiblingIndex() * 0.01f + 0.01f; //0.01f of GridHexagon
 
-        LeanTween.moveLocal(gameObject, localPos, 0.2f)
+        LeanTween.moveLocal(gameObject, localPos, GameConstants.HexagonConstants.TIME_ANIM)
             .setEaseInOutSine()
             .setDelay(delayTime);
 
         Vector3 direction = (localPos - transform.localPosition).With(y: 0).normalized;
         Vector3 rotationAxis = Vector3.Cross(Vector3.up, direction);
 
-        LeanTween.rotateAround(gameObject, rotationAxis, 180, 0.2f)
+        LeanTween.rotateAround(gameObject, rotationAxis, 180, GameConstants.HexagonConstants.TIME_ANIM)
             .setEaseInOutSine()
             .setDelay(delayTime);
     }
@@ -65,7 +65,7 @@ public class Hexagon : PoolMember
     public void TweenVanish(float offsetDelayTime)
     {
         LeanTween.cancel(gameObject);
-        LeanTween.scale(gameObject, Vector3.zero, 0.2f)
+        LeanTween.scale(gameObject, Vector3.zero, GameConstants.HexagonConstants.TIME_ANIM)
             .setEaseInBack()
             .setDelay(offsetDelayTime)
             .setOnComplete(() =>
@@ -77,7 +77,9 @@ public class Hexagon : PoolMember
 
     public void OnResert()
     {
+        LeanTween.cancel(gameObject);
         transform.localScale = Vector3.one;
+        transform.localRotation = Quaternion.identity;
         EnableCollider();
         HexagonStack = null;
     }

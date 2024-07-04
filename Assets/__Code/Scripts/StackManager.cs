@@ -39,6 +39,7 @@ public class StackManager : MonoBehaviour, IStackOnPlaced
     public void OnInit()
     {      
         stackSpawner = randomSpawner;
+        stackMerger.OnResert();
         GenerateStacks();
     }
 
@@ -46,6 +47,7 @@ public class StackManager : MonoBehaviour, IStackOnPlaced
     {
         stackSpawner = dataSpawner;
         dataSpawner.OnInit(stackData);
+        stackMerger.OnResert();
         GenerateStacks();
     }
 

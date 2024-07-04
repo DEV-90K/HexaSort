@@ -61,7 +61,7 @@ public class GridHexagon : PoolMember
         if (StackOfCell == null)
             return false;
 
-        if(StackOfCell.gameObject.activeSelf == false)
+        if(StackOfCell.gameObject.activeInHierarchy == false)
         {
             StackOfCell = null;
             return false;
@@ -87,7 +87,7 @@ public class GridHexagon : PoolMember
         StackHexagon stackHexagon = PoolManager.Spawn<StackHexagon>(PoolType.STACK_HEXAGON, Vector3.zero , Quaternion.identity);
         StackOfCell = stackHexagon;
         StackOfCell.transform.SetParent(transform);
-        StackOfCell.transform.localPosition = Vector3.up * 0.2f;
+        StackOfCell.transform.localPosition = Vector3.up * GameConstants.HexagonConstants.HEIGHT;
 
         stackHexagon.OnInit(stackHexagonDatas);
         stackHexagon.PlaceOnGridHexagon();
