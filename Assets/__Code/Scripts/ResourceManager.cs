@@ -16,13 +16,9 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
     private HexagonData[] _hexagonDatas;
     private Dictionary<int, HexagonData> _cacheHexagonData = new Dictionary<int, HexagonData>();
 
-
-    protected override void Awake()
+    public void LoadResource()
     {
-        base.Awake();
-
         _levelData = LoadLevelData();
-        //_challengeData = LoadChallengeData();
         _challengeData = LoadChallengeData();
         _challengeData.DebugLogObject();
         _hexagonDatas = LoadHexagonData();

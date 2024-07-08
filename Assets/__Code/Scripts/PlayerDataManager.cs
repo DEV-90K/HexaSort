@@ -1,5 +1,6 @@
 using Mul21_Lib;
 using Newtonsoft.Json;
+using System;
 using UnityEngine;
 
 public class PlayerDataManager : PersistentMonoSingleton<PlayerDataManager> 
@@ -49,6 +50,11 @@ public class PlayerDataManager : PersistentMonoSingleton<PlayerDataManager>
     private void DeletePlayerDataFromPlayerPrefab()
     {
         PlayerPrefs.DeleteKey(KEY_PLAYER);
+    }
+
+    public void LoadData()
+    {
+        //throw new NotImplementedException();
     }
 
     #endregion PlayerPrefab Load

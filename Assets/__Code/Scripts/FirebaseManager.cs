@@ -11,11 +11,6 @@ public class FirebaseManager : PersistentMonoSingleton<FirebaseManager>
     private FB_RemoteConfig _remoteConfig;
     Firebase.FirebaseApp appOnCloud = null;
 
-    private async void Start()
-    {
-        await ConnectToFirebase();
-    }
-
     public async Task ConnectToFirebase()
     {
         await ConnectToFirebaseApp();
