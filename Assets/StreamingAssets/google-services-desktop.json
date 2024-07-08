@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "410439377856",
+    "project_id": "tech90k-hexasort",
+    "storage_bucket": "tech90k-hexasort.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:410439377856:android:4d621ded971d9944ba9e25",
+        "android_client_info": {
+          "package_name": "com.tech90k.hexasort"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjVljzbRTohcIWQoEcpx0w0FWLztAR6dw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

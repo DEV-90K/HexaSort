@@ -63,26 +63,6 @@ public class StackHexagon : PoolMember
         return amount;
     }
 
-    public int GetNumberTopPlayerHexagonSameColor()
-    {
-        Debug.Log("GetNumberTopPlayerHexagonSameColor");
-        Color color = GetTopHexagonColor();
-        int amount = 0;
-        for (int i = Hexagons.Count - 1; i >= 0; i--)
-        {
-            if (Hexagons[i].Color == color)
-            {
-                amount++;
-            }
-            else
-            {
-                break;
-            }
-        }
-        Debug.Log("Amount: " + amount);
-        return amount;
-    }
-
     public void AddPlayerHexagon(Hexagon playerHexagon)
     {
         if(Hexagons == null)
@@ -164,11 +144,8 @@ public class StackHexagon : PoolMember
         {
             Hexagon playerHexagon = Hexagons[0];
             playerHexagon.SetParent(null);
-            //playerHexagon.TweenVanishFinish(offsetDelayTime);
             playerHexagon.TweenVanish(offsetDelayTime);
             offsetDelayTime += GameConstants.HexagonConstants.TIME_DELAY;
-
-            //stackHexagon.RemovePlayerHexagon(playerHexagon);
             Hexagons.RemoveAt(0);
         }
 

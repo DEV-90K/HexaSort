@@ -107,7 +107,6 @@ public class StackMerger : MonoBehaviour
 
         //Merge solution 3: Target Merge craete stack have One Color if can. Get Current Grid is center of merge process 
         yield return IE_AlgorithmMerge_3(gridHexagon, neighborGridHexagonSameTopColor);
-        Debug.Log("Yiel completed");
         //neighborGridHexagonSameTopColor = UpdateNeighborGridHexagonSameTopColor_S3(gridHexagon, neighborGridHexagonSameTopColor);
         //yield return IE_MergePlayerHexagonsToStack(stackHexagon, neighborGridHexagonSameTopColor);
 
@@ -297,7 +296,6 @@ public class StackMerger : MonoBehaviour
     private List<GridHexagon> GetNeighborGidHexagon(GridHexagon gridHexagon)
     {
         float distance = gridHexagon.transform.parent.transform.localScale.x * 2;
-        Debug.Log("Distance: " + distance);
         Collider[] neighborGridCellColliders = Physics.OverlapSphere(gridHexagon.transform.position, distance, gridHexagonLayerMask);
         //OverlapSphere: Computes and stores colliders touching or inside the sphere. 
         // 2 because gridHexagon size (1.7321, 2, 0) 2 radius is good for detecech neighbors

@@ -72,3 +72,9 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 /[Aa]ssets/LeanTween/*
 /[Aa]ssets/TextMesh Pro/*
+/[Aa]ssets/Firebase/*
+
+# plugins ignore
+/[Aa]ssets/Editor Default Resources/*
+/[Aa]ssets/ExternalDependencyManager/*
+/[Aa]ssets/Plugins/*
