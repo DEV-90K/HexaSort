@@ -5,6 +5,8 @@ using UnityUtils;
 public class StackController : MonoBehaviour
 {
     public static Action<GridHexagon> OnStackPlacedOnGridHexagon;
+    public static Action<bool> OnStackMoving;
+
 
     [SerializeField]
     private LayerMask playerHexagonLayerMask;
@@ -34,15 +36,18 @@ public class StackController : MonoBehaviour
         if(Input.GetMouseButtonDown(0))
         {
             //Input All Collider diffirent Hexagon Close
+            OnStackMoving?.Invoke(true);
             ControlMouseDown();
         }
         else if(Input.GetMouseButton(0) && stackContact != null)
         {
             //Input All Collider Hexagon Close
+            OnStackMoving?.Invoke(false);
             ControlMouseDrag();
         }
         else if (Input.GetMouseButtonUp(0) && stackContact != null) 
         {
+            OnStackMoving?.Invoke(false);
             ControlMouseUp();
         }
     }
@@ -90,7 +95,7 @@ public class StackController : MonoBehaviour
             return;
         }
 
-        Vector3 stackTargetPos = hit.point.With(y: 1.5f);
+        Vector3 stackTargetPos = hit.point.With(y: GameConstants.StackHexagonConstants.CONTACT_HEIGHT);
         //Smooth move stack to stackTargetPos
         stackContact.transform.position = Vector3.MoveTowards(stackContact.transform.position, stackTargetPos, Time.deltaTime * 30);
         gridHexagonContact = null;

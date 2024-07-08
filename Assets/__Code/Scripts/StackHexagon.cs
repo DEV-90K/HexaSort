@@ -29,8 +29,8 @@ public class StackHexagon : PoolMember
             Vector3 spawnPosition = transform.TransformPoint(Vector3.up * i * GameConstants.HexagonConstants.HEIGHT);
 
             Hexagon hexagonIns = PoolManager.Spawn<Hexagon>(PoolType.HEXAGON, spawnPosition, Quaternion.identity);
-            hexagonIns.OnSetUp();
             hexagonIns.SetParent(transform);
+            hexagonIns.OnSetUp();            
             hexagonIns.Color = hexagonColors[i];
             hexagonIns.Configure(this);
             AddPlayerHexagon(hexagonIns);

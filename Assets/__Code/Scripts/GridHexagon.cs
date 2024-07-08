@@ -80,6 +80,11 @@ public class GridHexagon : PoolMember
     public void SetStackOfCell(StackHexagon stack)
     {
         StackOfCell = stack;
+
+        if(stack != null)
+        {
+            stack.transform.localEulerAngles = Vector3.zero;
+        }
     }
 
     private void GenerateInitialHexagonStack(StackHexagonData stackHexagonDatas)
@@ -87,6 +92,7 @@ public class GridHexagon : PoolMember
         StackHexagon stackHexagon = PoolManager.Spawn<StackHexagon>(PoolType.STACK_HEXAGON, Vector3.zero , Quaternion.identity);
         StackOfCell = stackHexagon;
         StackOfCell.transform.SetParent(transform);
+        StackOfCell.transform.localScale = Vector3.one;
         StackOfCell.transform.localPosition = Vector3.up * GameConstants.HexagonConstants.HEIGHT;
 
         stackHexagon.OnInit(stackHexagonDatas);

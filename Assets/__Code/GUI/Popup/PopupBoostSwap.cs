@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,8 @@ public interface IBoostSwap
 
 public class PopupBoostSwap : PopupBase
 {
+    public static Action<bool> OnStackMoving;
+
     [SerializeField]
     private Button btnClose;
     private IBoostSwap _able;
@@ -37,12 +40,14 @@ public class PopupBoostSwap : PopupBase
     public override void Show()
     {
         base.Show();
+        OnStackMoving?.Invoke(false);
         _able.EnterBoostSwap();
     }
 
     public override void Hide()
     {
         base.Hide();
+        OnStackMoving?.Invoke(true);
         _able.ExitBoostSwap();
     }
     private void Awake()
@@ -114,7 +119,14 @@ public class PopupBoostSwap : PopupBase
         Physics.Raycast(CameraUtils.GetRayFromMouseClicked(), out hit, 500, gridHexagonLayerMask);
 
         if (gridSwap != null)
+        {
             gridSwap.ShowColor();
+
+            if(gridSwap.CheckOccupied())
+            {
+                gridSwap.StackOfCell.transform.position = gridSwap.transform.position.With(y: GameConstants.HexagonConstants.HEIGHT);
+            }
+        }
 
         if (hit.collider == null)
         {
@@ -144,36 +156,12 @@ public class PopupBoostSwap : PopupBase
 
     private void DraggingAboveGridHexagon(RaycastHit hit)
     {
-        Debug.Log("DraggingAboveGridHexagon");
-        GridHexagon gridHexagon = hit.collider.GetComponent<GridHexagon>();
+        Debug.Log("DraggingAboveGridHexagon");        
 
-        if (gridHexagon.CheckOccupied())
-        {
-            DraggingAboveGridHexagonOccupied();
-        }
-        else
-        {
-            DraggingAboveGridHexagonNonOccupied(gridHexagon);
-        }
-    }
+        RaycastHit hit2;
+        Physics.Raycast(CameraUtils.GetRayFromMouseClicked(), out hit2, 500, gridHexagonLayerMask);
 
-    private void DraggingAboveGridHexagonOccupied()
-    {
-        Debug.Log("DraggingAboveGridHexagonOccupied");
-        DraggingAboveGround();
-    }
-
-    private void DraggingAboveGridHexagonNonOccupied(GridHexagon gridHexagon)
-    {
-        Debug.Log("DraggingAboveGridHexagonNonOccupied");
-        //Move solution 1
-        //Vector3 stackTargetPos = gridHexagon.transform.position.With(y: 1.5f);
-        //stackContact.transform.position = Vector3.MoveTowards(stackContact.transform.position, stackTargetPos, Time.deltaTime * 30);
-        //Move solution 2
-        RaycastHit hit;
-        Physics.Raycast(CameraUtils.GetRayFromMouseClicked(), out hit, 500, gridHexagonLayerMask);
-
-        if (hit.collider == null)
+        if (hit2.collider == null)
         {
             return;
         }
@@ -181,25 +169,74 @@ public class PopupBoostSwap : PopupBase
         Vector3 stackTargetPos = hit.point.With(y: 1.5f);
         stackContact.transform.position = Vector3.MoveTowards(stackContact.transform.position, stackTargetPos, Time.deltaTime * 30);
 
+        GridHexagon gridHexagon = hit.collider.GetComponent<GridHexagon>();
+
+        if (gridHexagon.gameObject.CompareObject(gridContact.gameObject))
+        {
+            if(gridSwap)
+            {
+                if (gridSwap.CheckOccupied())
+                {
+                    gridSwap.StackOfCell.transform.position = gridSwap.transform.position.With(y: GameConstants.HexagonConstants.HEIGHT);
+                }
+            }
+
+            gridSwap = null;
+            return;
+        }
+
+        if (gridHexagon.CheckOccupied())
+        {
+            DraggingAboveGridHexagonOccupied(gridHexagon);
+        }
+        else
+        {
+            DraggingAboveGridHexagonNonOccupied(gridHexagon);
+        }
+    }
+
+    private void DraggingAboveGridHexagonOccupied(GridHexagon gridHexagon)
+    {
         gridHexagon.ShowColorContact();
         gridSwap = gridHexagon;
 
+        gridSwap.StackOfCell.transform.position = gridContact.transform.position.With(y: GameConstants.HexagonConstants.HEIGHT);
+    }
+
+    private void DraggingAboveGridHexagonNonOccupied(GridHexagon gridHexagon)
+    {
+        gridHexagon.ShowColorContact();
+        gridSwap = gridHexagon;
     }
 
     private void ControlMouseUp()
     {
-        if (gridSwap != null)
-            gridSwap.ShowColor();
-
         if (gridSwap)
         {
-            stackContact.transform.position = gridSwap.transform.position.With(y: GameConstants.HexagonConstants.HEIGHT);
-            stackContact.transform.SetParent(gridSwap.transform);
+            gridSwap.ShowColor();
 
-            gridSwap.SetStackOfCell(stackContact);
-            gridContact.SetStackOfCell(null);
+            if(gridSwap.CheckOccupied())
+            {
+                gridContact.SetStackOfCell(gridSwap.StackOfCell);
+                gridContact.StackOfCell.transform.SetParent(gridContact.transform);
+                gridContact.StackOfCell.transform.position = gridContact.transform.position.With(y: GameConstants.HexagonConstants.HEIGHT);
 
-            _able.OnBoostSwap(gridSwap);
+                gridSwap.SetStackOfCell(stackContact);
+                gridSwap.StackOfCell.transform.SetParent(gridSwap.transform);
+                gridSwap.StackOfCell.transform.position = gridSwap.transform.position.With(y: GameConstants.HexagonConstants.HEIGHT);
+                _able.OnBoostSwap(gridSwap);
+                _able.OnBoostSwap(gridContact);
+            }
+            else
+            {
+                gridContact.SetStackOfCell(null);
+
+                gridSwap.SetStackOfCell(stackContact);
+                gridSwap.StackOfCell.transform.SetParent(gridSwap.transform);
+                gridSwap.StackOfCell.transform.position = gridSwap.transform.position.With(y: GameConstants.HexagonConstants.HEIGHT);
+                _able.OnBoostSwap(gridSwap);
+            }
+            
             gridSwap = null;
             StartCoroutine(IE_OnBoostSwapCompleted());
         }

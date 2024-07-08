@@ -31,8 +31,11 @@ public class StackRandomSpawner : StackSpawner
     {
         StackHexagon insHexagonStack = SpawnStack(stack.position);
         insHexagonStack.name = $"Hexagon Stack"; //{stack.GetSiblingIndex()}
+        insHexagonStack.transform.SetParent(stack);
+        insHexagonStack.transform.localPosition = Vector3.zero;
+        insHexagonStack.transform.localScale = Vector3.one;
 
-        const int NUMBER_COLOR_IN_STACK = 2;
+        const int NUMBER_COLOR_IN_STACK = 4;
 
         Color[] colors = GetRandomColors(NUMBER_COLOR_IN_STACK);        
 
@@ -47,6 +50,8 @@ public class StackRandomSpawner : StackSpawner
                 Vector3 localPos = Vector3.up * amount * GameConstants.HexagonConstants.HEIGHT;
                 Vector3 pos = insHexagonStack.transform.TransformPoint(localPos);
                 Hexagon insPlayerHexagon = SpawnHexagon(insHexagonStack, color, pos);
+                //insPlayerHexagon.transform.SetParent(insHexagonStack.transform);
+                insPlayerHexagon.transform.localScale = Vector3.one;
                 amount++;
             }
         }

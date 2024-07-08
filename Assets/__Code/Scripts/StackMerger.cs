@@ -1,10 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEditor;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class StackMerger : MonoBehaviour
 {
@@ -14,9 +11,6 @@ public class StackMerger : MonoBehaviour
     private LayerMask gridHexagonLayerMask;
 
     public List<GridHexagon> listGridHexagonNeedUpdate = new List<GridHexagon>();
-
-    //public Stack<GridHexagon> listGridMerge = new Stack<GridHexagon>();
-    //public Stack<GridHexagon> listGridRemove = new Stack<GridHexagon>();
 
     private void Awake()
     {
@@ -53,7 +47,6 @@ public class StackMerger : MonoBehaviour
 
     private IEnumerator IE_OnStackPlacedOnGridHexagon(GridHexagon gridHexagon)
     {        
-        //listGridHexagonNeedUpdate.Add(gridHexagon);
         while (listGridHexagonNeedUpdate.Count > 0)
         {
             GridHexagon merge = listGridHexagonNeedUpdate[listGridHexagonNeedUpdate.Count - 1];
@@ -235,6 +228,7 @@ public class StackMerger : MonoBehaviour
 
             float yOffset = yOfCurrentGridHexagon + (i + 1) * GameConstants.HexagonConstants.HEIGHT;
             Vector3 localPos = Vector3.up * yOffset; //(0, yOffset, 0)
+            playerHexagon.Configure(stackHexagon);
             playerHexagon.MoveToGridHexagon(localPos, i * GameConstants.HexagonConstants.TIME_DELAY);
         }
     }
@@ -302,8 +296,9 @@ public class StackMerger : MonoBehaviour
 
     private List<GridHexagon> GetNeighborGidHexagon(GridHexagon gridHexagon)
     {
-
-        Collider[] neighborGridCellColliders = Physics.OverlapSphere(gridHexagon.transform.position, 2, gridHexagonLayerMask);
+        float distance = gridHexagon.transform.parent.transform.localScale.x * 2;
+        Debug.Log("Distance: " + distance);
+        Collider[] neighborGridCellColliders = Physics.OverlapSphere(gridHexagon.transform.position, distance, gridHexagonLayerMask);
         //OverlapSphere: Computes and stores colliders touching or inside the sphere. 
         // 2 because gridHexagon size (1.7321, 2, 0) 2 radius is good for detecech neighbors
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -12,6 +13,8 @@ public interface IBoostHammer
 
 public class PopupBoostHammer : PopupBase
 {
+    public static Action<bool> OnStackMoving;
+
     [SerializeField]
     private Button btnClose;
 
@@ -29,6 +32,7 @@ public class PopupBoostHammer : PopupBase
     public override void Show()
     {
         base.Show();
+        OnStackMoving?.Invoke(false);
         _able.EnterBoostHammer();
         GameManager.Instance.ChangeState(GameState.PAUSE);
     }
@@ -36,6 +40,7 @@ public class PopupBoostHammer : PopupBase
     public override void Hide()
     {
         base.Hide();
+        OnStackMoving?.Invoke(true);
         _able.ExitBoostHammer();
     }
 

@@ -6,4 +6,9 @@ public static class GameConstants
         public const float TIME_DELAY = 0.01f;//0.01f
         public const float HEIGHT = 0.2f;
     }
+
+    public static class StackHexagonConstants
+    {
+        public const float CONTACT_HEIGHT = 2f; //10 * 0.2f;
+    }
 }

@@ -1,1 +1,1 @@
-[{"ID":1,"HexColor":"#333333"},{"ID":2,"HexColor":"#FF55DF"},{"ID":3,"HexColor":"#4A249D"},{"ID":4,"HexColor":"#219C90"}]
+[{"ID":1,"HexColor":"#333333"},{"ID":2,"HexColor":"#FF55DF"},{"ID":3,"HexColor":"#4A249D"},{"ID":4,"HexColor":"#973131"},{"ID":5,"HexColor":"#F5F7F8"},{"ID":6,"HexColor":"#F4CE14"},{"ID":7,"HexColor":"#939185"},{"ID":8,"HexColor":"#088395"},{"ID":9,"HexColor":"#E88D67"}]

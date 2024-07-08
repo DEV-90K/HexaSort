@@ -3,16 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mul21_Lib;
 
-public interface IGridPortability
-{
-    public Vector3Int ConvertToGridPos(Vector3 worldPos);
-    public Vector3 ConvertToWorldPos(Vector3Int gridPos);
-}
-
-public class GridManager : MonoBehaviour, IGridPortability
+public class GridManager : MonoBehaviour
 {
     [SerializeField]
-    private Grid grid;
+    private GridUnit _GridUnit;
+
     [SerializeField]
     private GridController _gridControl;
     [SerializeField]
@@ -23,7 +18,7 @@ public class GridManager : MonoBehaviour, IGridPortability
 
     protected void Awake()
     {
-        _gridSpawner.OnInit(this);
+        _gridSpawner.OnInit(_GridUnit);
     }
 
     public void OnInit(GridData gridData)
@@ -33,6 +28,7 @@ public class GridManager : MonoBehaviour, IGridPortability
         GridHexagon[] gridHexagons = _gridSpawner.Spawn(_gridData);
         _gridHexagons = gridHexagons;
         _gridControl.OnInit(gridHexagons);
+        _GridUnit.OnInit();
     }
 
     public GridHexagon[] GetGridHexagonContainStack()
@@ -64,16 +60,4 @@ public class GridManager : MonoBehaviour, IGridPortability
 
         _gridHexagons = null;
     }
-
-    #region Impl IGridPortability
-    public Vector3Int ConvertToGridPos(Vector3 worldPos)
-    {
-        return grid.WorldToCell(worldPos);
-    }
-
-    public Vector3 ConvertToWorldPos(Vector3Int gridPos)
-    {
-        return grid.CellToWorld(gridPos);
-    }
-    #endregion Impl IGridPortability
 }
