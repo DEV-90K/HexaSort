@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class SwipeScale : MonoBehaviour
@@ -5,12 +6,10 @@ public class SwipeScale : MonoBehaviour
     private float speed = 5f;
 
     private bool isRotating = false;
-    private bool hasCompleted = false;
 
     private float[] targetAngle = new float[] { 0f, 60f, 120f, 180f, 240f, 300f, 360f };
     private float[] targetScale = new float[] { 1f, 0.85f, 0.85f, 1f, 0.85f, 0.85f, 1f };
 
-    private float _t = 0f;
     private Transform[] _followeres;
     private Vector3 _targetScale = Vector3.one;
 
@@ -29,13 +28,11 @@ public class SwipeScale : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            _t = 0f;
             isRotating = true;
         }
         else if (Input.GetMouseButtonUp(0) && isRotating)
         {
             isRotating = false;
-            hasCompleted = false;
 
             float eulerAngles = transform.rotation.eulerAngles.y;
             float result = eulerAngles - Mathf.CeilToInt(eulerAngles / 360f) * 360f;
@@ -55,20 +52,8 @@ public class SwipeScale : MonoBehaviour
                     _targetScale = Vector3.one * targetScale[i];
                 }
             }
-        }
 
-        if (!this.isRotating && !hasCompleted)
-        {
-            _t += speed * Time.deltaTime;
-            this.transform.localScale = Vector3.Slerp(this.transform.localScale, _targetScale, _t);
-
-            if(_t >= 1)
-            {
-                hasCompleted = true;
-                this.transform.localScale = _targetScale;
-            }
-            
-            UpdateFolloweres();
+            StartCoroutine(IE_Scale(_targetScale));
         }
     }
 
@@ -76,7 +61,23 @@ public class SwipeScale : MonoBehaviour
     {
         foreach (Transform tf in _followeres)
         {
-            tf.localScale = this.transform.localScale;
+            tf.localScale = transform.localScale;
         }
+    }
+
+    private IEnumerator IE_Scale(Vector3 targetScale)
+    {
+        Vector3 currScale = transform.localScale;
+
+        float t = 0;
+        while (t < 1)
+        {
+            t += speed * Time.deltaTime;
+            transform.localScale = Vector3.Slerp(currScale, targetScale, t);
+            UpdateFolloweres();
+            yield return null;
+        }
+        transform.transform.localScale = targetScale;
+        UpdateFolloweres();
     }
 }
