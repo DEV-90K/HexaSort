@@ -21,6 +21,7 @@ public class Hexagon : PoolMember
 
     public void OnSetUp()
     {
+        this.transform.localEulerAngles = Vector3.zero;
         transform.localScale = Vector3.one;
         EnableCollider();
     }
@@ -48,17 +49,20 @@ public class Hexagon : PoolMember
     public void MoveToGridHexagon(Vector3 localPos, float delayTime)
     {
         LeanTween.cancel(gameObject);
-        //float delay = transform.GetSiblingIndex() * 0.01f + 0.01f; //0.01f of GridHexagon
-
         LeanTween.moveLocal(gameObject, localPos, GameConstants.HexagonConstants.TIME_ANIM)
             .setEaseInOutSine()
             .setDelay(delayTime);
 
         Vector3 direction = (localPos - transform.localPosition).With(y: 0).normalized;
-        Vector3 rotationAxis = Vector3.Cross(Vector3.up, direction);
+        Vector3 v = transform.rotation * direction;
+        Vector3 rotationAxis = Vector3.Cross(Vector3.up, v);
 
         LeanTween.rotateAround(gameObject, rotationAxis, 180, GameConstants.HexagonConstants.TIME_ANIM)
             .setEaseInOutSine()
+            .setOnComplete(() =>
+            {
+                transform.localEulerAngles = Vector3.zero;
+            })
             .setDelay(delayTime);
     }
 

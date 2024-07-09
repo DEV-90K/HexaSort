@@ -4,10 +4,15 @@ using UnityEngine;
 
 public interface IStackOnPlaced
 {
-    public void OnStackPlaced();
+    public void OnStackPlaced(StackHexagon stack);
 }
 
-public class StackManager : MonoBehaviour, IStackOnPlaced
+public interface IStackSphereRadius
+{
+    public Vector3 GetRadiusByGrid();
+}
+
+public class StackManager : MonoBehaviour, IStackOnPlaced, IStackSphereRadius
 {    
     [SerializeField]
     private Transform[] pointSpawns;
@@ -26,14 +31,11 @@ public class StackManager : MonoBehaviour, IStackOnPlaced
     private List<StackHexagon> stackHexagons;
     private List<StackHexagon> stackCollects;
 
-    private const int NUMBER_OF_STACK = 3;
-    private int stackCount = 0;
-
     private void Awake()
     {
-        stackCount = 0;
         stackHexagons = new List<StackHexagon>();
-        stackController.OnInit(this);
+        stackController.OnInit(this, this);
+        stackMerger.OnInit(this);
     }
 
     public void OnInit()
@@ -53,15 +55,13 @@ public class StackManager : MonoBehaviour, IStackOnPlaced
 
     public void OnResert()
     {
-        stackCount = 0;
-        stackHexagons = new List<StackHexagon>();
+        stackHexagons.Clear();
     }
 
-    public void OnStackPlaced()
+    public void OnStackPlaced(StackHexagon stack)
     {
-        stackCount++;
-
-        if (stackCount == NUMBER_OF_STACK)
+        stackHexagons.Remove(stack);
+        if (stackHexagons.Count == 0)
         {
             OnResert();
             GenerateStacks();
@@ -70,7 +70,7 @@ public class StackManager : MonoBehaviour, IStackOnPlaced
 
     public void ReGenerateStacks()
     {
-        foreach(StackHexagon stack in stackHexagons)
+        foreach (StackHexagon stack in stackHexagons)
         {
             stack.CollectImmediate();
         }
@@ -123,5 +123,11 @@ public class StackManager : MonoBehaviour, IStackOnPlaced
     public void MergeStackIntoGrid(GridHexagon grid)
     {
         stackMerger.OnStackPlacedOnGridHexagon(grid);
+    }
+
+    public Vector3 GetRadiusByGrid()
+    {
+        //Grid scale = Point Spawn stack Scale
+        return pointSpawns[0].localScale;
     }
 }

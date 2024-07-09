@@ -34,14 +34,12 @@ public class LoadSystem : MonoBehaviour
         await FirebaseConnecting();
         Debug.Log("FirebaseConnecting Completed");
         _ScreenLoader.LoadToTarget(null);
-        await Task.Delay(3000);
         await ResourceLoading();
         Debug.Log("ResourceLoading Completed");
         _ScreenLoader.LoadToTarget(null);
-        await Task.Delay(2000);
         await PlayerLoading();
-        Debug.Log("PlayerLoading Completed");
         _ScreenLoader.LoadToTarget(100f);
+        _CountDownTimer.Stop();
     }
 
     private void ExitLoading()

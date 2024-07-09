@@ -1,5 +1,7 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityUtils;
 
 public class SwipeRotate : MonoBehaviour
@@ -22,6 +24,8 @@ public class SwipeRotate : MonoBehaviour
 
     private void Update()
     {
+        if (IsPointerOverUIObject()) return;
+
         if(Input.GetMouseButtonDown(0))
         {            
             isRotating = true;            
@@ -87,4 +91,19 @@ public class SwipeRotate : MonoBehaviour
         transform.localEulerAngles = targetEulers;
     }
     #endregion With Mouse event
+
+    private bool IsPointerOverUIObject()
+    {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+
+        //for (int i = 0; i < results.Count; i++)
+        //{
+        //    Debug.Log("Raycast: " + results[i].gameObject.name);
+        //}
+
+        return results.Count > 1;
+    }
 }

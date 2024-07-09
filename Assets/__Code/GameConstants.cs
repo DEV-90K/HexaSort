@@ -9,6 +9,6 @@ public static class GameConstants
 
     public static class StackHexagonConstants
     {
-        public const float CONTACT_HEIGHT = 2f; //10 * 0.2f;
+        public const float CONTACT_HEIGHT = 1.5f; //10 * 0.2f;
     }
 }

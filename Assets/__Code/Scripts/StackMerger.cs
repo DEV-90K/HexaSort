@@ -11,6 +11,7 @@ public class StackMerger : MonoBehaviour
     private LayerMask gridHexagonLayerMask;
 
     public List<GridHexagon> listGridHexagonNeedUpdate = new List<GridHexagon>();
+    private IStackSphereRadius _IStackSphereRadius;
 
     private void Awake()
     {
@@ -22,6 +23,10 @@ public class StackMerger : MonoBehaviour
         StackController.OnStackPlacedOnGridHexagon -= StackController_OnStackPlacedOnGridHexagon;
     }
 
+    public void OnInit(IStackSphereRadius StackSphereRadius)
+    {
+        _IStackSphereRadius = StackSphereRadius;
+    }
     public void OnResert()
     {
         listGridHexagonNeedUpdate.Clear();
@@ -295,10 +300,8 @@ public class StackMerger : MonoBehaviour
 
     private List<GridHexagon> GetNeighborGidHexagon(GridHexagon gridHexagon)
     {
-        float distance = gridHexagon.transform.parent.transform.localScale.x * 2;
+        float distance = _IStackSphereRadius.GetRadiusByGrid().x * 2;
         Collider[] neighborGridCellColliders = Physics.OverlapSphere(gridHexagon.transform.position, distance, gridHexagonLayerMask);
-        //OverlapSphere: Computes and stores colliders touching or inside the sphere. 
-        // 2 because gridHexagon size (1.7321, 2, 0) 2 radius is good for detecech neighbors
 
         //Get A list of neighbor grid hexagon, that are occupied
         List<GridHexagon> listNeighborGridHexagons = new List<GridHexagon>();

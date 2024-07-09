@@ -29,19 +29,29 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
     {
         if(_levelData != null)
         {
-            _levelData = LoadLocalLevelData($"Level_{IDLevel}");
+            _levelData = LoadLevelData(IDLevel);
         }
 
         return _levelData;
     }
 
-    private LevelData LoadLevelData()
+    private LevelData LoadLevelData(int IDLevel = TEST_IDLEVEL)
     {
-        return LoadLocalLevelData("Level_1");
+        Debug.Log("Load LevelData Remote");
+        LevelData levelData = FirebaseManager.instance.GetRemoteLevelData(IDLevel);
+
+        if(levelData == null)
+        {
+            Debug.Log("LoadLocalLevelData");
+            levelData = LoadLocalLevelData(IDLevel);
+        }
+
+        return levelData;
     }
 
-    private LevelData LoadLocalLevelData(string key)
+    private LevelData LoadLocalLevelData(int IDLevel)
     {
+        string key = "Level_" + IDLevel;
         TextAsset textAsset = Resources.Load<TextAsset>(string.Format("Config/Data/Levels/{0}", key));
         if (textAsset != null)
         {
@@ -76,11 +86,13 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
     //TEST ONLY
     private LevelPresenterData[] CreateLevelPresenterDatas()
     {
+        Debug.Log("CreateLevelPresenterDatas");
         List<LevelPresenterData> levelPresenterDatas = new List<LevelPresenterData>();
         LevelPresenterData levelPresenter1 = new LevelPresenterData(1, 100);
         LevelPresenterData levelPresenter2 = new LevelPresenterData(2, 200);
         levelPresenterDatas.Add(levelPresenter1);
         levelPresenterDatas.Add(levelPresenter2);
+        levelPresenterDatas.ToArray().DebugLogObject();
         return levelPresenterDatas.ToArray();
     }
     //END
@@ -102,25 +114,6 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
 
         return null;
     }
-
-
-    //TEST ONLY
-    //private ChallengeData CreateChallengeData()
-    //{
-    //    StackHexagonData stack1 = new StackHexagonData(new string[] { "#FFC700", "#FFC700", "#219C90", "#219C90", "#219C90", "#219C90", "#219C90", "#219C90" });
-    //    StackHexagonData stack2 = new StackHexagonData(new string[] { "#FF55DF", "#FF55DF", "#FF55DF", "#FF55DF", "#FF55DF", "#FF55DF", "#FFC700"});
-    //    StackHexagonData stack3 = new StackHexagonData(new string[] { "#219C90", "#219C90", "#219C90", "#219C90", "#FFC700", "#FFC700", "#FFC700", "#FFC700", "#FFC700"});
-    //    StackHexagonData stack4 = new StackHexagonData(new string[] { "#FFC700", "#FFC700", "#FFC700", "#FFC700", "#FFC700", "#FFC700", "#219C90"});
-    //    StackHexagonData stack5 = new StackHexagonData(new string[] { "#219C90", "#219C90", "#219C90", "#219C90", "#219C90", "#219C90", "#219C90"});
-    //    StackHexagonData stack6 = new StackHexagonData(new string[] { "#FF55DF", "#FF55DF", "#FF55DF", "#FF55DF", "#FF55DF", "#FF55DF", "#FF55DF", "#219C90", "#219C90"});
-
-    //    StackQueueData stackQueueData = new StackQueueData(new StackHexagonData[] {stack1, stack2, stack3, stack4, stack5, stack6});
-    //    ChallengeData challengeData = new ChallengeData(stackQueueData);
-    //    challengeData.DebugLogObject();
-
-    //    return challengeData;
-    //}
-    // END
 
     public ChallengeData GetChallengeByID(int IDChallenge = TEST_IDLEVEL)
     {

@@ -4,6 +4,7 @@ using UnityEngine;
 using Mul21_Lib;
 using System;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 public class FirebaseManager : PersistentMonoSingleton<FirebaseManager>
 {
@@ -39,4 +40,20 @@ public class FirebaseManager : PersistentMonoSingleton<FirebaseManager>
             });
     }
     #endregion Template
+
+    public LevelData GetRemoteLevelData(int iDLevel)
+    {
+        string key = "Level_" + iDLevel;
+
+        try
+        {
+            string value = _remoteConfig.GetRemoteConfigValue(key);
+            LevelData data = JsonConvert.DeserializeObject<LevelData>(value);
+            return data;
+        }
+        catch
+        {
+            return null;
+        }
+    }
 }

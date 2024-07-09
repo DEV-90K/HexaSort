@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityUtils;
 
@@ -16,14 +17,16 @@ public class StackController : MonoBehaviour
     private LayerMask groundLayerMask;
 
     private IStackOnPlaced _stackPlaceable;
+    private IStackSphereRadius _IStackSphereRadius;
 
     private Vector3 originPosStackContact;
     private StackHexagon stackContact;
     private GridHexagon gridHexagonContact;
 
-    public void OnInit(IStackOnPlaced stackPlaceable)
+    public void OnInit(IStackOnPlaced stackPlaceable, IStackSphereRadius stackSphereRadius)
     {
         _stackPlaceable = stackPlaceable;
+        _IStackSphereRadius = stackSphereRadius;
     }
 
     private void Update()
@@ -87,18 +90,24 @@ public class StackController : MonoBehaviour
 
     private void DraggingAboveGround()
     {
-        RaycastHit hit;
-        Physics.Raycast(GetRayFromMouseClicked(), out hit, 500, groundLayerMask);
+        RaycastHit hitGround;
+        Physics.Raycast(GetRayFromMouseClicked(), out hitGround, 500, groundLayerMask);
 
-        if (hit.collider == null)
+        if (hitGround.collider == null)
         {
             return;
         }
 
-        Vector3 stackTargetPos = hit.point.With(y: GameConstants.StackHexagonConstants.CONTACT_HEIGHT);
-        //Smooth move stack to stackTargetPos
+        Vector3 stackTargetPos = hitGround.point.With(y: GameConstants.StackHexagonConstants.CONTACT_HEIGHT);
         stackContact.transform.position = Vector3.MoveTowards(stackContact.transform.position, stackTargetPos, Time.deltaTime * 30);
         gridHexagonContact = null;
+
+        float radius = _IStackSphereRadius.GetRadiusByGrid().x * 1.25f;
+        Collider[] neighborGridCellColliders = Physics.OverlapSphere(hitGround.point, radius, gridHexagonLayerMask);
+        if(neighborGridCellColliders.Length > 0)
+        {
+            DraggingAboveGridHexagon(neighborGridCellColliders[0].GetComponent<GridHexagon>());
+        }                    
     }
 
     private void DraggingAboveGridHexagon(RaycastHit hit)
@@ -115,6 +124,19 @@ public class StackController : MonoBehaviour
         }
     }
 
+    private void DraggingAboveGridHexagon(GridHexagon gridHexagon)
+    {
+        if (gridHexagon.CheckOccupied())
+        {
+            //DraggingAboveGridHexagonOccupied();
+        }
+        else
+        {
+            gridHexagon.ShowColorContact();
+            gridHexagonContact = gridHexagon;
+        }
+    }
+
     private void DraggingAboveGridHexagonOccupied()
     {
         DraggingAboveGround();
@@ -122,10 +144,6 @@ public class StackController : MonoBehaviour
 
     private void DraggingAboveGridHexagonNonOccupied(GridHexagon gridHexagon)
     {
-        //Move solution 1
-        //Vector3 stackTargetPos = gridHexagon.transform.position.With(y: 1.5f);
-        //stackContact.transform.position = Vector3.MoveTowards(stackContact.transform.position, stackTargetPos, Time.deltaTime * 30);
-        //Move solution 2
         RaycastHit hit;
         Physics.Raycast(GetRayFromMouseClicked(), out hit, 500, gridHexagonLayerMask);
 
@@ -134,7 +152,7 @@ public class StackController : MonoBehaviour
             return;
         }
 
-        Vector3 stackTargetPos = hit.point.With(y: 1.5f);        
+        Vector3 stackTargetPos = hit.point.With(y: GameConstants.StackHexagonConstants.CONTACT_HEIGHT);        
         stackContact.transform.position = Vector3.MoveTowards(stackContact.transform.position, stackTargetPos, Time.deltaTime * 30);
 
         gridHexagon.ShowColorContact();
@@ -154,8 +172,7 @@ public class StackController : MonoBehaviour
             stackContact.PlaceOnGridHexagon();
             gridHexagonContact.SetStackOfCell(stackContact);
 
-            //OnStackPlaced?.Invoke();
-            _stackPlaceable.OnStackPlaced();
+            _stackPlaceable.OnStackPlaced(stackContact);
             OnStackPlacedOnGridHexagon?.Invoke(gridHexagonContact);
 
             gridHexagonContact = null;

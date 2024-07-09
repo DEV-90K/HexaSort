@@ -1,5 +1,7 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class SwipeScale : MonoBehaviour
 {
@@ -26,6 +28,8 @@ public class SwipeScale : MonoBehaviour
 
     private void Update()
     {
+        if (IsPointerOverUIObject()) return;
+
         if (Input.GetMouseButtonDown(0))
         {
             isRotating = true;
@@ -79,5 +83,20 @@ public class SwipeScale : MonoBehaviour
         }
         transform.transform.localScale = targetScale;
         UpdateFolloweres();
+    }
+
+    private bool IsPointerOverUIObject()
+    {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+
+        //for (int i = 0; i < results.Count; i++)
+        //{
+        //    Debug.Log("Raycast: " + results[i].gameObject.name);
+        //}
+
+        return results.Count > 1;
     }
 }
