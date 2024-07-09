@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class T_GameManager : MonoBehaviour
+public class T_GUIManager : MonoBehaviour
 {
-    public static T_GameManager Instance;
+    public static T_GUIManager Instance;
 
     public GameObject ScreenTool;
     public GameObject ScreenDemo;
@@ -12,13 +12,11 @@ public class T_GameManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        this.ScreenTool.SetActive(true);
-        this.ScreenDemo.SetActive(true);
     }
 
-    void Start()
+    private void Start()
     {
-        
+        this.ShowTool();
     }
 
     public void ShowTool()

@@ -15,7 +15,7 @@ TagManager:
   - PlayerHexagon
   - GridHexagon
   - Ground
-  - 
+  - HexaTool
   - GUI
   - Overlap GUI
   - 
