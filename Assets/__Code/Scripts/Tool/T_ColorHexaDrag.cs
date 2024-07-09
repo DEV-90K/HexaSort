@@ -31,6 +31,16 @@ public class T_ColorHexaDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         this.BoderImg.gameObject.SetActive(isActive);
     }
 
+    public void ChangeColorHexa(int idColor)
+    {
+        T_HexaButton hexaButton = this.transform.parent.GetComponent<T_HexaButton>();
+        T_HexaInBoardData hexaData = hexaButton.GetHexaData();
+        string color = T_ConfigValue.ColorList[idColor];
+        if (hexaData != null)
+            hexaData.ColorHexa = color;
+        this._colorHexa.color = T_Utils.ConvertToColor(hexaData.ColorHexa);
+    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         this.ParentAfterDrag = transform.parent;

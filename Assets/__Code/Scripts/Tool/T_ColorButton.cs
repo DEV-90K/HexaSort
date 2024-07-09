@@ -21,7 +21,8 @@ public class T_ColorButton : MonoBehaviour, IDropHandler
         if(this.SeletedBoder != null)
             this.SeletedBoder.SetActive(false);
 
-        this._imageColorHexa = this.ColorHexa.GetComponent<Image>();
+        if(this.ColorHexa != null)
+            this._imageColorHexa = this.ColorHexa.GetComponent<Image>();
     }
 
     public void InitColor(int locationId = -1, bool changeLocation = true)

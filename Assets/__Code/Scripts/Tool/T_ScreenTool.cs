@@ -102,8 +102,8 @@ public class T_ScreenTool : MonoBehaviour
         this.EmptyBtn.SetActive(true);
         this.ColumnHexa.gameObject.SetActive(true);
         this.ColumnHexa.ShowColumnHexa(this._hexaObj);
-        //this.PanelColorGroup.Show();
-        //this.PanelColorGroup.InitColorBtn(_colorNumber);
+        this.PanelColorGroup.Show();
+        this.PanelColorGroup.InitColorBtn(_colorNumber);
     }
 
     public void HideOnClickHexaDisable()
@@ -151,8 +151,8 @@ public class T_ScreenTool : MonoBehaviour
 
     public void SetColorHexa(int idColor)
     {
-        if (this._colorBtnSelected == null) return;
-        this._colorBtnSelected.ChangeColorHexa(idColor);
+        if (this._colorHexaDrag == null) return;
+        this._colorHexaDrag.ChangeColorHexa(idColor);
         //this._colorBtnSelected.InitColor(idColor, false);
     }
 
