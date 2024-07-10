@@ -7,7 +7,6 @@ public class GridManager : MonoBehaviour
 {
     [SerializeField]
     private GridUnit _GridUnit;
-
     [SerializeField]
     private GridController _gridControl;
     [SerializeField]
@@ -60,4 +59,18 @@ public class GridManager : MonoBehaviour
 
         _gridHexagons = null;
     }
+
+    public bool CheckEmptyGrid()
+    {
+        for(int i = 0; i < _gridHexagons.Length; i++)
+        {
+            if (_gridHexagons[i].CheckOccupied() == false)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    } 
+    
 }

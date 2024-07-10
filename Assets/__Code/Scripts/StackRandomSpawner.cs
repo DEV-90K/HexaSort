@@ -15,14 +15,33 @@ public class StackRandomSpawner : StackSpawner
     {
         HexagonData[] datas = ResourceManager.Instance.GetAllHexagonData();
         List<Color> listColors = new List<Color>();
-        foreach (HexagonData data in datas) 
+        foreach (HexagonData data in datas)
         {
             if (data.ID == 1) continue; //1 is color of grid
-            if(ColorUtility.TryParseHtmlString(data.HexColor, out Color color))
+            if (ColorUtility.TryParseHtmlString(data.HexColor, out Color color))
             {
                 listColors.Add(color);
             }
         }
+
+        //List<HexagonData> listData = new List<HexagonData>();
+        //listData.AddRange(datas);
+        //listData.Shuffle();
+
+        //for (int i = 2; i < listData.Count; i++)
+        //{
+        //    HexagonData data = datas[i];
+        //    if (ColorUtility.TryParseHtmlString(data.HexColor, out Color color))
+        //    {
+        //        listColors.Add(color);
+        //    }
+
+        //    if(listColors.Count == 3)
+        //    {
+        //        break;
+        //    }
+        //}
+
 
         colors = listColors.ToArray();
     }
@@ -35,7 +54,7 @@ public class StackRandomSpawner : StackSpawner
         insHexagonStack.transform.localPosition = Vector3.zero;
         insHexagonStack.transform.localScale = Vector3.one;
 
-        const int NUMBER_COLOR_IN_STACK = 4;
+        const int NUMBER_COLOR_IN_STACK = 2;
 
         Color[] colors = GetRandomColors(NUMBER_COLOR_IN_STACK);        
 

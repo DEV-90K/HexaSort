@@ -31,5 +31,15 @@ public class LevelPresenterData
         Level = level;
         Goal = goal;
     }
+
+    public void UpdateLevel(int level)
+    {
+        Level = level;
+    }
+
+    public void UpdateGoal(int goal)
+    {
+        Goal = goal;
+    }
 }
 

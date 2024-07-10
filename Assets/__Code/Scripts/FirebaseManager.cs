@@ -56,4 +56,19 @@ public class FirebaseManager : PersistentMonoSingleton<FirebaseManager>
             return null;
         }
     }
+
+    public LevelPresenterData[] GetRemoteLevelPresenterDatas()
+    {
+        string key = "LevelPresenters";
+        try
+        {
+            string value = _remoteConfig.GetRemoteConfigValue(key);
+            LevelPresenterData[] data = JsonConvert.DeserializeObject<LevelPresenterData[]>(value);
+            return data;
+        }
+        catch
+        {
+            return null;
+        }
+    }
 }

@@ -188,7 +188,7 @@ MonoBehaviour:
   - {r: 1, g: 0.33333334, b: 0.8745098, a: 0}
   - {r: 1, g: 0.78039217, b: 0, a: 0}
   - {r: 0.12941177, g: 0.6117647, b: 0.5647059, a: 0}
-  hexagonClampf: {x: 7, y: 10}
+  hexagonClampf: {x: 8, y: 10}
 --- !u!1 &63738333
 GameObject:
   m_ObjectHideFlags: 0
@@ -299,7 +299,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.1, z: 0}
-  m_LocalScale: {x: 10, y: 1, z: 10}
+  m_LocalScale: {x: 1.3, y: 1, z: 2.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1145630099}

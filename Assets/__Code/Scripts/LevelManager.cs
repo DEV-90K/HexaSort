@@ -1,21 +1,9 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Mul21_Lib;
-using UnityUtils;
-using System;
 
 public class LevelManager : MonoSingleton<LevelManager>
 {
-    private enum LevelState
-    {
-        NONE,
-        LOADING,
-        PLAYING,
-        PAUSED,
-        FINISHED
-    }
-
     [SerializeField]
     private GridManager _gridManager;
     [SerializeField]
@@ -28,7 +16,6 @@ public class LevelManager : MonoSingleton<LevelManager>
     private LevelPresenterData _presenterData;
 
     private int amountHexagon = 0;
-    private LevelState levelState = LevelState.NONE;
 
     private void OnEnable()
     {
@@ -41,10 +28,9 @@ public class LevelManager : MonoSingleton<LevelManager>
     }
 
     private void Start()
-    {
-        levelState = LevelState.NONE;     
+    {    
         _hammer.gameObject.SetActive(false);
-        InitTestLevel();
+        OnInitLevelByID(1);
     }
 
     public LevelPresenterData GetPresenterData()
@@ -61,50 +47,83 @@ public class LevelManager : MonoSingleton<LevelManager>
     {
         amountHexagon = amount;
     }
-
-    private void InitTestLevel()
+    
+    private void OnInitLevelByID(int IDLevel)
     {
-        LevelData levelData = ResourceManager.Instance.GetLevelByID(1);
-        LevelPresenterData presenterData = ResourceManager.instance.GetLevelPresenterDataByID(1);
+        LevelData levelData = ResourceManager.instance.GetLevelByID(IDLevel);
+        LevelPresenterData presenterData = ResourceManager.instance.GetLevelPresenterDataByID(IDLevel);
 
         OnInit(levelData, presenterData);
     }
 
-    public void OnInit(LevelData levelData, LevelPresenterData presenterData)
+    private void OnInitNextLevel()
     {
-        levelState = LevelState.LOADING;
+        int IDLevel = _presenterData.Level;
+        LevelData levelData = ResourceManager.instance.GetLevelByID(IDLevel + 1);
+        LevelPresenterData presenterData = ResourceManager.instance.GetLevelPresenterDataByID(IDLevel + 1);
 
+        if(levelData == null || presenterData == null)
+        {
+            levelData = _levelData;
+            presenterData = _presenterData;
+        }
+
+        OnInit(levelData, presenterData);
+    }
+
+    private void OnInitCurrentLevel()
+    {
+        OnInit(_levelData, _presenterData);
+    }
+
+    public void UpdateCurrentLevel(LevelPresenterData levelPresenter)
+    {
+        int IDLevel = levelPresenter.Level;
+        LevelData levelData = ResourceManager.instance.GetLevelByID(IDLevel);
+        LevelPresenterData presenterData = levelPresenter;
+
+        OnFinish();
+        this.Invoke(() => OnInit(levelData, presenterData), 1f);
+    }
+
+    private void OnInit(LevelData levelData, LevelPresenterData presenterData)
+    {
+        Debug.Log("OnInit Level By ID: " + presenterData.Level);
         _levelData = levelData;
         _presenterData = presenterData;
+
         amountHexagon = 0;
 
         _gridManager.OnInit(levelData.Grid);
         _stackManager.OnInit();
 
-        GUIManager.Instance.ShowScreen<ScreenLevel>(presenterData);
-        levelState = LevelState.PLAYING;        
+        GUIManager.Instance.ShowScreen<ScreenLevel>(presenterData);       
     }
 
     public void OnReplay()
     {
-        _stackManager.CollectRandomImmediate();
         _gridManager.CollectGridImmediate();
-
-        OnInit(_levelData, _presenterData);
+        _stackManager.CollectRandomImmediate();
+        OnInitCurrentLevel();
     }
 
-    public void OnFinish()
+    private void OnFinish()
     {
-        Debug.Log("OnFinish");
-        if (levelState == LevelState.FINISHED)
-            return;
-
-        levelState = LevelState.FINISHED;
-
+        GameManager.instance.ChangeState(GameState.FINISH);
         _gridManager.CollectOccupied();
         _stackManager.CollectRandomed();
+    }
 
-        Invoke(nameof(InitTestLevel), 1f);
+    private void OnFinishLosed()
+    {
+        OnFinish();
+        this.Invoke(() => OnInitCurrentLevel(), 1f);
+    }
+
+    private void OnFinishWoned()
+    {
+        OnFinish();
+        this.Invoke(() => OnInitNextLevel(), 1f);
     }
 
     #region Boost Hammer
@@ -180,7 +199,6 @@ public class LevelManager : MonoSingleton<LevelManager>
 
     public void OnBoostSwap(GridHexagon grid)
     {
-        //_stackManager.Mer
         _stackManager.MergeStackIntoGrid(grid);
     }
 
@@ -212,15 +230,14 @@ public class LevelManager : MonoSingleton<LevelManager>
 
     private void StackMerge_OnStackMergeCompleted()
     {
-        Debug.Log("Level State: " + EnumUtils.ParseString(levelState));
-        if (levelState != LevelState.PLAYING)
-        {
-            return;
-        }
 
         if (amountHexagon >= _presenterData.Goal)
         {
-            OnFinish();
+            OnFinishWoned();
         }
-    } 
+        else if (!_gridManager.CheckEmptyGrid())
+        {
+            OnFinishLosed();
+        }
+    }
 }

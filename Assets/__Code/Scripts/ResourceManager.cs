@@ -8,8 +8,10 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
 {
     private const int TEST_IDLEVEL = 1;
 
-    private LevelData _levelData;
+    private Dictionary<int, LevelData> _levelDataDict = new Dictionary<int, LevelData>();
+
     private LevelPresenterData[] _levelPresenterDatas;
+    private Dictionary<int, LevelPresenterData> _levelPresenterDatasDict = new Dictionary<int, LevelPresenterData>();
 
     private ChallengeData _challengeData;
 
@@ -18,31 +20,49 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
 
     public void LoadResource()
     {
-        _levelData = LoadLevelData();
         _challengeData = LoadChallengeData();
-        _challengeData.DebugLogObject();
+        _levelPresenterDatas = LoadLevelPresenterDatas();
         _hexagonDatas = LoadHexagonData();
-        _hexagonDatas.DebugLogObject();
     }
 
+    #region Level Data
     public LevelData GetLevelByID(int IDLevel = TEST_IDLEVEL)
     {
-        if(_levelData != null)
+        if(_levelDataDict.ContainsKey(IDLevel))
         {
-            _levelData = LoadLevelData(IDLevel);
+            return _levelDataDict[IDLevel];
         }
 
-        return _levelData;
+        LevelData levelData = LoadLevelData(IDLevel);
+
+        if(levelData == null)
+        {
+            levelData = GetLevelDataByRandom(IDLevel);
+        }
+
+        _levelDataDict[IDLevel] = levelData;
+
+        return levelData;
     }
 
-    private LevelData LoadLevelData(int IDLevel = TEST_IDLEVEL)
+    private LevelData GetLevelDataByRandom(int IDMax)
     {
-        Debug.Log("Load LevelData Remote");
+        int IDLevel = Random.Range(0, IDMax);
+
+        if (_levelDataDict.ContainsKey(IDLevel))
+        {
+            return _levelDataDict[IDLevel].CopyObject();
+        }
+
+        return LoadLevelData(IDMax).CopyObject();
+    }
+
+    private LevelData LoadLevelData(int IDLevel)
+    {
         LevelData levelData = FirebaseManager.instance.GetRemoteLevelData(IDLevel);
 
         if(levelData == null)
         {
-            Debug.Log("LoadLocalLevelData");
             levelData = LoadLocalLevelData(IDLevel);
         }
 
@@ -59,50 +79,57 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         }
         return null;
     }
+    #endregion Level Data
 
-    public LevelPresenterData GetLevelPresenterDataByID(int IDLevel = TEST_IDLEVEL)
+    #region Level Presenter Data
+    public LevelPresenterData GetLevelPresenterDataByID(int IDLevel)
     {
-        if(_levelPresenterDatas == null)
+        if(_levelPresenterDatasDict.ContainsKey(IDLevel))
         {
-            _levelPresenterDatas = LoadLevelPresenterDatas();
+            return (_levelPresenterDatasDict[IDLevel]);
         }
 
-        if(_levelPresenterDatas == null)
-        {
-            _levelPresenterDatas = CreateLevelPresenterDatas();
-        }
+        LevelPresenterData levelPresenterData = null;
 
         for (int i = 0; i < _levelPresenterDatas.Length; i++)
         {
             if (_levelPresenterDatas[i].Level == IDLevel)
             {
-                return _levelPresenterDatas[i];
+                levelPresenterData = _levelPresenterDatas[i];
+                break;
             }
         }
 
-        return null;
+        if(levelPresenterData == null)
+        {
+            levelPresenterData = GetLevelPresenterDataByRandom();
+        }
+
+        levelPresenterData.UpdateLevel(IDLevel);
+        _levelPresenterDatasDict[IDLevel] = levelPresenterData;
+
+        return levelPresenterData;
     }
 
-    //TEST ONLY
-    private LevelPresenterData[] CreateLevelPresenterDatas()
+    private LevelPresenterData GetLevelPresenterDataByRandom()
     {
-        Debug.Log("CreateLevelPresenterDatas");
-        List<LevelPresenterData> levelPresenterDatas = new List<LevelPresenterData>();
-        LevelPresenterData levelPresenter1 = new LevelPresenterData(1, 100);
-        LevelPresenterData levelPresenter2 = new LevelPresenterData(2, 200);
-        levelPresenterDatas.Add(levelPresenter1);
-        levelPresenterDatas.Add(levelPresenter2);
-        levelPresenterDatas.ToArray().DebugLogObject();
-        return levelPresenterDatas.ToArray();
+        int IDXLevel = Random.Range(0, _levelPresenterDatas.Length);
+        return _levelPresenterDatas[IDXLevel].CopyObject();
     }
-    //END
 
     private LevelPresenterData[] LoadLevelPresenterDatas()
     {
-        return LoadLocalPresenterDatas();
+        LevelPresenterData[] presenterDatas = FirebaseManager.instance.GetRemoteLevelPresenterDatas();
+
+        if(presenterDatas == null)
+        {
+            presenterDatas = LoadLocalLevelPresenterDatas();
+        }
+
+        return presenterDatas;
     }
 
-    private LevelPresenterData[] LoadLocalPresenterDatas()
+    private LevelPresenterData[] LoadLocalLevelPresenterDatas()
     {
         string key = "LevelPresenters";
         TextAsset textAsset = Resources.Load<TextAsset>(string.Format("Config/Presenter/{0}", key));
@@ -114,7 +141,7 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
 
         return null;
     }
-
+    #endregion Level Presenter Data
     public ChallengeData GetChallengeByID(int IDChallenge = TEST_IDLEVEL)
     {
         if (_challengeData != null)

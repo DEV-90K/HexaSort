@@ -9,8 +9,6 @@ public class ScreenLevel : ScreenBase, IBoostHammer, IBoostSwap
     private TMP_Text txtRatio;
     [SerializeField]
     private Image imgFill;
-    [SerializeField]
-    private Button btnReplay;
 
     [SerializeField]
     private ButtonBoostHammer btnBoostHammer;
@@ -28,13 +26,6 @@ public class ScreenLevel : ScreenBase, IBoostHammer, IBoostSwap
     private void OnDisable()
     {
         Hexagon.OnVanish -= Hexagon_OnVanish;
-    }
-
-    public void OnChangeHexagon(int amount)
-    {
-        Debug.Log("OnChangeHexagon: " + amount);
-        UpdateTxtRatio(amount);
-        UpdateImgFill((float) amount / (float) presenterData.Goal);
     }
 
     #region Boost Hammer
@@ -76,12 +67,12 @@ public class ScreenLevel : ScreenBase, IBoostHammer, IBoostSwap
         base.Awake();
         btnBoostHammer.OnInit(this);
         btnBoostSwap.OnInit(this);
-        btnReplay.onClick.AddListener(OnBtnReplayClick);
     }
 
     public override void OnInit(params object[] paras)
     {
         base.OnInit(paras);
+
         if (paras.Length > 1)
             presenterData = (LevelPresenterData)paras[0];
         else
@@ -111,13 +102,13 @@ public class ScreenLevel : ScreenBase, IBoostHammer, IBoostSwap
         imgFill.fillAmount = Mathf.Min(ratio, 1);
     }
 
-    private void OnBtnReplayClick()
-    {
-        LevelManager.Instance.OnReplay();
-    }
-
     private void Hexagon_OnVanish()
     {
+        if(GameManager.Instance.IsState(GameState.FINISH))
+        {
+            return;
+        }
+
         amount++;
         LevelManager.Instance.UpdateAmountHexagon(amount);
         UpdateTxtRatio(amount);

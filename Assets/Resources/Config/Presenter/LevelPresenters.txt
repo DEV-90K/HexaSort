@@ -1,0 +1,1 @@
+[{"Level":1,"Goal":100},{"Level":2,"Goal":200},{"Level":3,"Goal":300},{"Level":4,"Goal":350},{"Level":5,"Goal":400},{"Level":6,"Goal":500}]
