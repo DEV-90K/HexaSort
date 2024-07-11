@@ -12,6 +12,7 @@ public class T_HexaInBoardObject : MonoBehaviour
     }
 
     private T_HexaInBoardData _data;
+    private GridHexagonData _gridHexagonData;
 
     private string _deactive = "#ffffff";
     private string _active = "#06D001";
@@ -39,6 +40,15 @@ public class T_HexaInBoardObject : MonoBehaviour
         this._hexaColor = T_Utils.ConvertToColor(this._data.ColorHexa);
     }
 
+    public void InitData(int numberHexaInHexa, int row, int column)
+    {
+        this._gridHexagonData = new GridHexagonData(GridHexagonState.NONE, row, column, 1, new StackHexagonData(new int[numberHexaInHexa]));
+        for (int i = 0; i < numberHexaInHexa; i++)
+        {
+            this._gridHexagonData.StackHexagon.IDHexes[i] = i;
+        }
+    }
+
     public void CheckHexaInBoard()
     {
         if (!this._data.IsSelected)
@@ -56,6 +66,8 @@ public class T_HexaInBoardObject : MonoBehaviour
     {
         if(isSelected)
         {
+            this._gridHexagonData.State = GridHexagonState.UNLOCK;
+
             this._data.IsSelected = true;
             this._data.ColorHexa = this._active;
             this._hexaColor = T_Utils.ConvertToColor(this._data.ColorHexa);
@@ -63,6 +75,8 @@ public class T_HexaInBoardObject : MonoBehaviour
         }
         else
         {
+            this._gridHexagonData.State = GridHexagonState.NONE;
+
             this._data.IsSelected = false;
             this._data.ColorHexa = this._deactive;
             this._hexaColor = T_Utils.ConvertToColor(this._data.ColorHexa);
@@ -81,6 +95,8 @@ public class T_HexaInBoardObject : MonoBehaviour
         }
         else
         {
+            this._gridHexagonData.State = GridHexagonState.UNLOCK;
+
             this._data.IsSelected = true;
             this._data.ColorHexa = this._active;
             this._hexaColor = T_Utils.ConvertToColor(this._data.ColorHexa);
@@ -90,5 +106,10 @@ public class T_HexaInBoardObject : MonoBehaviour
     public T_HexaInBoardData GetDataHexa()
     {
         return this._data;
+    }
+
+    public GridHexagonData GetGridHexagonData()
+    {
+        return this._gridHexagonData;
     }
 }

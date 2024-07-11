@@ -156,7 +156,6 @@ public class T_ColumnHexa : MonoBehaviour
         for (int i = 0; i < this.Content.transform.childCount; i++)
         {
             Transform child = this.Content.transform.GetChild(i);
-            Debug.LogError(string.Format("{0}_{1}", child.gameObject, dataObj.HexagonDatas[i].Id));
             T_HexaButton hexaButton = child.GetComponent<T_HexaButton>();
             hexaButton.Init(dataObj.HexagonDatas[i]);
         }

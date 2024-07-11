@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityUtils;
+using static UnityEditor.FilePathAttribute;
 
 public class T_GridController : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class T_GridController : MonoBehaviour
     private float _tileZOffset = 1.567f;
     private int _colorNumber;
     private int _hexaNumber;
+    private float _location = 0.2f;
 
 
     private void Awake()
@@ -84,6 +86,7 @@ public class T_GridController : MonoBehaviour
                 gObj.transform.position = cellPos;
                 T_HexaInBoardObject hexaObj = gObj.GetComponent<T_HexaInBoardObject>();
                 hexaObj.Init(numberHexa);
+                hexaObj.InitData(numberHexa, xSwizzle, zSwizzle);
                 this._childsGrid.Add(gObj);
             }
         }
@@ -121,7 +124,6 @@ public class T_GridController : MonoBehaviour
 
     public void ShowNumberHexaInHexa(T_HexaInBoardObject hexaObj)
     {
-        float location = 0.2f;
         GameObject gObjHexa = hexaObj.gameObject;
         int childCount = hexaObj.transform.childCount;
         T_HexaInBoardData hexaData = hexaObj.GetDataHexa();
@@ -130,7 +132,7 @@ public class T_GridController : MonoBehaviour
         for(int i = 0; i < hexaData.HexagonDatas.Length; i++)
         {
             GameObject gObj = Instantiate(this._modelHexa.gameObject, gObjHexa.transform);
-            gObj.transform.localPosition = new Vector3(0, (i+1) * location, 0);
+            gObj.transform.localPosition = new Vector3(0, (i+1) * this._location, 0);
             MeshRenderer model = gObj.GetComponent<MeshRenderer>();
             model.material.color = T_Utils.ConvertToColor(hexaData.HexagonDatas[i].ColorHexa);
             this._childHexas.Add(gObj);

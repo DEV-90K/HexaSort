@@ -125,7 +125,7 @@ public class T_ScreenTool : MonoBehaviour
         this.RemoveBtn.SetActive(true);
         this.ShowBtn.SetActive(true);
         this.EmptyBtn.SetActive(true);
-        this.HideBtn.SetActive(true);
+        //this.HideBtn.SetActive(true);
         this.ColumnHexa.gameObject.SetActive(true);
         this.ColumnHexa.ShowColumnHexa(this._hexaObj);
         this.PanelColorGroup.Show();
@@ -138,7 +138,7 @@ public class T_ScreenTool : MonoBehaviour
         this.RemoveBtn.SetActive(false);
         this.ShowBtn.SetActive(false);
         this.EmptyBtn.SetActive(false);
-        this.HideBtn.SetActive(false);
+        //this.HideBtn.SetActive(false);
         this.ColumnHexa.gameObject.SetActive(false);
         this.PanelColorGroup.Hide();
     }
@@ -211,7 +211,7 @@ public class T_ScreenTool : MonoBehaviour
         else this._hexaInBoardSelecteds.Remove(hexaObj);
     }
 
-    public T_LevelData GetLevelData()
+    public T_LevelData GetTLevelData()
     {
         int count = this._hexaInBoardSelecteds.Count;
         T_LevelData result = new T_LevelData();
@@ -226,6 +226,40 @@ public class T_ScreenTool : MonoBehaviour
                 if (hexaData.HexagonDatas.Length > hexaObj.transform.childCount) hexaData.HexagonDatas = new T_HexaInBoardData[0];
                 result.HexaInBoardDatas[i] = hexaData;
             }
+        }
+        return result;
+    }
+
+    public LevelData GetLevelData()
+    {
+        int count = this._hexaInBoardSelecteds.Count;
+        LevelData result = new LevelData();
+        GridData gridData = new GridData(new GridHexagonData[count]);
+        if (count > 0)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                T_HexaInBoardObject hexaObj = this._hexaInBoardSelecteds[i];
+                T_HexaInBoardData hexaData = hexaObj.GetDataHexa();
+                GridHexagonData gridHexagonData = hexaObj.GetGridHexagonData();
+                gridData.GridHexagonDatas[i] = gridHexagonData;
+                StackHexagonData stackHexagonData = gridData.GridHexagonDatas[i].StackHexagon;
+                if (hexaData.HexagonDatas.Length > hexaObj.transform.childCount) 
+                {
+                    stackHexagonData.IDHexes = null;
+                }
+                else
+                {
+                    List<int> idhexa = new List<int>();
+                    for(int j = 0; j < hexaData.HexagonDatas.Length; j++)
+                    {
+                        idhexa.Add(hexaData.HexagonDatas[j].Id);
+                    }
+                    stackHexagonData.IDHexes = idhexa.ToArray();
+                }
+
+            }
+            result.SetGrid(gridData);
         }
         return result;
     }

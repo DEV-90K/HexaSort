@@ -10,14 +10,16 @@ public class T_PanelExport : T_PanelBase
 
     public void OnExportBtnClick()
     {
-        T_LevelData levelData = T_ScreenTool.Instance.GetLevelData();
+        //T_LevelData levelData = T_ScreenTool.Instance.GetTLevelData();
         int level = 0;
         int.TryParse(this.LevelTxt.text.Trim(), out level);
-        levelData.Level = level;
+        //levelData.Level = level;
+
+        LevelData levelData = T_ScreenTool.Instance.GetLevelData();
         string levelFile = string.Format("Level_{0}", level);
         T_GridController.Instance.CanContact = true;
         Debug.LogError(JsonConvert.SerializeObject(levelData));
-        WebGLFileSaver.SaveFile(JsonConvert.SerializeObject(levelData), levelFile);
+        //WebGLFileSaver.SaveFile(JsonConvert.SerializeObject(levelData), levelFile);
     }
 
     public void OnCloseBtnClick()
