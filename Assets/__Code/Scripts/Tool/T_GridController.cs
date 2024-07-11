@@ -10,12 +10,14 @@ public class T_GridController : MonoBehaviour
     public int Width = 5;
     public int Height = 5;
     public int CellSize = 5;
+    public bool CanContact = true;
     public GameObject Hexagon;
 
     private Grid _grid;
     private Camera _camera;
     private MeshRenderer _modelHexa;
     private List<GameObject> _childHexas;
+    private List<GameObject> _childsGrid;
 
     private float _tileXOffset = 1.735f;
     private float _tileZOffset = 1.567f;
@@ -31,16 +33,20 @@ public class T_GridController : MonoBehaviour
         this._camera = Camera.main;
         this._modelHexa = this.Hexagon.GetComponentInChildren<MeshRenderer>();
         _childHexas = new List<GameObject>();
+        this._childsGrid = new List<GameObject>();
     }
     private void Start()
     {
         this._colorNumber = T_ScreenTool.Instance.GetColorNumber();
         this._hexaNumber = T_ScreenTool.Instance.GetHexaInEachHexaNumber();
-        this.Init();
+        //this.Init();
     }
 
     private void LateUpdate()
     {
+        if (CanContact == false)
+            return;
+
         if(Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -55,9 +61,12 @@ public class T_GridController : MonoBehaviour
         }
     }
 
-    public void Init()
+    public void Init(int numberHexa)
     {
+        int count = this.transform.childCount;
+        if (count > 0) this.DestroyChildGrid();
         //this._camera.transform.position = new Vector3(-4.6f, 20, -12);
+        this._childsGrid = new List<GameObject>();
         Vector3 cellCenter = this._grid.CellToWorld(new Vector3Int(1, 0, 0));
         for (int xSwizzle = -CellSize; xSwizzle <= CellSize; xSwizzle++)
         {
@@ -74,7 +83,8 @@ public class T_GridController : MonoBehaviour
                 gObj.name = string.Format("{0}_{1}", xSwizzle, zSwizzle);
                 gObj.transform.position = cellPos;
                 T_HexaInBoardObject hexaObj = gObj.GetComponent<T_HexaInBoardObject>();
-                hexaObj.Init(this._hexaNumber);
+                hexaObj.Init(numberHexa);
+                this._childsGrid.Add(gObj);
             }
         }
 
@@ -96,6 +106,17 @@ public class T_GridController : MonoBehaviour
                 }
             }
         }*/
+    }
+
+    public void DestroyChildGrid()
+    {
+        if(this._childsGrid.Count > 0)
+        {
+            foreach(var gObj in this._childsGrid)
+            {
+                Destroy(gObj);
+            }
+        }
     }
 
     public void ShowNumberHexaInHexa(T_HexaInBoardObject hexaObj)
@@ -127,8 +148,9 @@ public class T_GridController : MonoBehaviour
         }
     }
 
-    public void ShowEmptyHexa()
+    public void ShowEmptyHexa(T_HexaInBoardObject hexaObj)
     {
-        if (this._childHexas.Count > 0) this.DestroyChildHexa(this._childHexas);
+        int childCount = hexaObj.transform.childCount;
+        if (childCount > 1) this.DestroyChildHexa(this._childHexas);
     }
 }

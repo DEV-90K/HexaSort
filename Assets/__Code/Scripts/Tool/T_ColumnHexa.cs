@@ -98,37 +98,83 @@ public class T_ColumnHexa : MonoBehaviour
         T_HexaInBoardData dataObj = this._hexaObject.GetDataHexa();
         int count = dataObj.HexagonDatas.Length;
 
-        T_HexaInBoardData[] dataObjNew = new T_HexaInBoardData[count + 1];
-        for(int i = 0; i < count; i++)
+        if(count > 0 && T_ScreenTool.Instance.GetColorHexa() != null)
         {
-            dataObjNew[i] = dataObj.HexagonDatas[i];
+            T_HexaInBoardData[] dataObjNew = new T_HexaInBoardData[count + 1];
+            for(int i = 0; i < count; i++)
+            {
+                dataObjNew[i] = dataObj.HexagonDatas[i];
+            }
+
+            this._hexaBtnSelected = T_ScreenTool.Instance.GetColorHexa().transform.parent.gameObject;
+            if(this._hexaBtnSelected != null)
+            {
+                T_HexaInBoardData hexaData = this._hexaBtnSelected.GetComponent<T_HexaButton>().GetHexaData();
+                GameObject gObj = Instantiate(this._hexaBtnSelected, this.Content.transform);
+                gObj.SetActive(true);
+                gObj.name = string.Format("{0}_{1}", "HexaButton", count + 1);
+                T_HexaButton hexaButton = gObj.GetComponent<T_HexaButton>();
+                hexaButton.Init(hexaData);
+                this._childs.Add(gObj);
+                dataObjNew[count] = hexaData;
+                this._hexaObject.GetDataHexa().HexagonDatas = dataObjNew;
+            }
         }
 
-        this._hexaBtnSelected = T_ScreenTool.Instance.GetColorHexa().transform.parent.gameObject;
-        if(this._hexaBtnSelected != null)
+    }
+
+    public void AddDataToObj(T_HexaButton hexaButton, int pos = 0)
+    {
+        T_HexaInBoardData dataObj = this._hexaObject.GetDataHexa();
+        int count = dataObj.HexagonDatas.Length;
+
+        if (count >= 0)
         {
-            T_HexaInBoardData hexaData = this._hexaBtnSelected.GetComponent<T_HexaButton>().GetHexaData();
-            GameObject gObj = Instantiate(this._hexaBtnSelected, this.Content.transform);
-            gObj.SetActive(true);
-            gObj.name = string.Format("{0}_{1}", "HexaButton", count + 1);
-            T_HexaButton hexaButton = gObj.GetComponent<T_HexaButton>();
-            hexaButton.Init(hexaData);
-            this._childs.Add(gObj);
-            dataObjNew[count] = hexaData;
-            this._hexaObject.GetDataHexa().HexagonDatas = dataObjNew;
+            List<T_HexaInBoardData> dataObjNew = new List<T_HexaInBoardData>();
+            for(int i = 0; i < count; i++)
+            {
+                dataObjNew.Add(dataObj.HexagonDatas[i]);
+            }
+            dataObjNew.Insert(pos, hexaButton.GetHexaData());
+            if(dataObjNew.Count > 0)
+            {
+                for(int i = 0; i < dataObjNew.Count; i++)
+                {
+                    dataObjNew[i].Id = i + 1;
+                }
+            }
+            this._hexaObject.GetDataHexa().HexagonDatas = dataObjNew.ToArray();
+            dataObjNew = null;
+            this._childs.Add(hexaButton.gameObject);
+            this.SetupContent(this._hexaObject);
+        }
+    }
+
+    public void SetupContent(T_HexaInBoardObject hexaObj)
+    {
+        T_HexaInBoardData dataObj = hexaObj.GetDataHexa();
+        for (int i = 0; i < this.Content.transform.childCount; i++)
+        {
+            Transform child = this.Content.transform.GetChild(i);
+            Debug.LogError(string.Format("{0}_{1}", child.gameObject, dataObj.HexagonDatas[i].Id));
+            T_HexaButton hexaButton = child.GetComponent<T_HexaButton>();
+            hexaButton.Init(dataObj.HexagonDatas[i]);
         }
     }
 
     public void OnRemoveBtnClick()
     {
-        this._hexaBtnSelected = T_ScreenTool.Instance.GetColorHexa().transform.parent.gameObject;
-        if (this._hexaBtnSelected != null)
+        if (T_ScreenTool.Instance.GetColorHexa())
         {
-            T_HexaInBoardData hexaData = this._hexaBtnSelected.GetComponent<T_HexaButton>().GetHexaData();
-            T_HexaInBoardData[] array = this._hexaObject.GetDataHexa().HexagonDatas;
-            array = array.Where(s => s.Id != hexaData.Id).ToArray();
-            this._hexaObject.GetDataHexa().HexagonDatas = array;
-            Destroy(this._hexaBtnSelected);
+            this._hexaBtnSelected = T_ScreenTool.Instance.GetColorHexa().transform.parent.gameObject;
+            if (this._hexaBtnSelected != null)
+            {
+                T_HexaInBoardData hexaData = this._hexaBtnSelected.GetComponent<T_HexaButton>().GetHexaData();
+                T_HexaInBoardData[] array = this._hexaObject.GetDataHexa().HexagonDatas;
+                array = array.Where(s => s.Id != hexaData.Id).ToArray();
+                this._hexaObject.GetDataHexa().HexagonDatas = array;
+                Destroy(this._hexaBtnSelected);
+            }
         }
     }
 }

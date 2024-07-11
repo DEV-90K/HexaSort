@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,15 +9,15 @@ public class T_ConfigValue
     public static string[] ColorList = new string[12]
     {
       "#cc0022",
-      "#014f41",
+      "#FFB200",
       "#d29bc2",
-      "#990913",
-      "#f4e7de",
-      "#6ba1bc",
+      "#5BBCFF",
+      "#D10363",
+      "#FFFF80",
       "#256832",
       "#871616",
       "#87694d",
-      "#dfdbdb",
+      "#131842",
       "#964CFA",
       "#6266F9",
     };
@@ -29,11 +30,14 @@ public class T_ScreenTool : MonoBehaviour
     public GameObject RemoveBtn;
     public GameObject ShowBtn;
     public GameObject EmptyBtn;
+    public GameObject HideBtn;
 
     public T_PanelSetup PanelSetup;
     public T_PanelColorGroup PanelColorGroup;
+    public T_PanelExport PanelExport;
     public T_ColumnHexa ColumnHexa;
 
+    private List<T_HexaInBoardObject> _hexaInBoardSelecteds;
     private T_HexaInBoardObject _hexaObj;
     private int _hexInEachHexaNumber;
     private int _colorNumber;
@@ -46,17 +50,20 @@ public class T_ScreenTool : MonoBehaviour
     {
         this.HideOnClickHexaDisable();
         this.PanelSetup.Hide();
+        this.PanelExport.Hide();
     }
 
     public void InitLevel(int hexInEachHexaNumber, int colorNumber)
     {
+        this._hexaInBoardSelecteds = new List<T_HexaInBoardObject>();
         this._hexInEachHexaNumber = hexInEachHexaNumber;
         this._colorNumber = colorNumber;
     }
     public void OnRemoveBtnClick()
     {
         if (this._hexaObj == null) return;
-        T_GridController.Instance.ShowEmptyHexa();
+        T_GridController.Instance.ShowEmptyHexa(this._hexaObj);
+        this._hexaObj.SetVisualState(VisualState.SHOW);
         this._hexaObj.SetSelectedHexa(false);
         this.HideOnClickHexaDisable();
     }
@@ -65,6 +72,7 @@ public class T_ScreenTool : MonoBehaviour
     {
         if (this._hexaObj == null) return;
         T_ColumnHexa.Instance.SetUpHexaObj(this._hexaObj);
+        this._hexaObj.SetVisualState(VisualState.SHOW);
         T_GridController.Instance.ShowNumberHexaInHexa(this._hexaObj);
         this.HideOnClickHexaDisable();
     }
@@ -72,8 +80,24 @@ public class T_ScreenTool : MonoBehaviour
     public void OnEmptyBtnClick()
     {
         if (this._hexaObj == null) return;
-        T_GridController.Instance.ShowEmptyHexa();
+        T_GridController.Instance.ShowEmptyHexa(this._hexaObj);
+        this._hexaObj.Init(0);
+        this._hexaObj.SetVisualState(VisualState.SHOW);
         this.HideOnClickHexaDisable();
+    }
+
+    public void OnHideBtnClick()
+    {
+        if (this._hexaObj == null) return;
+        this._hexaObj.Init(0);
+        this._hexaObj.SetVisualState(VisualState.HIDE);
+        this.HideOnClickHexaDisable();
+    }
+
+    public void OnExportBtnClick()
+    {
+        this.PanelExport.Show();
+        T_GridController.Instance.CanContact = false;
     }
 
     public void ShowOnClickHexa(T_HexaInBoardObject hexaObj, bool isEnable)
@@ -93,6 +117,7 @@ public class T_ScreenTool : MonoBehaviour
     public void OnSetupBtnClick()
     {
         this.PanelSetup.Show();
+        T_GridController.Instance.CanContact = false;
     }
 
     public void ShowOnClickHexaEnable()
@@ -100,10 +125,12 @@ public class T_ScreenTool : MonoBehaviour
         this.RemoveBtn.SetActive(true);
         this.ShowBtn.SetActive(true);
         this.EmptyBtn.SetActive(true);
+        this.HideBtn.SetActive(true);
         this.ColumnHexa.gameObject.SetActive(true);
         this.ColumnHexa.ShowColumnHexa(this._hexaObj);
         this.PanelColorGroup.Show();
-        this.PanelColorGroup.InitColorBtn(_colorNumber);
+        //this.PanelColorGroup.InitColorBtn(_colorNumber);
+        this.PanelColorGroup.InitColor(_colorNumber);
     }
 
     public void HideOnClickHexaDisable()
@@ -111,6 +138,7 @@ public class T_ScreenTool : MonoBehaviour
         this.RemoveBtn.SetActive(false);
         this.ShowBtn.SetActive(false);
         this.EmptyBtn.SetActive(false);
+        this.HideBtn.SetActive(false);
         this.ColumnHexa.gameObject.SetActive(false);
         this.PanelColorGroup.Hide();
     }
@@ -132,7 +160,7 @@ public class T_ScreenTool : MonoBehaviour
         this._colorBtnSelected.SetSelected(true);
     }
 
-    private T_ColorHexaDrag _colorHexaDrag;
+    private T_ColorHexaDrag _colorHexaDrag = null;
     public void SetSelectedColorHexa(T_ColorHexaDrag colorHexaDrag)
     {
         if (this._colorHexaDrag != null)
@@ -173,6 +201,32 @@ public class T_ScreenTool : MonoBehaviour
 
     public T_ColorHexaDrag GetColorHexa()
     {
+        if (this._colorHexaDrag == null) return null;
         return this._colorHexaDrag;
+    }
+
+    public void SetSelectedHexaObj(T_HexaInBoardObject hexaObj, bool isSlected)
+    {
+        if(isSlected) this._hexaInBoardSelecteds.Add(hexaObj);
+        else this._hexaInBoardSelecteds.Remove(hexaObj);
+    }
+
+    public T_LevelData GetLevelData()
+    {
+        int count = this._hexaInBoardSelecteds.Count;
+        T_LevelData result = new T_LevelData();
+        result.Level = 0;
+        result.HexaInBoardDatas = new T_HexaInBoardData[count];
+        if(count > 0)
+        {
+            for(int i = 0; i < count; i++)
+            {
+                T_HexaInBoardObject hexaObj = this._hexaInBoardSelecteds[i];
+                T_HexaInBoardData hexaData = hexaObj.GetDataHexa();
+                if (hexaData.HexagonDatas.Length > hexaObj.transform.childCount) hexaData.HexagonDatas = new T_HexaInBoardData[0];
+                result.HexaInBoardDatas[i] = hexaData;
+            }
+        }
+        return result;
     }
 }

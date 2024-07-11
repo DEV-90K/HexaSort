@@ -15,20 +15,25 @@ public class T_HexaInBoardObject : MonoBehaviour
 
     private string _deactive = "#ffffff";
     private string _active = "#06D001";
+    private string _hide = "#686D76";
 
     public void Init(int numberHexaInHexa)
     {
         this._data = new T_HexaInBoardData();
         this._data.Id = 0;
         this._data.IsSelected = false;
+        this._data.State = VisualState.SHOW;
         this._data.ColorHexa = this._deactive;
         this._data.HexagonDatas = new T_HexaInBoardData[numberHexaInHexa];
 
-        for (int i = 0; i < numberHexaInHexa; i++)
+        if(numberHexaInHexa > 0)
         {
-            this._data.HexagonDatas[i] = new T_HexaInBoardData();
-            this._data.HexagonDatas[i].Id = i + 1;
-            this._data.HexagonDatas[i].ColorHexa = T_ConfigValue.ColorList[i];
+            for (int i = 0; i < numberHexaInHexa; i++)
+            {
+                this._data.HexagonDatas[i] = new T_HexaInBoardData();
+                this._data.HexagonDatas[i].Id = i + 1;
+                this._data.HexagonDatas[i].ColorHexa = T_ConfigValue.ColorList[i];
+            }
         }
 
         this._hexaColor = T_Utils.ConvertToColor(this._data.ColorHexa);
@@ -54,11 +59,30 @@ public class T_HexaInBoardObject : MonoBehaviour
             this._data.IsSelected = true;
             this._data.ColorHexa = this._active;
             this._hexaColor = T_Utils.ConvertToColor(this._data.ColorHexa);
+            T_ScreenTool.Instance.SetSelectedHexaObj(this, true);
         }
         else
         {
             this._data.IsSelected = false;
             this._data.ColorHexa = this._deactive;
+            this._hexaColor = T_Utils.ConvertToColor(this._data.ColorHexa);
+            T_ScreenTool.Instance.SetSelectedHexaObj(this, false);
+        }
+    }
+
+    public void SetVisualState(VisualState state)
+    {
+        this._data.State = state;
+        if(this._data.State == VisualState.HIDE)
+        {
+            this._data.IsSelected = true;
+            this._data.ColorHexa = this._hide;
+            this._hexaColor = T_Utils.ConvertToColor(this._data.ColorHexa);
+        }
+        else
+        {
+            this._data.IsSelected = true;
+            this._data.ColorHexa = this._active;
             this._hexaColor = T_Utils.ConvertToColor(this._data.ColorHexa);
         }
     }

@@ -8,12 +8,25 @@ public class T_HexaButton : MonoBehaviour, IDropHandler
     public GameObject ColorHexa;
     private T_HexaInBoardData _hexaData;
     private T_ColorHexaDrag _colorHexa;
+    private Transform _parent;
+
+    private void Awake()
+    {
+        this._parent = this.transform.parent;
+    }
 
     public void Init(T_HexaInBoardData hexaData)
     {
         this._colorHexa = this.ColorHexa.GetComponent<T_ColorHexaDrag>();
         this._hexaData = hexaData;
         this._colorHexa.Init(this._hexaData);
+    }
+
+    public void InitColor(string colorId)
+    {
+        this._hexaData = null;
+        this._colorHexa = this.ColorHexa.GetComponent<T_ColorHexaDrag>();
+        this._colorHexa.InitColor(colorId);
     }
 
     public void SetHexaData(T_HexaInBoardData hexaData)
@@ -40,18 +53,37 @@ public class T_HexaButton : MonoBehaviour, IDropHandler
     {
         GameObject dropped = eventData.pointerDrag;
         T_ColorHexaDrag draggableItem = dropped.GetComponent<T_ColorHexaDrag>();
-        if (this.transform.childCount > 0)
+        if (this.transform.childCount > 0 && draggableItem.GetDataBefore() != null)
         {
             GameObject current = this.transform.GetChild(0).gameObject;
+            if(this._parent != T_PanelColorGroup.Instance.ColorGroup.transform)
+            {
+                T_ColorHexaDrag dragCurrent = current.GetComponent<T_ColorHexaDrag>();
+                dragCurrent.transform.SetParent(draggableItem.ParentAfterDrag);
+                draggableItem.ParentAfterDrag = this.transform;
 
-            T_ColorHexaDrag dragCurrent = current.GetComponent<T_ColorHexaDrag>();
-            dragCurrent.transform.SetParent(draggableItem.ParentAfterDrag);
-            draggableItem.ParentAfterDrag = this.transform;
+                GameObject gObj = current.transform.parent.gameObject;
+                T_HexaButton hexaButton = gObj.GetComponent<T_HexaButton>();
+                this.SetColorHexaInHexaBtn(gObj);
+                this.ChangeData(hexaButton, this, T_ScreenTool.Instance.GetHexaObj());
+            }
 
-            GameObject gObj = current.transform.parent.gameObject;
+        }
+        else if(this._parent != T_PanelColorGroup.Instance.ColorGroup.transform && this.GetHexaData() != draggableItem.GetDataBefore())
+        {
+            int count = this._parent.childCount;
+            GameObject gObj = Instantiate(T_ColumnHexa.Instance.HexaButton, this._parent);
+            T_HexaButton current = this.transform.GetComponent<T_HexaButton>();
+
+            gObj.name = string.Format("{0}_{1}", "HexaButton", count + 1);
             T_HexaButton hexaButton = gObj.GetComponent<T_HexaButton>();
-            this.SetColorHexaInHexaBtn(gObj);
-            this.ChangeData(hexaButton, this, T_ScreenTool.Instance.GetHexaObj());
+            T_HexaInBoardData hexaData = new T_HexaInBoardData();
+            hexaData.Id = count + 1;
+            hexaData.ColorHexa = draggableItem.GetColorId();
+            hexaData.IsSelected = false;
+            hexaData.State = VisualState.SHOW;
+            hexaButton.Init(hexaData);
+            T_ColumnHexa.Instance.AddDataToObj(hexaButton, current.GetHexaData().Id);
         }
     }
 
@@ -66,11 +98,6 @@ public class T_HexaButton : MonoBehaviour, IDropHandler
         T_HexaInBoardData data_1 = hexa_1.GetHexaData();
         hexa_1.SetHexaData(hexa_2.GetHexaData());
         hexa_2.SetHexaData(data_1);
-
-        /*T_HexaInBoardData hexaData = hexaObj.GetDataHexa();
-        Debug.LogError(hexaObj.gameObject);
-        hexaData.HexagonDatas[hexa_1.GetHexaData().Id - 1] = hexa_1.GetHexaData();
-        hexaData.HexagonDatas[hexa_2.GetHexaData().Id - 1] = hexa_2.GetHexaData();*/
     }
 
     public void OnHexaButtonClick(GameObject gObj)
