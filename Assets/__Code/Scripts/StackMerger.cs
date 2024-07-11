@@ -647,6 +647,28 @@ public class StackMerger : MonoBehaviour
         yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM + (hexagons.Count - 1) * GameConstants.HexagonConstants.TIME_DELAY);
         grid.StackOfCell.ShowCanvas();
 
+        foreach (GridHexagon gridChild in gridHexagons)
+        {
+            if(gridChild.CheckOccupied() && !CheckContainGrid(listGridHexagonNeedUpdate, gridChild))
+            {
+                listGridHexagonNeedUpdate.Add(gridChild);
+            }
+        }
+    }
+
+    private bool CheckContainGrid(List<GridHexagon> gridHexagons, GridHexagon grid)
+    {
+        for (int i = 0; i < gridHexagons.Count; i++)
+        {
+            GridHexagon grid1 = gridHexagons[i];
+
+            if (grid1.gameObject.CompareObject(grid.gameObject))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private IEnumerator IE_MergeRootNode(GridHexagonNode rootNode)
@@ -680,9 +702,11 @@ public class StackMerger : MonoBehaviour
         {
             if (stack.GetNumberSimilarColor() > 1)
             {
-                GridHexagon firstGridHex = listOne[0];
+                GridHexagon firstGrid = listOne[0];
                 listOne.RemoveAt(0);
                 yield return IE_MergePlayerHexagonsToStack(stack, listOne);
+                listGridHexagonNeedUpdate.Add(firstGrid);
+                yield break;
             }
             else
             {
@@ -696,6 +720,8 @@ public class StackMerger : MonoBehaviour
                 GridHexagon firstGridHexOneSimilar = listOne[0];
                 gridHexagons.Remove(firstGridHexOneSimilar);
                 yield return IE_MergePlayerHexagonsToStack(stack, gridHexagons);
+                listGridHexagonNeedUpdate.Add(firstGridHexOneSimilar);
+                yield break;
             }
             else
             {
@@ -705,17 +731,17 @@ public class StackMerger : MonoBehaviour
 
         yield return IE_RemovePlayerHexagonsFromStack_v2(stack);
 
+        foreach (GridHexagon gridHex in gridHexagons)
+        {
+            if(gridHex.CheckOccupied())
+            {
+                listGridHexagonNeedUpdate.Add(gridHex);
+            }
+        }
+
         if (grid.CheckOccupied())
         {
             listGridHexagonNeedUpdate.Add(grid);
-        }
-
-        foreach (GridHexagon gridItem in gridHexagons)
-        {
-            if (gridItem.CheckOccupied())
-            {
-                listGridHexagonNeedUpdate.Add(gridItem);
-            }
         }
     }
 }
