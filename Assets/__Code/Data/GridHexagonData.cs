@@ -27,6 +27,11 @@ public class GridHexagonData
     public GridHexagonData()
     {
     }
+
+    public void SetStackHexagonData(StackHexagonData stackHexagon)
+    {
+        this.StackHexagon = stackHexagon;
+    }
 }
 
 public class GridHexagonLockData

@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -246,16 +247,18 @@ public class T_ScreenTool : MonoBehaviour
                 StackHexagonData stackHexagonData = gridData.GridHexagonDatas[i].StackHexagon;
                 if (hexaData.HexagonDatas.Length > hexaObj.transform.childCount) 
                 {
-                    stackHexagonData.IDHexes = null;
+                    gridData.GridHexagonDatas[i].SetStackHexagonData(null);
                 }
                 else
                 {
                     List<int> idhexa = new List<int>();
                     for(int j = 0; j < hexaData.HexagonDatas.Length; j++)
                     {
-                        idhexa.Add(hexaData.HexagonDatas[j].Id);
+                        int idColor = Array.IndexOf(T_ConfigValue.ColorList, hexaData.HexagonDatas[j].ColorHexa);
+                        idhexa.Add(idColor);
                     }
                     stackHexagonData.IDHexes = idhexa.ToArray();
+                    idhexa = null;
                 }
 
             }

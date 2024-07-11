@@ -7,6 +7,15 @@ public class T_PanelSetup : T_PanelBase
 {
     public TMP_InputField NumberHexaInBoardTxt;
     public TMP_InputField NumberColorTxt;
+
+    private int NumberHexaInBoard = 5;
+    private int NumberColor = 8;
+
+    private void OnEnable()
+    {
+        this.NumberHexaInBoardTxt.text = this.NumberHexaInBoard.ToString();
+        this.NumberColorTxt.text = this.NumberColor.ToString();
+    }
     public void OnConfirmBtnClick()
     {
         int numberHexa = int.Parse(this.NumberHexaInBoardTxt.text);
