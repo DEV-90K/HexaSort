@@ -24,12 +24,12 @@ public class T_PanelSetup : T_PanelBase
         T_ScreenTool.Instance.InitLevel(numberHexa, numberColor);
         T_GameController.Instance.ShowGrid();
         T_GridController.Instance.Init(numberHexa);
-        T_GridController.Instance.CanContact = true;
         this.Hide();
+        T_GridController.Instance.CanContact = true;
     }
     public void OnCloseBtnClick()
     {
-        T_GridController.Instance.CanContact = true;
         this.Hide();
+        T_GridController.Instance.CanContact = true;
     }
 }

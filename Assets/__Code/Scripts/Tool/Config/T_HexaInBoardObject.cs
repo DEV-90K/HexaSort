@@ -89,6 +89,8 @@ public class T_HexaInBoardObject : MonoBehaviour
         this._data.State = state;
         if(this._data.State == VisualState.HIDE)
         {
+            this._gridHexagonData.State = GridHexagonState.LOCK_BY_GOAL;
+
             this._data.IsSelected = true;
             this._data.ColorHexa = this._hide;
             this._hexaColor = T_Utils.ConvertToColor(this._data.ColorHexa);

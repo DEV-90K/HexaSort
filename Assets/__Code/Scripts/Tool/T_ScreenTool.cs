@@ -126,7 +126,7 @@ public class T_ScreenTool : MonoBehaviour
         this.RemoveBtn.SetActive(true);
         this.ShowBtn.SetActive(true);
         this.EmptyBtn.SetActive(true);
-        //this.HideBtn.SetActive(true);
+        this.HideBtn.SetActive(true);
         this.ColumnHexa.gameObject.SetActive(true);
         this.ColumnHexa.ShowColumnHexa(this._hexaObj);
         this.PanelColorGroup.Show();
@@ -139,7 +139,7 @@ public class T_ScreenTool : MonoBehaviour
         this.RemoveBtn.SetActive(false);
         this.ShowBtn.SetActive(false);
         this.EmptyBtn.SetActive(false);
-        //this.HideBtn.SetActive(false);
+        this.HideBtn.SetActive(false);
         this.ColumnHexa.gameObject.SetActive(false);
         this.PanelColorGroup.Hide();
     }
@@ -245,7 +245,7 @@ public class T_ScreenTool : MonoBehaviour
                 GridHexagonData gridHexagonData = hexaObj.GetGridHexagonData();
                 gridData.GridHexagonDatas[i] = gridHexagonData;
                 StackHexagonData stackHexagonData = gridData.GridHexagonDatas[i].StackHexagon;
-                if (hexaData.HexagonDatas.Length > hexaObj.transform.childCount) 
+                if (hexaData.HexagonDatas.Length > hexaObj.transform.childCount || hexaObj.GetDataHexa().HexagonDatas.Length == 0) 
                 {
                     gridData.GridHexagonDatas[i].SetStackHexagonData(null);
                 }
