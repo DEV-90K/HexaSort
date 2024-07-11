@@ -1,55 +1,50 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
-using UnityUtils;
 
 //#if UNITY_EDITOR
 using UnityEngine;
+using Newtonsoft.Json;
 
 public class GridController : MonoBehaviour //Only using inside of the Editor. At product only load Prefab Level contain Grid
 {
-    [SerializeField]
-    private Grid grid;
-    [SerializeField]
-    private int gridSize = 2;    
-    [SerializeField]
-    private Transform hexagon;
+    private GridHexagon[] gridHexagons;
+    private List<GridHexagon> gridCollects;
 
-    private void Awake()
+    public void OnInit(GridHexagon[] gridHexagons)
     {
-        grid = GetComponent<Grid>();
+        this.gridHexagons = gridHexagons;        
+    }  
+    
+    public void OnResert()
+    {
+        gridHexagons = null;
+        gridCollects = null;
     }
 
-    private void Start()
+    public void Collect()
     {
-        Generating();
-    }
-
-    private void Generating()
-    {
-        transform.DestroyChildrenImmediate();
-        Vector3 cellCenter = grid.CellToWorld(new Vector3Int(1, 0, 0));
-        for(int xSwizzle = -gridSize; xSwizzle <= gridSize; xSwizzle++)
+        gridCollects = new List<GridHexagon>();
+        foreach (GridHexagon grid in gridHexagons)
         {
-            for(int zSwizzle = -gridSize; zSwizzle <= gridSize; zSwizzle++)
+            if (grid.CheckOccupied())
             {
-                Vector3 cellPos = grid.CellToWorld(new Vector3Int(xSwizzle, zSwizzle, 0));
-
-                if(cellPos.magnitude > cellCenter.magnitude * gridSize)
-                {
-                    continue;
-                }
-
-                //1
-                Transform instance = Instantiate(hexagon, transform);
-                instance.position = cellPos;
-
-                //2
-                //GameObject gridCellIns = (GameObject)PrefabUtility.InstantiatePrefab(hexagon);
-                //gridCellIns.transform.SetParent(transform);
-                //gridCellIns.transform.position = cellPos;
-                //gridCellIns.transform.rotation = Quaternion.identity;
+                gridCollects.Add(grid);
+                grid.StackOfCell.CollectPlayerHexagon(() => OnCollectCompleted(grid));
             }
+        }
+    }
+
+    private void OnCollectCompleted(GridHexagon gridHexagon)
+    {
+        gridCollects.Remove(gridHexagon);
+
+        if (gridCollects.Count <= 0)
+        {
+            foreach (GridHexagon grid in gridHexagons)
+            {
+                grid.CollectImmediate();
+            }
+            
+            OnResert();
         }
     }
 }

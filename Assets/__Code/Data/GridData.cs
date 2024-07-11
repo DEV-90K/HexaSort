@@ -1,5 +1,16 @@
+using Newtonsoft.Json;
+
 public class GridData
 {
-    public int ID { get; private set; }
+    [JsonProperty]
     public GridHexagonData[] GridHexagonDatas { get; private set; }
+
+    public GridData(GridHexagonData[] gridHexagonDatas)
+    {
+        GridHexagonDatas = gridHexagonDatas;
+    }
+
+    public GridData()
+    {
+    }
 }

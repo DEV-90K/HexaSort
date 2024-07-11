@@ -1,16 +1,20 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
+using UnityUtils;
 
 public class StackMerger : MonoBehaviour
 {
+    public static Action OnStackMergeCompleted;
     [SerializeField]
     private LayerMask gridHexagonLayerMask;
 
     public List<GridHexagon> listGridHexagonNeedUpdate = new List<GridHexagon>();
+    public Stack<GridHexagonNode> nodeVisited = new Stack<GridHexagonNode>();
+
+    private IStackSphereRadius _IStackSphereRadius;
 
     private void Awake()
     {
@@ -21,26 +25,58 @@ public class StackMerger : MonoBehaviour
     {
         StackController.OnStackPlacedOnGridHexagon -= StackController_OnStackPlacedOnGridHexagon;
     }
-    private void StackController_OnStackPlacedOnGridHexagon(GridHexagon gridHexagon)
-    {
-        StartCoroutine(IE_OnStackPlacedOnGridHexagon(gridHexagon));
-    }
 
-    private IEnumerator IE_OnStackPlacedOnGridHexagon(GridHexagon gridHexagon)
+    public void OnInit(IStackSphereRadius StackSphereRadius)
     {
+        _IStackSphereRadius = StackSphereRadius;
+    }
+    public void OnResert()
+    {
+        listGridHexagonNeedUpdate.Clear();
+    }
+    private void StackController_OnStackPlacedOnGridHexagon(GridHexagon gridHexagon)
+    {        
         listGridHexagonNeedUpdate.Add(gridHexagon);
+        if (listGridHexagonNeedUpdate.Count == 1)
+        {
+            StartCoroutine(IE_OnStackPlacedOnGridHexagon(gridHexagon));        
+        }
+    }
+    public void OnStackPlacedOnGridHexagon(GridHexagon gridHexagon)
+    {
+        //BFSAlgorithm(gridHexagon);
+        //Debug.Log("gridHexagonVisisted.Count: " + gridHexagonVisisted.Count);
+        //Debug.Log("gridHexagonLayer.Count: " + gridHexagonLayer.Count);
+        //gridHexagonVisisted.Clear();
+        //gridHexagonLayer.Clear();
+
+        listGridHexagonNeedUpdate.Add(gridHexagon);
+        if (listGridHexagonNeedUpdate.Count == 1)
+        {
+            StartCoroutine(IE_OnStackPlacedOnGridHexagon(gridHexagon));
+        }
+    }
+    private IEnumerator IE_OnStackPlacedOnGridHexagon(GridHexagon gridHexagon)
+    { 
         while (listGridHexagonNeedUpdate.Count > 0)
         {
             GridHexagon merge = listGridHexagonNeedUpdate[listGridHexagonNeedUpdate.Count - 1];
-
             listGridHexagonNeedUpdate.Remove(merge);
-            if(merge.IsOccupied)
-                yield return IE_CheckForMerge(merge);
+
+            if (merge.CheckOccupied())
+            {
+                CreateTree(merge);
+                yield return IE_HandleTree();
+                //yield return IE_CheckForMerge(merge);
+            }
         }
+
+        OnStackMergeCompleted?.Invoke();
     }
 
     private IEnumerator IE_CheckForMerge(GridHexagon gridHexagon)
     {
+        Debug.Log("IE_Check For Merge");
         //Get Top Color of Stack
         StackHexagon stackHexagon = gridHexagon.StackOfCell;
         Color topColorOfStackAtGridHexagon = stackHexagon.GetTopHexagonColor();
@@ -100,30 +136,29 @@ public class StackMerger : MonoBehaviour
         //}
     }
 
-    private IEnumerator IE_RemovePlayerHexagonsFromStack(List<Hexagon> listPlayerHexagonSimilarColor, StackHexagon stackHexagon)
-    {
-        Debug.Log("RemovePlayerHexagonsFromStack" + listPlayerHexagonSimilarColor.Count);
-        int numberOfPlayerHexagon = listPlayerHexagonSimilarColor.Count;
-        float offsetDelayTime = 0;
-        //Remove bottom to top
-        while(listPlayerHexagonSimilarColor.Count > 0)
-        {            
-            Hexagon playerHexagon = listPlayerHexagonSimilarColor[0];
-            playerHexagon.SetParent(null);
-            playerHexagon.TweenVanish(offsetDelayTime);            
-            offsetDelayTime += 0.01f;
+    //private IEnumerator IE_RemovePlayerHexagonsFromStack(List<Hexagon> listPlayerHexagonSimilarColor, StackHexagon stackHexagon)
+    //{
+    //    Debug.Log("RemovePlayerHexagonsFromStack" + listPlayerHexagonSimilarColor.Count);
+    //    int numberOfPlayerHexagon = listPlayerHexagonSimilarColor.Count;
+    //    float offsetDelayTime = 0;
+    //    //Remove bottom to top
+    //    while(listPlayerHexagonSimilarColor.Count > 0)
+    //    {            
+    //        Hexagon playerHexagon = listPlayerHexagonSimilarColor[0];
+    //        playerHexagon.SetParent(null);
+    //        playerHexagon.TweenVanish(offsetDelayTime);            
+    //        offsetDelayTime += 0.01f;
 
-            stackHexagon.RemovePlayerHexagon(playerHexagon);
-            listPlayerHexagonSimilarColor.RemoveAt(0);
-        }
+    //        stackHexagon.RemovePlayerHexagon(playerHexagon);
+    //        listPlayerHexagonSimilarColor.RemoveAt(0);
+    //    }
 
-        yield return new WaitForSeconds(0.2f + (numberOfPlayerHexagon + 1) * 0.01f);
-    }
+    //    yield return new WaitForSeconds(0.2f + (numberOfPlayerHexagon + 1) * 0.01f);
+    //}
 
     private IEnumerator IE_RemovePlayerHexagonsFromStack_v2(StackHexagon stackHexagon)
     {
-        List<Hexagon> listPlayerHexagonSimilarColor = GetPlayerHexagonSimilarColor_V2(stackHexagon);
-        Debug.Log("RemovePlayerHexagonsFromStack" + listPlayerHexagonSimilarColor.Count);
+        List<Hexagon> listPlayerHexagonSimilarColor = GetPlayerHexagonSimilarColor(stackHexagon);        
         int numberOfPlayerHexagon = listPlayerHexagonSimilarColor.Count;
         if (numberOfPlayerHexagon < 10) 
             yield break;
@@ -141,16 +176,16 @@ public class StackMerger : MonoBehaviour
             listPlayerHexagonSimilarColor.RemoveAt(0);
         }
 
-        yield return new WaitForSeconds(0.2f + (numberOfPlayerHexagon + 1) * 0.01f);
+        yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM + (numberOfPlayerHexagon - 1) * GameConstants.HexagonConstants.TIME_DELAY);
     }
 
-    private List<Hexagon> GetPlayerHexagonSimilarColor_V2(StackHexagon stackHexagon)
+    private List<Hexagon> GetPlayerHexagonSimilarColor(StackHexagon stackHexagon)
     {
         Color color = stackHexagon.GetTopHexagonColor();
         List<Hexagon> playerHexagons = new List<Hexagon>();
         for (int i = stackHexagon.Hexagons.Count - 1; i >= 0; i--)
         {
-            if (stackHexagon.Hexagons[i].Color == color)
+            if(ColorUtils.ColorEquals(stackHexagon.Hexagons[i].Color, color))
             {
                 playerHexagons.Add(stackHexagon.Hexagons[i]);
             }
@@ -163,50 +198,52 @@ public class StackMerger : MonoBehaviour
         return playerHexagons;
     }
         
-
     private IEnumerator IE_MergePlayerHexagonsToStack(StackHexagon stackHexagon, List<GridHexagon> neighborGridHexagon)
     {
         List<Hexagon> listPlayerHexagonMerge = GetPlayerHexagonNeedMerge(stackHexagon.GetTopHexagonColor(), neighborGridHexagon);
         RemovePlayerHexagonFromOldStack(neighborGridHexagon, listPlayerHexagonMerge);
         MergePlayerHexagon(stackHexagon, listPlayerHexagonMerge);
-        yield return new WaitForSeconds(0.2f + listPlayerHexagonMerge.Count * 0.01f + 0.01f);
+        stackHexagon.HideCanvas();
+        yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM + (listPlayerHexagonMerge.Count - 1) * GameConstants.HexagonConstants.TIME_DELAY);
+        stackHexagon.ShowCanvas();
     }
 
-    private List<Hexagon> GetPlayerHexagonSimilarColor(StackHexagon stackHexagon, Color topColorOfStackAtGridHexagon)
-    {
-        List<Hexagon> playerHexagons = new List<Hexagon>();
-        for(int i = stackHexagon.Hexagons.Count - 1; i >= 0; i--)
-        {
-            if (stackHexagon.Hexagons[i].Color == topColorOfStackAtGridHexagon)
-            {
-                playerHexagons.Add(stackHexagon.Hexagons[i]);
-            }
-            else
-            {
-                break;
-            }
-        }
+    //private List<Hexagon> GetPlayerHexagonSimilarColor(StackHexagon stackHexagon, Color topColorOfStackAtGridHexagon)
+    //{
+    //    List<Hexagon> playerHexagons = new List<Hexagon>();
+    //    for(int i = stackHexagon.Hexagons.Count - 1; i >= 0; i--)
+    //    {
+    //        //if (stackHexagon.Hexagons[i].Color == topColorOfStackAtGridHexagon)
+    //        //{
+    //        //    playerHexagons.Add(stackHexagon.Hexagons[i]);
+    //        //}
+    //        if(ColorUtils.ColorEquals(stackHexagon.Hexagons[i].Color, topColorOfStackAtGridHexagon))
+    //        {
+    //            playerHexagons.Add(stackHexagon.Hexagons[i]);
+    //        }
+    //        else
+    //        {
+    //            break;
+    //        }
+    //    }
 
-        return playerHexagons;
-    }
+    //    return playerHexagons;
+    //}
 
     private void MergePlayerHexagon(StackHexagon stackHexagon, List<Hexagon> listPlayerHexagonMerge)
     {
-        float yOfCurrentGridHexagon = stackHexagon.Hexagons.Count * 0.2f + 0.2f; //0.2f of GridHexagon
+        float yOfCurrentGridHexagon = (stackHexagon.Hexagons.Count - 1) * GameConstants.HexagonConstants.HEIGHT;
         for (int i = 0; i < listPlayerHexagonMerge.Count; i++)
         {
             Hexagon playerHexagon = listPlayerHexagonMerge[i];
             stackHexagon.AddPlayerHexagon(playerHexagon); //have setparent inside addPlayerHexagon
 
-            float yOffset = yOfCurrentGridHexagon + i * 0.2f;
+            float yOffset = yOfCurrentGridHexagon + (i + 1) * GameConstants.HexagonConstants.HEIGHT;
             Vector3 localPos = Vector3.up * yOffset; //(0, yOffset, 0)
-            //playerHexagon.transform.position = stackHexagon2.transform.position.Add(0, yOffset, 0);
-            //playerHexagon.transform.localPosition = localPos;
-            playerHexagon.MoveToGridHexagon(localPos);
+            playerHexagon.Configure(stackHexagon);
+            playerHexagon.MoveToGridHexagon(localPos, i * GameConstants.HexagonConstants.TIME_DELAY);
         }
     }
-
-
 
     private static void RemovePlayerHexagonFromOldStack(List<GridHexagon> neighborGridHexagonSameTopColor, List<Hexagon> listPlayerHexagonMerge)
     {
@@ -235,7 +272,13 @@ public class StackMerger : MonoBehaviour
             for (int i = hexagonStack.Hexagons.Count - 1; i >= 0; i--)
             {
                 Hexagon playerHexagon = hexagonStack.Hexagons[i];
-                if (playerHexagon.Color == topColorOfStackAtGridHexagon)
+                //if (playerHexagon.Color == topColorOfStackAtGridHexagon)
+                //{
+                //    listPlayerHexagonMerge.Add(playerHexagon);
+                //    playerHexagon.SetParent(null);
+                //}
+
+                if(ColorUtils.ColorEquals(playerHexagon.Color, topColorOfStackAtGridHexagon))
                 {
                     listPlayerHexagonMerge.Add(playerHexagon);
                     playerHexagon.SetParent(null);
@@ -251,8 +294,10 @@ public class StackMerger : MonoBehaviour
         //Get List Neighbor have stack have same top color
         List<GridHexagon> neighborGridHexagonSameTopColor = new List<GridHexagon>();
         foreach (GridHexagon neighborGridHexagon in listNeighborGridHexagons)
-        {
-            if (neighborGridHexagon.StackOfCell.GetTopHexagonColor() == topColorOfStackAtGridHexagon)
+        {            
+            Color color1 = neighborGridHexagon.StackOfCell.GetTopHexagonColor();
+            Color color2 = topColorOfStackAtGridHexagon;
+            if (ColorUtils.ColorEquals(color1, color2))
             {
                 neighborGridHexagonSameTopColor.Add(neighborGridHexagon);
             }
@@ -263,10 +308,8 @@ public class StackMerger : MonoBehaviour
 
     private List<GridHexagon> GetNeighborGidHexagon(GridHexagon gridHexagon)
     {
-
-        Collider[] neighborGridCellColliders = Physics.OverlapSphere(gridHexagon.transform.position, 2, gridHexagonLayerMask);
-        //OverlapSphere: Computes and stores colliders touching or inside the sphere. 
-        // 2 because gridHexagon size (1.7321, 2, 0) 2 radius is good for detecech neighbors
+        float distance = _IStackSphereRadius.GetRadiusByGrid().x * 2;
+        Collider[] neighborGridCellColliders = Physics.OverlapSphere(gridHexagon.transform.position, distance, gridHexagonLayerMask);
 
         //Get A list of neighbor grid hexagon, that are occupied
         List<GridHexagon> listNeighborGridHexagons = new List<GridHexagon>();
@@ -274,8 +317,14 @@ public class StackMerger : MonoBehaviour
         {
             GridHexagon neighborGridHexagon = collider.GetComponent<GridHexagon>();
 
-            if (neighborGridHexagon.IsOccupied == false) continue;
-            if (neighborGridHexagon == gridHexagon) continue;
+            if (neighborGridHexagon.CheckOccupied() == false)
+            {
+                continue;
+            }
+            if (neighborGridHexagon == gridHexagon)
+            {
+                continue;
+            }
 
             listNeighborGridHexagons.Add(neighborGridHexagon);            
         }
@@ -283,30 +332,30 @@ public class StackMerger : MonoBehaviour
         return listNeighborGridHexagons;
     }
 
-    private List<GridHexagon> UpdateNeighborGridHexagonSameTopColor_S2(GridHexagon gridHexagon, List<GridHexagon> neighborGridHexagonSameTopColor)
-    {
-        //Add gridHexagon to list
-        //Compare and by number simillar color
-        //Compare and by number of top color
-        //List<GridHexagon> listTest = new List<GridHexagon>();
-        //listTest.AddRange(neighborGridHexagonSameTopColor);
-        //listTest.Add(gridHexagon);
+    //private List<GridHexagon> UpdateNeighborGridHexagonSameTopColor_S2(GridHexagon gridHexagon, List<GridHexagon> neighborGridHexagonSameTopColor)
+    //{
+    //    //Add gridHexagon to list
+    //    //Compare and by number simillar color
+    //    //Compare and by number of top color
+    //    //List<GridHexagon> listTest = new List<GridHexagon>();
+    //    //listTest.AddRange(neighborGridHexagonSameTopColor);
+    //    //listTest.Add(gridHexagon);
 
-        //listTest.OrderByDescending(gridHex => gridHex.StackOfCell.GetNumberSimilarColor()).ThenBy(gridHex => gridHex.StackOfCell.GetNumberTopPlayerHexagonSameColor());
-        //return listTest;
+    //    //listTest.OrderByDescending(gridHex => gridHex.StackOfCell.GetNumberSimilarColor()).ThenBy(gridHex => gridHex.StackOfCell.GetNumberTopPlayerHexagonSameColor());
+    //    //return listTest;
 
-        //Add gridHexagon to list
-        List<GridHexagon> allGridHexagon = new List<GridHexagon>();
-        allGridHexagon.AddRange(neighborGridHexagonSameTopColor);
-        allGridHexagon.Add(gridHexagon);
+    //    //Add gridHexagon to list
+    //    List<GridHexagon> allGridHexagon = new List<GridHexagon>();
+    //    allGridHexagon.AddRange(neighborGridHexagonSameTopColor);
+    //    allGridHexagon.Add(gridHexagon);
 
-        return allGridHexagon
-            //Compare and by number simillar color
-            .OrderByDescending(gridHex => gridHex.StackOfCell.GetNumberSimilarColor())
-            //Compare and by number of top color
-            .ThenBy(gridHex => gridHex.StackOfCell.GetNumberTopPlayerHexagonSameColor())
-            .ToList();
-    }
+    //    return allGridHexagon
+    //        //Compare and by number simillar color
+    //        .OrderByDescending(gridHex => gridHex.StackOfCell.GetNumberSimilarColor())
+    //        //Compare and by number of top color
+    //        .ThenBy(gridHex => gridHex.StackOfCell.GetNumberTopPlayerHexagonSameColor())
+    //        .ToList();
+    //}
 
     //private IEnumerator UpdateNeighborGridHexagonSameTopColor_S3(GridHexagon gridHexagon, List<GridHexagon> neighborGridHexagonSameTopColor)
     //{
@@ -340,8 +389,10 @@ public class StackMerger : MonoBehaviour
     //    }
     //}
 
+    //Merge and remove neighbor
     private IEnumerator IE_AlgorithmMerge_3(GridHexagon gridHexagon, List<GridHexagon> neighborGridHexagonSameTopColor)
     {
+        Debug.Log("IE_AlgorithmMerge_3");
         //At [1] ensure all neighbor already add for loop merge
         //Test case all neighbor have similar color > 1, current == 1 => Merge all inside Curr Grid
         //Test case all neighbor have similar color > 1, current > 1 => Merge all inside Curr Grid
@@ -349,9 +400,6 @@ public class StackMerger : MonoBehaviour
         //Test case all neighbor have similar color == 1, current > 1 => Merge (all - 1) inside current => Merge current to the remaing Neigbor (add Remaining to last of listGridHexagonNeedUpdate)
         //Test case than 1 neighbor > 1 and than 1 neibor == 1, current == 1 => Merge all inside Curr Grid
         //Test case than 1 neighbor > 1 and than 1 neibor == 1, current > 1 => Merge (all - 1 neighbor = 1) inside Curr Grid => (add Remaining to last of listGridHexagonNeedUpdate)
-
-        //List<GridHexagon> neighborClone = new List<GridHexagon>();
-        //neighborClone.AddRange(neighborGridHexagonSameTopColor);
 
         StackHexagon stack = gridHexagon.StackOfCell;
 
@@ -394,7 +442,8 @@ public class StackMerger : MonoBehaviour
         }
 
         yield return IE_RemovePlayerHexagonsFromStack_v2(stack);
-        listGridHexagonNeedUpdate.Add(gridHexagon);
+        if(gridHexagon.CheckOccupied())
+            listGridHexagonNeedUpdate.Add(gridHexagon);
     }
 
     private List<GridHexagon> GetNeighborGridHexagonHaveOneSimilarColor(List<GridHexagon> neighborGridHexagonSameTopColor)
@@ -423,5 +472,317 @@ public class StackMerger : MonoBehaviour
         }
 
         return gridHexagons;
+    }
+    
+    private void CreateTree(GridHexagon grid)
+    {
+        GridHexagonNode rootNode = new GridHexagonNode(grid, null);
+        Stack<GridHexagonNode> queueNode = new Stack<GridHexagonNode>();
+        queueNode.Push(rootNode);
+
+        int k = 100;
+        while (queueNode.Count > 0)
+        {
+            k--;
+
+            if(k <= 0)
+            {
+                Debug.LogError("Some thing wrong here");
+                return;
+            }
+
+            GridHexagonNode nodeVisiting = queueNode.Pop();
+
+            if(nodeVisited.Contains(nodeVisiting))
+            {
+                continue;
+            }
+
+            nodeVisited.Push(nodeVisiting);
+
+            List<GridHexagonNode> chilNodes = CreateEdge(nodeVisiting);           
+
+            foreach (GridHexagonNode node in chilNodes)
+            {
+                //if (queueNode.Contains(node))
+                //    continue;
+
+                //if (nodeVisited.Contains(node))
+                //    continue;
+
+                if(CheckContainNode(queueNode.ToList(), node))
+                {
+                    continue;
+                }
+
+                if (CheckContainNode(nodeVisited.ToList(), node))
+                {
+                    continue;
+                }
+
+                queueNode.Push(node);
+                nodeVisiting.AddChildNode(node);
+            }                        
+        }
+    }
+
+    private bool CheckContainNode(List<GridHexagonNode> listNode, GridHexagonNode node)
+    {
+        for (int i = 0; i < listNode.Count; i++)
+        {
+            GridHexagon grid1 = listNode[i].GetGridHexagon();
+            GridHexagon grid2 = node.GetGridHexagon();
+
+            if (grid1.gameObject.CompareObject(grid2.gameObject))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private List<GridHexagonNode> CreateEdge(GridHexagonNode EdgeNode)
+    {
+        List<GridHexagonNode> result = new List<GridHexagonNode>();
+        GridHexagon grid = EdgeNode.GetGridHexagon();
+        Color topColor = grid.StackOfCell.GetTopHexagonColor();
+        List<GridHexagon> neighbor = GetNeighborGidHexagon(grid);
+
+        if(neighbor.Count == 0)
+        {
+            return result;
+        }    
+
+        List<GridHexagon> neighborSameColor = GetHexagonStackOfNeighborSameTopColor(neighbor, topColor);
+
+        //Ưu tiên xử lý OneSimiler
+        //Đảm bảo ThanOne Similar vào Queue trước => được xem xét trước => vào visited trước => được handle sau 
+        List<GridHexagon> neighborThanOneSimilar = GetNeighborGridHexagonHaveThanOneSimilarColor(neighborSameColor);
+        foreach (GridHexagon item in neighborThanOneSimilar)
+        {
+            GridHexagonNode node = new GridHexagonNode(item, EdgeNode);
+            result.Add(node);
+        }
+        
+        List<GridHexagon> neighborOneSimilar = GetNeighborGridHexagonHaveOneSimilarColor(neighborSameColor);
+        foreach (GridHexagon item in neighborOneSimilar)
+        {
+            GridHexagonNode node = new GridHexagonNode(item, EdgeNode);
+            result.Add(node);
+        }
+
+        return result;
+    }
+
+    //Duyệt cây từ cạnh lên
+    private IEnumerator IE_HandleTree()
+    {
+        GridHexagonNode edgeNode = null;
+        int k = 100;
+        while (nodeVisited.Count > 0)
+        {
+            k--;
+
+            if (k <= 0)
+            {
+                Debug.LogError("Some thing wrong here IE_HandleTree");
+                yield break;
+            }
+
+            GridHexagonNode node = nodeVisited.Pop();
+
+            if (node.IsRootNode)
+            {
+                edgeNode = node;
+                continue;
+            }
+            else if (node.IsLeafNode)
+            {
+                continue;
+            }            
+            else if(edgeNode == null)
+            {
+                edgeNode = node;
+                yield return IE_MergeHexagonToEdgeNode(edgeNode);
+            }
+            else if(edgeNode != null)
+            {
+                GridHexagon gridOfEdge = edgeNode.GetGridHexagon();
+                GridHexagon gridOfNode = node.GetGridHexagon();
+
+                if(gridOfEdge.gameObject.CompareObject(gridOfNode.gameObject))
+                {
+                    continue;
+                }
+                else
+                {
+                    edgeNode = node;
+                    yield return IE_MergeHexagonToEdgeNode(edgeNode);
+                }
+            }
+        }
+
+        //Root Node
+        //yield return IE_CheckForMerge(edgeNode.GetGridHexagon());
+        yield return IE_MergeRootNode(edgeNode);
+    }
+
+    private IEnumerator IE_MergeHexagonToEdgeNode(GridHexagonNode edgeNode)
+    {
+        GridHexagon grid = edgeNode.GetGridHexagon();
+        Color color = grid.StackOfCell.GetTopHexagonColor();
+
+        GridHexagonNode[] childNodes = edgeNode.GetChildNodes();
+        List<GridHexagon> gridHexagons = new List<GridHexagon>();
+        foreach (GridHexagonNode node in childNodes)
+        {
+            gridHexagons.Add(node.GetGridHexagon());
+        }
+
+        List<Hexagon> hexagons = GetPlayerHexagonNeedMerge(color, gridHexagons);
+        RemovePlayerHexagonFromOldStack(gridHexagons, hexagons);
+        MergePlayerHexagon(grid.StackOfCell, hexagons);
+        grid.StackOfCell.HideCanvas();        
+        yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM + (hexagons.Count - 1) * GameConstants.HexagonConstants.TIME_DELAY);
+        grid.StackOfCell.ShowCanvas();
+
+        foreach (GridHexagon gridChild in gridHexagons)
+        {
+            if(gridChild.CheckOccupied() && !CheckContainGrid(listGridHexagonNeedUpdate, gridChild))
+            {
+                listGridHexagonNeedUpdate.Add(gridChild);
+            }
+        }
+    }
+
+    private bool CheckContainGrid(List<GridHexagon> gridHexagons, GridHexagon grid)
+    {
+        for (int i = 0; i < gridHexagons.Count; i++)
+        {
+            GridHexagon grid1 = gridHexagons[i];
+
+            if (grid1.gameObject.CompareObject(grid.gameObject))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private IEnumerator IE_MergeRootNode(GridHexagonNode rootNode)
+    {
+        GridHexagon grid = rootNode.GetGridHexagon();
+        StackHexagon stack = grid.StackOfCell;
+        Color color = grid.StackOfCell.GetTopHexagonColor();
+
+        GridHexagonNode[] childNodes = rootNode.GetChildNodes();
+
+        if(childNodes.Length == 0)
+        {
+            Debug.Log("Root not have any child");
+            yield break;
+        }
+
+        List<GridHexagon> gridHexagons = new List<GridHexagon>();
+        foreach (GridHexagonNode node in childNodes)
+        {
+            gridHexagons.Add(node.GetGridHexagon());
+        }
+
+        List<GridHexagon> listOne = GetNeighborGridHexagonHaveOneSimilarColor(gridHexagons);
+        List<GridHexagon> listThanOne = GetNeighborGridHexagonHaveThanOneSimilarColor(gridHexagons);
+
+        if (listThanOne.Count == gridHexagons.Count)
+        {
+            yield return IE_MergePlayerHexagonsToStack(stack, listThanOne);
+        }
+        else if (listOne.Count == gridHexagons.Count)
+        {
+            if (stack.GetNumberSimilarColor() > 1)
+            {
+                GridHexagon firstGrid = listOne[0];
+                listOne.RemoveAt(0);
+                yield return IE_MergePlayerHexagonsToStack(stack, listOne);
+                listGridHexagonNeedUpdate.Add(firstGrid);
+                yield break;
+            }
+            else
+            {
+                yield return IE_MergePlayerHexagonsToStack(stack, listOne);
+            }
+        }
+        else
+        {
+            if (stack.GetNumberSimilarColor() > 1)
+            {
+                GridHexagon firstGridHexOneSimilar = listOne[0];
+                gridHexagons.Remove(firstGridHexOneSimilar);
+                yield return IE_MergePlayerHexagonsToStack(stack, gridHexagons);
+                listGridHexagonNeedUpdate.Add(firstGridHexOneSimilar);
+                yield break;
+            }
+            else
+            {
+                yield return IE_MergePlayerHexagonsToStack(stack, gridHexagons);
+            }
+        }
+
+        yield return IE_RemovePlayerHexagonsFromStack_v2(stack);
+
+        foreach (GridHexagon gridHex in gridHexagons)
+        {
+            if(gridHex.CheckOccupied())
+            {
+                listGridHexagonNeedUpdate.Add(gridHex);
+            }
+        }
+
+        if (grid.CheckOccupied())
+        {
+            listGridHexagonNeedUpdate.Add(grid);
+        }
+    }
+}
+
+public class GridHexagonNode
+{
+    private GridHexagonNode _EdgeNode;
+    private GridHexagon _GridHexagon;
+    private List<GridHexagonNode> _ChildNodes;
+    public bool IsRootNode => _EdgeNode == null;
+    public bool IsLeafNode => _ChildNodes.Count == 0;
+
+    public GridHexagonNode(GridHexagon Content, GridHexagonNode EdgeNode = null)
+    {
+        this._GridHexagon = Content;
+        this._EdgeNode = EdgeNode;
+        this._ChildNodes = new List<GridHexagonNode>();
+    }    
+
+    public GridHexagonNode[] GetChildNodes()
+    {
+        return _ChildNodes.ToArray();
+    }
+
+    public void AddChildNode(GridHexagonNode childNode)
+    {
+        this._ChildNodes.Add(childNode);
+    }
+
+    public void UpdateChildNode(List<GridHexagonNode> childNodes)
+    {
+        this._ChildNodes = childNodes;
+    }
+
+    public GridHexagonNode GetEdgeNode()
+    {
+        return _EdgeNode;
+    }
+
+    public GridHexagon GetGridHexagon()
+    {
+        return _GridHexagon;
     }
 }

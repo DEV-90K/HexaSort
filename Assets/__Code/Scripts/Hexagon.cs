@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityUtils;
 
-public class Hexagon : MonoBehaviour
+public class Hexagon : PoolMember
 {
+    public static Action OnVanish;
+
     [SerializeField]
     private new Renderer renderer;
     [SerializeField]
@@ -15,6 +17,13 @@ public class Hexagon : MonoBehaviour
     {
         get => renderer.material.color;
         set => renderer.material.color = value;
+    }
+
+    public void OnSetUp()
+    {
+        this.transform.localEulerAngles = Vector3.zero;
+        transform.localScale = Vector3.one;
+        EnableCollider();
     }
 
     public void Configure(StackHexagon hexStack)
@@ -37,31 +46,58 @@ public class Hexagon : MonoBehaviour
         collider.enabled = true;
     }
 
-    public void MoveToGridHexagon(Vector3 localPos)
+    public void MoveToGridHexagon(Vector3 localPos, float delayTime)
     {
         LeanTween.cancel(gameObject);
-        float delay = transform.GetSiblingIndex() * 0.01f + 0.01f; //0.01f of GridHexagon
-
-        LeanTween.moveLocal(gameObject, localPos, 0.2f)
+        LeanTween.moveLocal(gameObject, localPos, GameConstants.HexagonConstants.TIME_ANIM)
             .setEaseInOutSine()
-            .setDelay(delay);
+            .setDelay(delayTime);
 
         Vector3 direction = (localPos - transform.localPosition).With(y: 0).normalized;
-        Vector3 rotationAxis = Vector3.Cross(Vector3.up, direction);
+        Vector3 v = transform.rotation * direction;
+        Vector3 rotationAxis = Vector3.Cross(Vector3.up, v);
 
-        LeanTween.rotateAround(gameObject, rotationAxis, 180, 0.2f)
+        LeanTween.rotateAround(gameObject, rotationAxis, 180, GameConstants.HexagonConstants.TIME_ANIM)
             .setEaseInOutSine()
-            .setDelay(delay);
+            .setOnComplete(() =>
+            {
+                transform.localEulerAngles = Vector3.zero;
+            })
+            .setDelay(delayTime);
     }
 
     public void TweenVanish(float offsetDelayTime)
     {
         LeanTween.cancel(gameObject);
-        LeanTween.scale(gameObject, Vector3.zero, 0.2f)
+        LeanTween.scale(gameObject, Vector3.zero, GameConstants.HexagonConstants.TIME_ANIM)
             .setEaseInBack()
             .setDelay(offsetDelayTime)
-            .setOnComplete(() => 
-                DestroyImmediate(gameObject)
+            .setOnComplete(() =>
+                {
+                    Collect();
+                }
              );
+    }
+
+    public void OnResert()
+    {
+        LeanTween.cancel(gameObject);
+        transform.localScale = Vector3.one;
+        transform.localRotation = Quaternion.identity;
+        EnableCollider();
+        HexagonStack = null;
+    }
+
+    public void CollectImmediate()
+    {
+        OnResert();
+        PoolManager.Despawn(this);
+    }
+
+    public void Collect()
+    {
+        OnResert();
+        OnVanish?.Invoke();
+        PoolManager.Despawn(this);
     }
 }

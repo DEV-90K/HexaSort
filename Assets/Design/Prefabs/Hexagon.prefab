@@ -68,6 +68,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2de5935df9a17442acfc313736b4a8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  poolType: 1
   renderer: {fileID: 2588829635925838130}
   collider: {fileID: 7134767596597297414}
 --- !u!1 &5889420442748632010

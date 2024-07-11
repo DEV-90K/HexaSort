@@ -22,7 +22,7 @@ public class PopupManager : MonoBehaviour
 
         for (var i = popupRoot.childCount - 1; i >= 0; i--)
         {
-            UnityEngine.Object.Destroy(popupRoot.GetChild(i));
+            UnityEngine.Object.Destroy(popupRoot.GetChild(i).gameObject);
         }
 
         cachePopups.Clear();
@@ -32,12 +32,7 @@ public class PopupManager : MonoBehaviour
     public T CreatePopup<T>() where T : PopupBase
     {
         PopupBase popup = Instantiate(GetPrefab<T>(), popupRoot);
-
-        if(popup.canReused) 
-            cachePopups.Add(typeof(T), popup);
-        else
-            cachePopups.Add(typeof(T), null);
-
+        cachePopups[typeof(T)] = popup;
         return popup as T;
     }
 
@@ -67,13 +62,20 @@ public class PopupManager : MonoBehaviour
 
     public bool CheckPopupShowed<T>() where T : PopupBase
     {
-        if (CheckPopup<T>() && cachePopups[typeof(T)].gameObject.activeInHierarchy)
+        if (CheckPopup<T>() && CheckPopupShowedFromCache<T>())
         {
             return true;
         }
 
         return false;
     }
+
+    private bool CheckPopupShowedFromCache<T>() where T : PopupBase
+    {
+        System.Type type = typeof(T);
+        return cachePopups[type].gameObject.activeSelf;
+    }
+
     private bool CheckPopup<T>() where T : PopupBase
     {
         System.Type type = typeof(T);
