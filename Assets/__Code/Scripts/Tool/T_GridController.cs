@@ -128,7 +128,6 @@ public class T_GridController : MonoBehaviour
         int childCount = hexaObj.transform.childCount;
         T_HexaInBoardData hexaData = hexaObj.GetDataHexa();
         if (childCount > 1) this.DestroyChildHexa(this._childHexas);
-        this._childHexas = new List<GameObject>();
         for(int i = 0; i < hexaData.HexagonDatas.Length; i++)
         {
             GameObject gObj = Instantiate(this._modelHexa.gameObject, gObjHexa.transform);
@@ -147,12 +146,21 @@ public class T_GridController : MonoBehaviour
             {
                 Destroy(obj);
             }
+            childHexas.Clear();
         }
     }
 
     public void ShowEmptyHexa(T_HexaInBoardObject hexaObj)
     {
+        List<GameObject> children = new List<GameObject>();
         int childCount = hexaObj.transform.childCount;
-        if (childCount > 1) this.DestroyChildHexa(this._childHexas);
+        if (childCount > 1)
+        {
+            for(int i = childCount - 1; i >= 0; i--)
+            {
+                children.Add(hexaObj.transform.GetChild(i).gameObject);
+            }
+            DestroyChildHexa(children);
+        }
     }
 }

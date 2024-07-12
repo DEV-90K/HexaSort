@@ -90,7 +90,8 @@ public class T_ScreenTool : MonoBehaviour
     public void OnHideBtnClick()
     {
         if (this._hexaObj == null) return;
-        this._hexaObj.Init(0);
+        //this._hexaObj.Init(0);
+        T_GridController.Instance.ShowEmptyHexa(this._hexaObj);
         this._hexaObj.SetVisualState(VisualState.HIDE);
         this.HideOnClickHexaDisable();
     }
@@ -245,7 +246,7 @@ public class T_ScreenTool : MonoBehaviour
                 GridHexagonData gridHexagonData = hexaObj.GetGridHexagonData();
                 gridData.GridHexagonDatas[i] = gridHexagonData;
                 StackHexagonData stackHexagonData = gridData.GridHexagonDatas[i].StackHexagon;
-                if (hexaData.HexagonDatas.Length > hexaObj.transform.childCount || hexaObj.GetDataHexa().HexagonDatas.Length == 0) 
+                if ((hexaData.HexagonDatas.Length > hexaObj.transform.childCount && hexaData.State != VisualState.HIDE) || hexaObj.GetDataHexa().HexagonDatas.Length == 0) 
                 {
                     gridData.GridHexagonDatas[i].SetStackHexagonData(null);
                 }
@@ -258,7 +259,7 @@ public class T_ScreenTool : MonoBehaviour
                         idhexa.Add(idColor);
                     }
                     stackHexagonData.IDHexes = idhexa.ToArray();
-                    idhexa = null;
+                    idhexa.Clear();
                 }
 
             }
