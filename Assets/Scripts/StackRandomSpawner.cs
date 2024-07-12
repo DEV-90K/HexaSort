@@ -19,9 +19,27 @@ public class StackRandomSpawner : StackSpawner
 
         HexagonData[] datas = ResourceManager.Instance.GetAllHexagonData();
         List<Color> listColors = new List<Color>();
-        foreach (HexagonData data in datas)
+        //foreach (HexagonData data in datas)
+        //{
+        //    if (data.ID == 1) continue; //1 is color of grid
+        //    if (ColorUtility.TryParseHtmlString(data.HexColor, out Color color))
+        //    {
+        //        listColors.Add(color);
+        //    }
+        //}
+
+        for (int i = 0; i < datas.Length; i++)
         {
-            if (data.ID == 1) continue; //1 is color of grid
+            HexagonData data = datas[i];
+
+            if (data.ID == 1)
+                continue;
+
+            if(i >= 3)
+            {
+                break;
+            }
+
             if (ColorUtility.TryParseHtmlString(data.HexColor, out Color color))
             {
                 listColors.Add(color);
@@ -46,7 +64,9 @@ public class StackRandomSpawner : StackSpawner
             return null;
         }
         else
+        {
             COUNT++;
+        }    
 
         StackHexagon insHexagonStack = SpawnStack(stack.position);
         insHexagonStack.name = $"Hexagon Stack"; //{stack.GetSiblingIndex()}
@@ -73,14 +93,54 @@ public class StackRandomSpawner : StackSpawner
             }
         }
 
-        if(CheckStackSimilar(insHexagonStack))
+        if (CheckStackSimilar(insHexagonStack))
         {
+            Debug.Log("RECOURSE");
             insHexagonStack.CollectImmediate();
-            return Spawn(stack, COUNT);
+            return this.Spawn(stack, COUNT);
         }
 
         cacheStacks.Add(insHexagonStack);
         return insHexagonStack;
+    }
+
+    private bool CheckStackSimilar(StackHexagon stackCompare)
+    {
+        if (cacheStacks.Count == 0)
+        {
+            return false;
+        }
+
+        List<Hexagon> hexsCompare = stackCompare.Hexagons;
+
+        for (int i = 0; i < cacheStacks.Count; i++)
+        {
+            StackHexagon stack = cacheStacks[i];
+            List<Hexagon> hexs = stack.Hexagons;
+
+            if (hexs.Count != hexsCompare.Count)
+            {
+                return false;
+            }
+
+            for (int j = 0; j < hexsCompare.Count; j++)
+            {
+                if (ColorUtils.ColorEquals(hexs[j].Color, hexsCompare[j].Color))
+                {
+                    //Similar last Hex => all stack similar
+                    if(j == hexsCompare.Count - 1)
+                    {
+                        return true;
+                    }                    
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+        
+        return false;
     }
 
     //Each stack have many than one color
@@ -134,41 +194,6 @@ public class StackRandomSpawner : StackSpawner
         return arrHexagon;
     }
 
-    private bool CheckStackSimilar(StackHexagon stackCompare)
-    {
-        if(cacheStacks.Count == 0)
-        {
-            return false;
-        }
-
-        List<Hexagon> hexsCompare = stackCompare.Hexagons;
-
-        for(int i = 0; i < cacheStacks.Count; i++)
-        {
-            StackHexagon stack = cacheStacks[i];
-            List<Hexagon> hexs = stack.Hexagons;
-
-            if(hexs.Count != hexsCompare.Count)
-            {
-                return false;
-            }
-
-            for(int j = 0; j < hexsCompare.Count; j++)
-            {
-                if (ColorUtils.ColorEquals(hexs[j].Color, hexsCompare[j].Color))
-                {
-                    continue;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
-        Debug.LogError("TRUE");
-        return true;
-    }
-
     private void ClearCacheStacks()
     {
         Debug.Log("Clear Cache Stacks");
@@ -179,5 +204,16 @@ public class StackRandomSpawner : StackSpawner
     {
         base.OnEnterSpawn();
         ClearCacheStacks();
+    }
+
+    private void ShowStringColorOfStack(StackHexagon stack)
+    {
+        string strColor = "";
+        for (int i = 0; i < stack.Hexagons.Count; i++)
+        {
+            Hexagon hex = stack.Hexagons[i];
+            strColor += ColorUtility.ToHtmlStringRGB(hex.Color) + " ";
+        }
+        Debug.Log("Color: " + strColor);
     }
 }

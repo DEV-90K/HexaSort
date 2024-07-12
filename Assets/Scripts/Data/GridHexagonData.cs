@@ -1,5 +1,14 @@
 using Newtonsoft.Json;
 
+public enum GridHexagonState
+{
+    NONE,
+    UNLOCK,
+    LOCK_BY_GOAL,
+    LOCK_BY_ADS,
+    NORMAL
+}
+
 public class GridHexagonData
 {
     [JsonProperty]
@@ -13,6 +22,9 @@ public class GridHexagonData
     public int IDHex { get; private set; }
 
     [JsonProperty]
+    public int IDHexLock { get; private set; }
+
+    [JsonProperty]
     public StackHexagonData StackHexagon { get; private set; }
 
     public GridHexagonData(GridHexagonState state, int row, int column, int idHex, StackHexagonData stackHexagon)
@@ -21,6 +33,17 @@ public class GridHexagonData
         Row = row;
         Column = column;
         IDHex = idHex;
+        IDHexLock = IDHexLock;
+        StackHexagon = stackHexagon;
+    }
+
+    public GridHexagonData(GridHexagonState state, int row, int column, int iDHex, int iDHexLock, StackHexagonData stackHexagon)
+    {
+        State = state;
+        Row = row;
+        Column = column;
+        IDHex = iDHex;
+        IDHexLock = iDHexLock;
         StackHexagon = stackHexagon;
     }
 
@@ -34,29 +57,22 @@ public class GridHexagonData
     }
 }
 
-public class GridHexagonLockData
+public class GridHexagonPresenterData
 {
-    public int Goal {  get; private set; }
     [JsonProperty]
-    public int IDHex { get; private set; }
-    public GridHexagonData GridHexagonData { get; private set; }
+    public int IDGrid;
 
-    public GridHexagonLockData(int goal, int idHex, GridHexagonData gridHexagonData)
+    [JsonProperty]
+    public int Goal;
+
+    public GridHexagonPresenterData(int iDGrid, int goal)
     {
+        IDGrid = iDGrid;
         Goal = goal;
-        IDHex = idHex;
-        GridHexagonData = gridHexagonData;
     }
 
-    public GridHexagonLockData()
+    public GridHexagonPresenterData()
     {
-    }
-}
 
-public enum GridHexagonState
-{
-    NONE,
-    UNLOCK,
-    LOCK_BY_GOAL,
-    LOCK_BY_ADS
+    }
 }
