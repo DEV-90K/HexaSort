@@ -160,7 +160,7 @@ public class T_GridController : MonoBehaviour
             {
                 children.Add(hexaObj.transform.GetChild(i).gameObject);
             }
-            DestroyChildHexa(children);
+            this.DestroyChildHexa(children);
         }
     }
 }

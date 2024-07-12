@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,6 +79,7 @@ public class T_ColumnHexa : MonoBehaviour
             {
                 Destroy(child);
             }
+            childs.Clear();
         }
     }
 
@@ -123,7 +125,7 @@ public class T_ColumnHexa : MonoBehaviour
 
     }
 
-    public void AddDataToObj(T_HexaButton hexaButton, int pos = 0)
+    public void AddDataToObj(T_HexaButton hexaButton, int id = 0)
     {
         T_HexaInBoardData dataObj = this._hexaObject.GetDataHexa();
         int count = dataObj.HexagonDatas.Length;
@@ -135,7 +137,8 @@ public class T_ColumnHexa : MonoBehaviour
             {
                 dataObjNew.Add(dataObj.HexagonDatas[i]);
             }
-            dataObjNew.Insert(pos, hexaButton.GetHexaData());
+            int pos = dataObjNew.FindIndex(a => a.Id == id);
+            dataObjNew.Insert(pos + 1, hexaButton.GetHexaData());
             if(dataObjNew.Count > 0)
             {
                 for(int i = 0; i < dataObjNew.Count; i++)
@@ -144,7 +147,7 @@ public class T_ColumnHexa : MonoBehaviour
                 }
             }
             this._hexaObject.GetDataHexa().HexagonDatas = dataObjNew.ToArray();
-            dataObjNew = null;
+            dataObjNew.Clear();
             this._childs.Add(hexaButton.gameObject);
             this.SetupContent(this._hexaObject);
         }
@@ -153,7 +156,9 @@ public class T_ColumnHexa : MonoBehaviour
     public void SetupContent(T_HexaInBoardObject hexaObj)
     {
         T_HexaInBoardData dataObj = hexaObj.GetDataHexa();
-        for (int i = 0; i < this.Content.transform.childCount; i++)
+        int count = this._childs.Count;
+        Debug.Log(count + " " + dataObj.HexagonDatas.Length);
+        for (int i = 0; i < count; i++)
         {
             Transform child = this.Content.transform.GetChild(i);
             T_HexaButton hexaButton = child.GetComponent<T_HexaButton>();
@@ -172,8 +177,10 @@ public class T_ColumnHexa : MonoBehaviour
                 T_HexaInBoardData[] array = this._hexaObject.GetDataHexa().HexagonDatas;
                 array = array.Where(s => s.Id != hexaData.Id).ToArray();
                 this._hexaObject.GetDataHexa().HexagonDatas = array;
+                this._childs.Remove(this._hexaBtnSelected);
                 Destroy(this._hexaBtnSelected);
             }
         }
+        this.SetupContent(this._hexaObject);
     }
 }
