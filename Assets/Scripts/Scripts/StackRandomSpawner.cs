@@ -167,6 +167,7 @@ public class StackRandomSpawner : StackSpawner
 
     public void ClearCacheStacks()
     {
+        Debug.Log("Clear Cache Stacks");
         cacheStacks.Clear();
     }
 }

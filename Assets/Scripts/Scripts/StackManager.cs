@@ -88,6 +88,12 @@ public class StackManager : MonoBehaviour, IStackOnPlaced, IStackSphereRadius
     private void GenerateStacks()
     {
         stackHexagons.Clear();
+
+        if(stackSpawner is StackRandomSpawner)
+        {
+            randomSpawner.ClearCacheStacks();
+        }
+
         for (int i = 0; i < pointSpawns.Length; i++)
         {
            StackHexagon stack = stackSpawner.Spawn(pointSpawns[i]);
