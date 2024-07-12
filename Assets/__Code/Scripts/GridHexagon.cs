@@ -18,6 +18,8 @@ public class GridHexagon : PoolMember
     public Color cacheColor;
     private Color contactColor;
 
+    private GridHexagonData _data;
+
     private void Awake()
     {
         ColorUtility.TryParseHtmlString("#525252", out contactColor);
@@ -25,6 +27,8 @@ public class GridHexagon : PoolMember
 
     public void OnInitialize(GridHexagonData gridHexagon, IGridPortability gridPortability)
     {
+        _data = gridHexagon;
+
         Vector3 cellPos = gridPortability.ConvertToWorldPos(new Vector3Int(gridHexagon.Row, gridHexagon.Column, 0));
         transform.position = cellPos;
 
@@ -108,4 +112,20 @@ public class GridHexagon : PoolMember
     {
         Color = contactColor;
     }
+
+    #region Grid Hexagon Data
+    internal GridHexagonData GetCurrentGridHexagonPlayingData()
+    {
+        if(CheckOccupied())
+        {
+            _data.UpdateStackHexagonData(StackOfCell.GetCurrentStackHexagonPlayingData());
+        }   
+        else
+        {
+            _data.UpdateStackHexagonData(null);
+        }
+
+        return _data;
+    }
+    #endregion Grid Hexagon Data
 }

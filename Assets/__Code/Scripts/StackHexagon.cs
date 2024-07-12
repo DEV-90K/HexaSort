@@ -9,29 +9,45 @@ public class StackHexagon : PoolMember
     [SerializeField]
     private CanvasStackHexagon canvasStack;
     public List<Hexagon> Hexagons { get; private set; }
-
+    private StackHexagonData _data;
     public void OnInit(StackHexagonData data)
     {
-        List<Color> colors = new List<Color>();
-        for (int i = 0; i < data.IDHexes.Length; i++)
-        {
-            HexagonData hexData = ResourceManager.Instance.GetHexagonDataByID(data.IDHexes[i]);
-            if (ColorUtility.TryParseHtmlString(hexData.HexColor, out Color color))
-            {
-                colors.Add(color);
-            }
-        }
+        Debug.Log("On Init StackHexagon");
+        data.DebugLogObject();
+        _data = data;
+        //List<Color> colors = new List<Color>();
+        //for (int i = 0; i < data.IDHexes.Length; i++)
+        //{
+        //    HexagonData hexData = ResourceManager.Instance.GetHexagonDataByID(data.IDHexes[i]);
+        //    if (ColorUtility.TryParseHtmlString(hexData.HexColor, out Color color))
+        //    {
+        //        colors.Add(color);
+        //    }
+        //}
 
-        Color[] hexagonColors = colors.ToArray();
+        //Color[] hexagonColors = colors.ToArray();
 
-        for (int i = 0; i < hexagonColors.Length; i++)
+        //for (int i = 0; i < hexagonColors.Length; i++)
+        //{
+        //    Vector3 spawnPosition = transform.TransformPoint(Vector3.up * i * GameConstants.HexagonConstants.HEIGHT);
+
+        //    Hexagon hexagonIns = PoolManager.Spawn<Hexagon>(PoolType.HEXAGON, spawnPosition, Quaternion.identity);
+        //    hexagonIns.SetParent(transform);
+        //    hexagonIns.OnSetUp();            
+        //    hexagonIns.Color = hexagonColors[i];
+        //    hexagonIns.Configure(this);
+        //    AddPlayerHexagon(hexagonIns);
+        //}
+
+        for(int i = 0; i < data.IDHexes.Length; i++)
         {
             Vector3 spawnPosition = transform.TransformPoint(Vector3.up * i * GameConstants.HexagonConstants.HEIGHT);
-
+            HexagonData hexagonData = ResourceManager.Instance.GetHexagonDataByID(data.IDHexes[i]);
             Hexagon hexagonIns = PoolManager.Spawn<Hexagon>(PoolType.HEXAGON, spawnPosition, Quaternion.identity);
             hexagonIns.SetParent(transform);
-            hexagonIns.OnSetUp();            
-            hexagonIns.Color = hexagonColors[i];
+            hexagonIns.OnSetUp();
+            hexagonIns.OnInit(hexagonData);
+            //hexagonIns.Color = hexagonColors[i];
             hexagonIns.Configure(this);
             AddPlayerHexagon(hexagonIns);
         }
@@ -195,6 +211,26 @@ public class StackHexagon : PoolMember
     {
         canvasStack.gameObject.SetActive(false);
     }
-
     #endregion Canvas
+
+    #region Stack Hexagon Data
+    internal StackHexagonData GetCurrentStackHexagonPlayingData()
+    {
+        if(Hexagons == null || Hexagons.Count == 0)
+        {
+            return null;
+        }
+
+        int[] idHexs = new int[Hexagons.Count];
+
+        for(int i = 0; i < Hexagons.Count; i++)
+        {
+            idHexs[i] = Hexagons[i].GetCurrentHexagonPlayingData().ID;
+        }
+
+        _data.UpdateIDHexs(idHexs);
+
+        return _data;
+    }
+    #endregion Stack Hexagon Data
 }

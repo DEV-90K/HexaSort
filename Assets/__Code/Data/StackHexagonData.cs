@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System;
 
 public class StackHexagonData
 {
@@ -13,5 +14,10 @@ public class StackHexagonData
 
     public StackHexagonData()
     {
+    }
+
+    public void UpdateIDHexs(int[] idHexs)
+    {
+        IDHexes = idHexs;
     }
 }

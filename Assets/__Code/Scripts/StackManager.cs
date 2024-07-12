@@ -38,7 +38,7 @@ public class StackManager : MonoBehaviour, IStackOnPlaced, IStackSphereRadius
         stackMerger.OnInit(this);
     }
 
-    public void OnInit()
+    private void OnInit()
     {      
         stackSpawner = randomSpawner;
         stackMerger.OnResert();
@@ -47,6 +47,13 @@ public class StackManager : MonoBehaviour, IStackOnPlaced, IStackSphereRadius
 
     public void OnInit(StackQueueData stackData)
     {
+        if(stackData == null)
+        {
+            Debug.Log("Stack Data is null");
+            OnInit();
+            return;
+        }
+
         stackSpawner = dataSpawner;
         dataSpawner.OnInit(stackData);
         stackMerger.OnResert();

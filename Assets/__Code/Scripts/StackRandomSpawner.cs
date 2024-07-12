@@ -11,8 +11,13 @@ public class StackRandomSpawner : StackSpawner
     [SerializeField]
     private Vector2Int hexagonClampf;
 
+    private int NUMBER_COLOR_IN_STACK = 3;
+    //private Vector2Int HEXAGON_CLAMPF;
+
     private void Start()
     {
+        LoadConfig();
+
         HexagonData[] datas = ResourceManager.Instance.GetAllHexagonData();
         List<Color> listColors = new List<Color>();
         foreach (HexagonData data in datas)
@@ -46,6 +51,13 @@ public class StackRandomSpawner : StackSpawner
         colors = listColors.ToArray();
     }
 
+    private void LoadConfig()
+    {
+        StackConfig stackConfig = ResourceManager.Instance.GetStackConfig();
+        NUMBER_COLOR_IN_STACK = stackConfig.NumberOfColor;
+        hexagonClampf = new Vector2Int(stackConfig.AmountClampf[0], stackConfig.AmountClampf[1]);
+    }
+
     public override StackHexagon Spawn(Transform stack)
     {
         StackHexagon insHexagonStack = SpawnStack(stack.position);
@@ -53,8 +65,6 @@ public class StackRandomSpawner : StackSpawner
         insHexagonStack.transform.SetParent(stack);
         insHexagonStack.transform.localPosition = Vector3.zero;
         insHexagonStack.transform.localScale = Vector3.one;
-
-        const int NUMBER_COLOR_IN_STACK = 2;
 
         Color[] colors = GetRandomColors(NUMBER_COLOR_IN_STACK);        
 

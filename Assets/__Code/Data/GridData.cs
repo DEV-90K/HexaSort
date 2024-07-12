@@ -13,4 +13,9 @@ public class GridData
     public GridData()
     {
     }
+
+    public void UpdateGridHexagonDatas(GridHexagonData[] datas)
+    {
+        GridHexagonDatas = datas;
+    }
 }

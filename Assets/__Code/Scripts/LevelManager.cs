@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
 using Mul21_Lib;
+using System;
+using System.Collections.Generic;
 
 public class LevelManager : MonoSingleton<LevelManager>
 {
@@ -88,14 +90,13 @@ public class LevelManager : MonoSingleton<LevelManager>
 
     private void OnInit(LevelData levelData, LevelPresenterData presenterData)
     {
-        Debug.Log("OnInit Level By ID: " + presenterData.Level);
         _levelData = levelData;
         _presenterData = presenterData;
 
         amountHexagon = 0;
 
         _gridManager.OnInit(levelData.Grid);
-        _stackManager.OnInit();
+        _stackManager.OnInit(levelData.StackQueueData);
 
         GUIManager.Instance.ShowScreen<ScreenLevel>(presenterData);       
     }
@@ -240,4 +241,22 @@ public class LevelManager : MonoSingleton<LevelManager>
             OnFinishLosed();
         }
     }
+
+    #region Level Data
+    internal LevelData GetCurrentLevelPlayingData()
+    {
+        GridHexagonData[] gridHexagonDatas =  _gridManager.GetCurrentGridPlayingData();
+        GridData gridData = new GridData(gridHexagonDatas);
+
+        _levelData.UpdateGridData(gridData);
+
+        return _levelData;
+    }
+
+    internal int GetCurrentLevelPlayingID()
+    {
+        return _presenterData.Level;
+    }
+    #endregion Level Data
+
 }

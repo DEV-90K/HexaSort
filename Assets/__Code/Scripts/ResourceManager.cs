@@ -8,21 +8,68 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
 {
     private const int TEST_IDLEVEL = 1;
 
+    private MechanicConfig _mechanicConfig;
+    
     private Dictionary<int, LevelData> _levelDataDict = new Dictionary<int, LevelData>();
 
     private LevelPresenterData[] _levelPresenterDatas;
     private Dictionary<int, LevelPresenterData> _levelPresenterDatasDict = new Dictionary<int, LevelPresenterData>();
 
-    private ChallengeData _challengeData;
+    private Dictionary<int, ChallengeData> _challengeDataDict = new Dictionary<int, ChallengeData>();
 
     private HexagonData[] _hexagonDatas;
     private Dictionary<int, HexagonData> _cacheHexagonData = new Dictionary<int, HexagonData>();
 
     public void LoadResource()
     {
-        _challengeData = LoadChallengeData();
         _levelPresenterDatas = LoadLevelPresenterDatas();
         _hexagonDatas = LoadHexagonData();
+        _mechanicConfig = LoadMechanicConfig();
+    }
+
+    public StackConfig GetStackConfig()
+    {
+        return _mechanicConfig.StackConfig;
+    }
+
+    private MechanicConfig LoadMechanicConfig()
+    {
+        MechanicConfig config = FirebaseManager.instance.LoadRemoteMechanicConfig();
+
+        if(config == null)
+        {
+            Debug.Log("Load Local");
+            config = LoadLocalMechanicConfig();
+        }
+
+        if(config == null)
+        {
+            Debug.Log("Create New");
+            config = CreateMechanicConfig();            
+        }
+
+        config.DebugLogObject();
+
+        return config;
+    }
+
+    private MechanicConfig CreateMechanicConfig()
+    {
+        MechanicConfig config = new MechanicConfig();
+        config.StackConfig = new StackConfig(new int[] {6, 8}, 3);
+        
+        return config;
+    }
+
+    private MechanicConfig LoadLocalMechanicConfig()
+    {
+        string key = "Mechanic";
+        TextAsset textAsset = Resources.Load<TextAsset>(string.Format("Config/{0}", key));
+        if (textAsset != null)
+        {
+            return JsonConvert.DeserializeObject<MechanicConfig>(textAsset.text.Trim());
+        }
+        return null;
     }
 
     #region Level Data
@@ -47,7 +94,7 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
 
     private LevelData GetLevelDataByRandom(int IDMax)
     {
-        int IDLevel = Random.Range(0, IDMax);
+        int IDLevel = Random.Range(1, IDMax);
 
         if (_levelDataDict.ContainsKey(IDLevel))
         {
@@ -142,23 +189,54 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         return null;
     }
     #endregion Level Presenter Data
+
+    #region Challenge Data
+
     public ChallengeData GetChallengeByID(int IDChallenge = TEST_IDLEVEL)
     {
-        if (_challengeData != null)
+        if(_challengeDataDict.ContainsKey(IDChallenge))
         {
-            _challengeData = LoadLocalChallengeData($"Challenge_{IDChallenge}");
+            return _challengeDataDict[IDChallenge];
         }
 
-        return _challengeData;
+        ChallengeData challengeData = LoadChallengeData(IDChallenge);
+
+        if(challengeData == null)
+        {
+            challengeData = GetChallengeDataByRandom(IDChallenge);
+        }
+
+        _challengeDataDict[IDChallenge] = challengeData;
+        return challengeData;
     }
 
-    private ChallengeData LoadChallengeData()
+    private ChallengeData GetChallengeDataByRandom(int IDMax)
     {
-        return LoadLocalChallengeData("Challenge_1");
+        int IDChallenge = Random.Range(1, IDMax);
+
+        if (_challengeDataDict.ContainsKey(IDChallenge))
+        {
+            return _challengeDataDict[IDChallenge].CopyObject();
+        }
+
+        return LoadChallengeData(IDChallenge).CopyObject();
     }
 
-    private ChallengeData LoadLocalChallengeData(string key)
+    private ChallengeData LoadChallengeData(int IDChallenge)
     {
+        ChallengeData challengeData = FirebaseManager.instance.GetRemoteChallengeData(IDChallenge);
+
+        if (challengeData == null)
+        {
+            challengeData = LoadLocalChallengeData(IDChallenge);
+        }
+
+        return challengeData;
+    }
+
+    private ChallengeData LoadLocalChallengeData(int IDChallenge)
+    {
+        string key = "Challenge_" + IDChallenge;
         TextAsset textAsset = Resources.Load<TextAsset>(string.Format("Config/Data/Challenges/{0}", key));
         if (textAsset != null)
         {
@@ -167,6 +245,8 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         }
         return null;
     }
+
+    #endregion Challenge Data
 
     #region HexagonData
     public HexagonData GetHexagonDataByID(int IDHex)
@@ -188,16 +268,6 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         return null;
     }
 
-    private HexagonData[] CreateHexagonData()
-    {
-        HexagonData hexa1 = new HexagonData(1, "#333333");
-        HexagonData hexa2 = new HexagonData(2, "#FF55DF");
-        HexagonData hexa3 = new HexagonData(3, "#FFC700");
-        HexagonData hexa4 = new HexagonData(4, "#219C90");
-
-        return new HexagonData[] { hexa1, hexa2, hexa3, hexa4 };
-    }
-
     public HexagonData[] GetAllHexagonData()
     {
         return _hexagonDatas;
@@ -206,7 +276,14 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
     private HexagonData[] LoadHexagonData()
     {
         //return CreateHexagonData();
-        return LoadLocalHexagonDatas();
+        HexagonData[] datas = FirebaseManager.instance.GetRemoteHexagons();
+
+        if(datas == null)
+        {
+            datas = LoadLocalHexagonDatas();
+        }
+
+        return datas;
     }
     private HexagonData[] LoadLocalHexagonDatas()
     {

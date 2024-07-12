@@ -71,4 +71,68 @@ public class FirebaseManager : PersistentMonoSingleton<FirebaseManager>
             return null;
         }
     }
+
+    public HexagonData[] GetRemoteHexagons()
+    {
+        string key = "Hexagons";
+
+        try
+        {
+            string value = _remoteConfig.GetRemoteConfigValue(key);
+            HexagonData[] data = JsonConvert.DeserializeObject<HexagonData[]>(value);
+            return data;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public ChallengeData GetRemoteChallengeData(int iDChallenge)
+    {
+        string key = "Challenge_" + iDChallenge;
+
+        try
+        {
+            string value = _remoteConfig.GetRemoteConfigValue(key);
+            ChallengeData data = JsonConvert.DeserializeObject<ChallengeData>(value);
+            return data;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    internal MechanicConfig LoadRemoteMechanicConfig()
+    {
+        string key = "Mechanic";
+
+        try
+        {
+            string value = _remoteConfig.GetRemoteConfigValue(key);
+            MechanicConfig config = JsonConvert.DeserializeObject<MechanicConfig>(value);
+            return config;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    internal PlayerData LoadRemotePlayerData()
+    {
+        string key = "Player";
+
+        try
+        {
+            string value = _remoteConfig.GetRemoteConfigValue(key);
+            PlayerData data = JsonConvert.DeserializeObject<PlayerData>(value);
+            return data;
+        }
+        catch
+        {
+            return null;
+        }
+    }
 }

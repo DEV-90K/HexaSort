@@ -19,11 +19,23 @@ public class Hexagon : PoolMember
         set => renderer.material.color = value;
     }
 
+    private HexagonData _data;
+
     public void OnSetUp()
     {
         this.transform.localEulerAngles = Vector3.zero;
         transform.localScale = Vector3.one;
         EnableCollider();
+    }
+
+    public void OnInit(HexagonData data)
+    {
+        _data = data;
+
+        if (ColorUtility.TryParseHtmlString(data.HexColor, out Color color))
+        {
+            Color = color;
+        }
     }
 
     public void Configure(StackHexagon hexStack)
@@ -99,5 +111,10 @@ public class Hexagon : PoolMember
         OnResert();
         OnVanish?.Invoke();
         PoolManager.Despawn(this);
+    }
+
+    internal HexagonData GetCurrentHexagonPlayingData()
+    {
+        return _data;
     }
 }

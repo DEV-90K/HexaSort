@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mul21_Lib;
+using System;
 
 public class GridManager : MonoBehaviour
 {
@@ -71,6 +72,20 @@ public class GridManager : MonoBehaviour
         }
 
         return false;
-    } 
-    
+    }
+
+    #region Grid Hexagon Data
+    internal GridHexagonData[] GetCurrentGridPlayingData()
+    {
+        List<GridHexagonData> datas = new List<GridHexagonData> ();
+
+        foreach (GridHexagon grid in _gridHexagons)
+        {
+            GridHexagonData data = grid.GetCurrentGridHexagonPlayingData();
+            datas.Add(data);
+        }
+
+        return datas.ToArray();
+    }
+    #endregion Grid Hexagon Data
 }

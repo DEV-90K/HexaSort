@@ -35,7 +35,8 @@ public class StackMerger : MonoBehaviour
         listGridHexagonNeedUpdate.Clear();
     }
     private void StackController_OnStackPlacedOnGridHexagon(GridHexagon gridHexagon)
-    {        
+    {
+        Debug.Log("StackController_OnStackPlacedOnGridHexagon");
         listGridHexagonNeedUpdate.Add(gridHexagon);
         if (listGridHexagonNeedUpdate.Count == 1)
         {
@@ -44,12 +45,7 @@ public class StackMerger : MonoBehaviour
     }
     public void OnStackPlacedOnGridHexagon(GridHexagon gridHexagon)
     {
-        //BFSAlgorithm(gridHexagon);
-        //Debug.Log("gridHexagonVisisted.Count: " + gridHexagonVisisted.Count);
-        //Debug.Log("gridHexagonLayer.Count: " + gridHexagonLayer.Count);
-        //gridHexagonVisisted.Clear();
-        //gridHexagonLayer.Clear();
-
+        Debug.Log("OnStackPlacedOnGridHexagon");
         listGridHexagonNeedUpdate.Add(gridHexagon);
         if (listGridHexagonNeedUpdate.Count == 1)
         {
@@ -705,7 +701,15 @@ public class StackMerger : MonoBehaviour
                 GridHexagon firstGrid = listOne[0];
                 listOne.RemoveAt(0);
                 yield return IE_MergePlayerHexagonsToStack(stack, listOne);
+
+                foreach (GridHexagon gridH in gridHexagons)
+                {
+                    if (gridH.CheckOccupied())
+                        listGridHexagonNeedUpdate.Add(gridH);
+                }
+
                 listGridHexagonNeedUpdate.Add(firstGrid);
+
                 yield break;
             }
             else
@@ -720,6 +724,13 @@ public class StackMerger : MonoBehaviour
                 GridHexagon firstGridHexOneSimilar = listOne[0];
                 gridHexagons.Remove(firstGridHexOneSimilar);
                 yield return IE_MergePlayerHexagonsToStack(stack, gridHexagons);
+
+                foreach (GridHexagon gridH in gridHexagons)
+                {
+                    if(gridH.CheckOccupied())
+                        listGridHexagonNeedUpdate.Add(gridH);
+                }
+
                 listGridHexagonNeedUpdate.Add(firstGridHexOneSimilar);
                 yield break;
             }
@@ -728,20 +739,18 @@ public class StackMerger : MonoBehaviour
                 yield return IE_MergePlayerHexagonsToStack(stack, gridHexagons);
             }
         }
-
+        Debug.Log("Omg");
         yield return IE_RemovePlayerHexagonsFromStack_v2(stack);
-
-        foreach (GridHexagon gridHex in gridHexagons)
-        {
-            if(gridHex.CheckOccupied())
-            {
-                listGridHexagonNeedUpdate.Add(gridHex);
-            }
-        }
 
         if (grid.CheckOccupied())
         {
             listGridHexagonNeedUpdate.Add(grid);
+        }
+
+        foreach (GridHexagon gridH in gridHexagons)
+        {
+            if (gridH.CheckOccupied())
+                listGridHexagonNeedUpdate.Add(gridH);
         }
     }
 }
