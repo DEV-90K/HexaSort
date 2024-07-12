@@ -39,8 +39,14 @@ public class StackRandomSpawner : StackSpawner
         hexagonClampf = new Vector2Int(stackConfig.AmountClampf[0], stackConfig.AmountClampf[1]);
     }
 
-    public override StackHexagon Spawn(Transform stack)
+    public override StackHexagon Spawn(Transform stack, int COUNT = 0)
     {
+        if(COUNT > 100)
+        {
+            Debug.LogError("Some thing wrong");
+            COUNT++;
+        }
+
         StackHexagon insHexagonStack = SpawnStack(stack.position);
         insHexagonStack.name = $"Hexagon Stack"; //{stack.GetSiblingIndex()}
         insHexagonStack.transform.SetParent(stack);
@@ -64,6 +70,15 @@ public class StackRandomSpawner : StackSpawner
                 insPlayerHexagon.transform.localScale = Vector3.one;
                 amount++;
             }
+        }
+
+        if(CheckStackSimilar(insHexagonStack))
+        {
+            Spawn(stack, COUNT);
+        }
+        else
+        {
+            cacheStacks.Add(insHexagonStack);
         }
 
         return insHexagonStack;
@@ -120,8 +135,38 @@ public class StackRandomSpawner : StackSpawner
         return arrHexagon;
     }
 
-    private void CheckStackSimilar()
+    private bool CheckStackSimilar(StackHexagon stackCompare)
     {
+        List<Hexagon> hexsCompare = stackCompare.Hexagons;
 
+        for(int i = 0; i <= cacheStacks.Count; i++)
+        {
+            StackHexagon stack = cacheStacks[i];
+            List<Hexagon> hexs = stack.Hexagons;
+
+            if(hexs.Count != hexsCompare.Count)
+            {
+                return false;
+            }
+
+            for(int j = 0; j < hexsCompare.Count; j++)
+            {
+                if (ColorUtils.ColorEquals(hexs[j].Color, hexsCompare[j].Color))
+                {
+                    continue;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public void ClearCacheStacks()
+    {
+        cacheStacks.Clear();
     }
 }

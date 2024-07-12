@@ -25,4 +25,6 @@ public abstract class StackSpawner : MonoBehaviour
     }
 
     public virtual StackHexagon Spawn(Transform tfPos) { return null; }
+
+    public virtual StackHexagon Spawn(Transform tfPos, int COUNT = 0) { return null; }
 }
