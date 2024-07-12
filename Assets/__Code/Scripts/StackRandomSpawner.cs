@@ -12,7 +12,7 @@ public class StackRandomSpawner : StackSpawner
     private Vector2Int hexagonClampf;
 
     private int NUMBER_COLOR_IN_STACK = 3;
-    //private Vector2Int HEXAGON_CLAMPF;
+    private List<StackHexagon> cacheStacks = new List<StackHexagon>();
 
     private void Start()
     {
@@ -28,25 +28,6 @@ public class StackRandomSpawner : StackSpawner
                 listColors.Add(color);
             }
         }
-
-        //List<HexagonData> listData = new List<HexagonData>();
-        //listData.AddRange(datas);
-        //listData.Shuffle();
-
-        //for (int i = 2; i < listData.Count; i++)
-        //{
-        //    HexagonData data = datas[i];
-        //    if (ColorUtility.TryParseHtmlString(data.HexColor, out Color color))
-        //    {
-        //        listColors.Add(color);
-        //    }
-
-        //    if(listColors.Count == 3)
-        //    {
-        //        break;
-        //    }
-        //}
-
 
         colors = listColors.ToArray();
     }
@@ -137,5 +118,10 @@ public class StackRandomSpawner : StackSpawner
         }
 
         return arrHexagon;
+    }
+
+    private void CheckStackSimilar()
+    {
+
     }
 }
