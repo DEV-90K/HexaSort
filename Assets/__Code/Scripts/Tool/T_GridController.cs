@@ -156,7 +156,7 @@ public class T_GridController : MonoBehaviour
         int childCount = hexaObj.transform.childCount;
         if (childCount > 1)
         {
-            for(int i = childCount - 1; i >= 0; i--)
+            for(int i = childCount - 1; i > 0; i--)
             {
                 children.Add(hexaObj.transform.GetChild(i).gameObject);
             }
