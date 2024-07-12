@@ -79,6 +79,7 @@ public class StackRandomSpawner : StackSpawner
             return Spawn(stack, COUNT);
         }
 
+        cacheStacks.Add(insHexagonStack);
         return insHexagonStack;
     }
 
@@ -164,7 +165,7 @@ public class StackRandomSpawner : StackSpawner
                 }
             }
         }
-
+        Debug.LogError("TRUE");
         return true;
     }
 
