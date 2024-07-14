@@ -157,7 +157,6 @@ public class T_ColumnHexa : MonoBehaviour
     {
         T_HexaInBoardData dataObj = hexaObj.GetDataHexa();
         int count = this._childs.Count;
-        Debug.Log(count + " " + dataObj.HexagonDatas.Length);
         for (int i = 0; i < count; i++)
         {
             Transform child = this.Content.transform.GetChild(i);
@@ -178,7 +177,7 @@ public class T_ColumnHexa : MonoBehaviour
                 array = array.Where(s => s.Id != hexaData.Id).ToArray();
                 this._hexaObject.GetDataHexa().HexagonDatas = array;
                 this._childs.Remove(this._hexaBtnSelected);
-                Destroy(this._hexaBtnSelected);
+                DestroyImmediate(this._hexaBtnSelected);
             }
         }
         this.SetupContent(this._hexaObject);

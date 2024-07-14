@@ -13,6 +13,9 @@ public class GridHexagonData
     public int IDHex { get; private set; }
 
     [JsonProperty]
+    public int IDHexLock { get; private set; }
+
+    [JsonProperty]
     public StackHexagonData StackHexagon { get; private set; }
 
     public GridHexagonData(GridHexagonState state, int row, int column, int idHex, StackHexagonData stackHexagon)
@@ -21,6 +24,17 @@ public class GridHexagonData
         Row = row;
         Column = column;
         IDHex = idHex;
+        IDHexLock = IDHexLock;
+        StackHexagon = stackHexagon;
+    }
+
+    public GridHexagonData(GridHexagonState state, int row, int column, int iDHex, int iDHexLock, StackHexagonData stackHexagon)
+    {
+        State = state;
+        Row = row;
+        Column = column;
+        IDHex = iDHex;
+        IDHexLock = iDHexLock;
         StackHexagon = stackHexagon;
     }
 
@@ -31,6 +45,11 @@ public class GridHexagonData
     public void SetStackHexagonData(StackHexagonData stackHexagon)
     {
         this.StackHexagon = stackHexagon;
+    }
+
+    public void UpdateStackHexagonData(StackHexagonData stackData)
+    {
+        StackHexagon = stackData;
     }
 }
 

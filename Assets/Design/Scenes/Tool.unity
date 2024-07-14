@@ -8651,6 +8651,7 @@ MonoBehaviour:
   CellSize: 7
   CanContact: 1
   Hexagon: {fileID: 221629895212622987, guid: a855360f9db2e31439cd6afc67e7a145, type: 3}
+  ColorChallenge: 0
 --- !u!156049354 &1468894088
 Grid:
   m_ObjectHideFlags: 0

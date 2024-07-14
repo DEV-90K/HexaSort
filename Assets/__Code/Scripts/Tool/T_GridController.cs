@@ -14,11 +14,14 @@ public class T_GridController : MonoBehaviour
     public bool CanContact = true;
     public GameObject Hexagon;
 
+    public int ColorChallenge = 0;
+
     private Grid _grid;
     private Camera _camera;
     private MeshRenderer _modelHexa;
     private List<GameObject> _childHexas;
     private List<GameObject> _childsGrid;
+    private List<GameObject> _childsGridChallenge;
 
     private float _tileXOffset = 1.735f;
     private float _tileZOffset = 1.567f;
@@ -36,6 +39,7 @@ public class T_GridController : MonoBehaviour
         this._modelHexa = this.Hexagon.GetComponentInChildren<MeshRenderer>();
         _childHexas = new List<GameObject>();
         this._childsGrid = new List<GameObject>();
+        this._childsGridChallenge = new List<GameObject>();
     }
     private void Start()
     {
@@ -65,10 +69,12 @@ public class T_GridController : MonoBehaviour
 
     public void Init(int numberHexa)
     {
+        this.ColorChallenge = 0;
+        //CellSize = 1; // Challenge
         int count = this.transform.childCount;
         if (count > 0) this.DestroyChildGrid();
-        //this._camera.transform.position = new Vector3(-4.6f, 20, -12);
-        this._childsGrid = new List<GameObject>();
+        this._childsGrid.Clear();
+        //this._childsGridChallenge.Clear();
         Vector3 cellCenter = this._grid.CellToWorld(new Vector3Int(1, 0, 0));
         for (int xSwizzle = -CellSize; xSwizzle <= CellSize; xSwizzle++)
         {
@@ -80,7 +86,6 @@ public class T_GridController : MonoBehaviour
                 {
                     continue;
                 }
-
                 GameObject gObj = Instantiate(Hexagon, transform);
                 gObj.name = string.Format("{0}_{1}", xSwizzle, zSwizzle);
                 gObj.transform.position = cellPos;
@@ -90,6 +95,8 @@ public class T_GridController : MonoBehaviour
                 this._childsGrid.Add(gObj);
             }
         }
+        //this._childsGridChallenge = this._childsGrid;
+        //this.RandomGridChallenge(this._childsGridChallenge);
 
         /*this._camera.transform.position = new Vector3(12, 30, 10);
         for (int x = 0; x < Width; x++)
@@ -162,5 +169,17 @@ public class T_GridController : MonoBehaviour
             }
             this.DestroyChildHexa(children);
         }
+    }
+
+    public void RandomGridChallenge(List<GameObject> childs)
+    {
+        int count = childs.Count;
+        if (count == 0)
+            return;
+        GameObject gObj = childs[count - 1];
+        T_HexaInBoardObject hexaObj = gObj.GetComponent<T_HexaInBoardObject>();
+        hexaObj.RandomItemHexaChallenge(count - 1);
+        childs.RemoveAt(count - 1);
+        RandomGridChallenge(childs);
     }
 }

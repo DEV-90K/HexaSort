@@ -20,11 +20,13 @@ public class T_HexaInBoardObject : MonoBehaviour
 
     public void Init(int numberHexaInHexa)
     {
+        //int colorChallenge = T_GridController.Instance.ColorChallenge;
         this._data = new T_HexaInBoardData();
         this._data.Id = 0;
         this._data.IsSelected = false;
         this._data.State = VisualState.SHOW;
         this._data.ColorHexa = this._deactive;
+        //this._data.ColorHexa = this._active;
         this._data.HexagonDatas = new T_HexaInBoardData[numberHexaInHexa];
 
         if(numberHexaInHexa > 0)
@@ -34,10 +36,17 @@ public class T_HexaInBoardObject : MonoBehaviour
                 this._data.HexagonDatas[i] = new T_HexaInBoardData();
                 this._data.HexagonDatas[i].Id = i + 1;
                 this._data.HexagonDatas[i].ColorHexa = T_ConfigValue.ColorList[i];
+                //this._data.HexagonDatas[i].ColorHexa = T_ConfigValue.ColorList[colorChallenge];
             }
         }
 
         this._hexaColor = T_Utils.ConvertToColor(this._data.ColorHexa);
+        /*if(colorChallenge < numberHexaInHexa )
+        {
+            colorChallenge += 1;
+            T_GridController.Instance.ColorChallenge = colorChallenge;
+        }*/
+        //T_GridController.Instance.ShowNumberHexaInHexa(this);
     }
 
     public void InitData(int numberHexaInHexa, int row, int column)
@@ -113,5 +122,38 @@ public class T_HexaInBoardObject : MonoBehaviour
     public GridHexagonData GetGridHexagonData()
     {
         return this._gridHexagonData;
+    }
+
+    public void RandomItemHexaChallenge(int number)
+    {
+        Debug.Log(string.Format("{0}_{1}", this.gameObject, number));
+        if(number == 0)
+        {
+            RandomItemHexa0();
+        }
+    }
+
+    public void RandomItemHexa0()
+    {
+        int countItem = Random.Range(0, 10);
+        int countColor = 0, color = 0;
+        int sum = 0;
+        int a = 10;
+        int k = 0;
+        while (countColor <= 10)
+        {
+            Debug.Log(countColor);
+            color = Random.Range(0, 10); // Random màu
+            countColor = Random.Range(0, a);
+            a = 10 - countColor;
+            sum += countColor;
+            if (sum == 10)
+            {
+                Debug.LogError(sum);
+                break;
+            }
+            k++;
+            if (k == 100) break;
+        }
     }
 }
