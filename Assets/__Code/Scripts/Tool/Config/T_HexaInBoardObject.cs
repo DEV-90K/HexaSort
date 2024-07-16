@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,8 +11,8 @@ public class T_HexaInBoardObject : MonoBehaviour
         set => this.ModelHexa.material.color = value; 
     }
 
-    private T_HexaInBoardData _data;
-    private GridHexagonData _gridHexagonData;
+    private T_HexaInBoardData _data; // Data hexa của tool
+    private GridHexagonData _gridHexagonData; // Data hexa của gameplay
 
     private string _deactive = "#ffffff";
     private string _active = "#06D001";
@@ -80,7 +80,7 @@ public class T_HexaInBoardObject : MonoBehaviour
             this._data.IsSelected = true;
             this._data.ColorHexa = this._active;
             this._hexaColor = T_Utils.ConvertToColor(this._data.ColorHexa);
-            T_ScreenTool.Instance.SetSelectedHexaObj(this, true);
+            T_GridController.Instance.SetSelectedHexaObj(this, true);
         }
         else
         {
@@ -89,7 +89,7 @@ public class T_HexaInBoardObject : MonoBehaviour
             this._data.IsSelected = false;
             this._data.ColorHexa = this._deactive;
             this._hexaColor = T_Utils.ConvertToColor(this._data.ColorHexa);
-            T_ScreenTool.Instance.SetSelectedHexaObj(this, false);
+            T_GridController.Instance.SetSelectedHexaObj(this, false);
         }
     }
 
@@ -136,14 +136,12 @@ public class T_HexaInBoardObject : MonoBehaviour
     public void RandomItemHexa0()
     {
         int countItem = Random.Range(0, 10);
-        int countColor = 0, color = 0;
-        int sum = 0;
-        int a = 10;
+        int countColor = 0, color = 0, sum = 0, a = 10;
         int k = 0;
         while (countColor <= 10)
         {
             Debug.Log(countColor);
-            color = Random.Range(0, 10); // Random m�u
+            color = Random.Range(0, 10);
             countColor = Random.Range(0, a);
             a = 10 - countColor;
             sum += countColor;

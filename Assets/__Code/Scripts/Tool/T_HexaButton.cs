@@ -65,7 +65,7 @@ public class T_HexaButton : MonoBehaviour, IDropHandler
                 GameObject gObj = current.transform.parent.gameObject;
                 T_HexaButton hexaButton = gObj.GetComponent<T_HexaButton>();
                 this.SetColorHexaInHexaBtn(gObj);
-                this.ChangeData(hexaButton, this, T_ScreenTool.Instance.GetHexaObj());
+                this.ChangeData(hexaButton, this, T_GridController.Instance.GetHexaObjSelected());
             }
 
         }

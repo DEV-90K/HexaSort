@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityUtils;
@@ -19,9 +19,11 @@ public class T_GridController : MonoBehaviour
     private Grid _grid;
     private Camera _camera;
     private MeshRenderer _modelHexa;
-    private List<GameObject> _childHexas;
-    private List<GameObject> _childsGrid;
+    private List<GameObject> _childHexas; // Các item hexa của hexa được selected
+    private List<GameObject> _childsGrid; // Tất cả các hexa khi Init
     private List<GameObject> _childsGridChallenge;
+    private List<T_HexaInBoardObject> _hexaInBoardSelecteds;
+    private T_HexaInBoardObject _hexaObjSelected; // Hexa đang được selected ra
 
     private float _tileXOffset = 1.735f;
     private float _tileZOffset = 1.567f;
@@ -40,6 +42,7 @@ public class T_GridController : MonoBehaviour
         _childHexas = new List<GameObject>();
         this._childsGrid = new List<GameObject>();
         this._childsGridChallenge = new List<GameObject>();
+        this._hexaInBoardSelecteds = new List<T_HexaInBoardObject>();
     }
     private void Start()
     {
@@ -70,7 +73,7 @@ public class T_GridController : MonoBehaviour
     public void Init(int numberHexa)
     {
         this.ColorChallenge = 0;
-        //CellSize = 1; // Challenge
+        CellSize = 1; // Challenge
         int count = this.transform.childCount;
         if (count > 0) this.DestroyChildGrid();
         this._childsGrid.Clear();
@@ -82,8 +85,10 @@ public class T_GridController : MonoBehaviour
             {
                 Vector3 cellPos = _grid.CellToWorld(new Vector3Int(xSwizzle, zSwizzle, 0));
 
+                //Debug.Log(string.Format("{0}_{1}", new Vector3Int(xSwizzle, zSwizzle, 0), cellPos));
                 if (cellPos.magnitude > cellCenter.magnitude * CellSize)
-                {
+                { 
+                    Debug.Log(string.Format("{0}_{1}", new Vector3Int(xSwizzle, zSwizzle, 0), cellPos));
                     continue;
                 }
                 GameObject gObj = Instantiate(Hexagon, transform);
@@ -118,6 +123,12 @@ public class T_GridController : MonoBehaviour
         }*/
     }
 
+    public void SetSelectedHexaObj(T_HexaInBoardObject hexaObj, bool isSlected)
+    {
+        if (isSlected) this._hexaInBoardSelecteds.Add(hexaObj);
+        else this._hexaInBoardSelecteds.Remove(hexaObj);
+    }
+
     public void DestroyChildGrid()
     {
         if(this._childsGrid.Count > 0)
@@ -129,7 +140,7 @@ public class T_GridController : MonoBehaviour
         }
     }
 
-    public void ShowNumberHexaInHexa(T_HexaInBoardObject hexaObj)
+    public void ShowNumberHexaInHexa(T_HexaInBoardObject hexaObj) // Show stack hexa
     {
         GameObject gObjHexa = hexaObj.gameObject;
         int childCount = hexaObj.transform.childCount;
@@ -181,5 +192,20 @@ public class T_GridController : MonoBehaviour
         hexaObj.RandomItemHexaChallenge(count - 1);
         childs.RemoveAt(count - 1);
         RandomGridChallenge(childs);
+    }
+
+    public List<T_HexaInBoardObject> GetHexaObjsSelected()
+    {
+        return this._hexaInBoardSelecteds;
+    }
+
+    public void SetHexaObjSeleted(T_HexaInBoardObject hexaObj)
+    {
+        this._hexaObjSelected = hexaObj; 
+    }
+
+    public T_HexaInBoardObject GetHexaObjSelected()
+    {
+        return this._hexaObjSelected;
     }
 }

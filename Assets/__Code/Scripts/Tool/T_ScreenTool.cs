@@ -38,7 +38,6 @@ public class T_ScreenTool : MonoBehaviour
     public T_PanelExport PanelExport;
     public T_ColumnHexa ColumnHexa;
 
-    private List<T_HexaInBoardObject> _hexaInBoardSelecteds;
     private T_HexaInBoardObject _hexaObj;
     private int _hexInEachHexaNumber;
     private int _colorNumber;
@@ -56,12 +55,12 @@ public class T_ScreenTool : MonoBehaviour
 
     public void InitLevel(int hexInEachHexaNumber, int colorNumber)
     {
-        this._hexaInBoardSelecteds = new List<T_HexaInBoardObject>();
         this._hexInEachHexaNumber = hexInEachHexaNumber;
         this._colorNumber = colorNumber;
     }
     public void OnRemoveBtnClick()
     {
+        this._hexaObj = T_GridController.Instance.GetHexaObjSelected();
         if (this._hexaObj == null) return;
         T_GridController.Instance.ShowEmptyHexa(this._hexaObj);
         this._hexaObj.SetVisualState(VisualState.SHOW);
@@ -71,6 +70,7 @@ public class T_ScreenTool : MonoBehaviour
 
     public void OnShowBtnClick()
     {
+        this._hexaObj = T_GridController.Instance.GetHexaObjSelected();
         if (this._hexaObj == null) return;
         T_ColumnHexa.Instance.SetUpHexaObj(this._hexaObj);
         this._hexaObj.SetVisualState(VisualState.SHOW);
@@ -80,6 +80,7 @@ public class T_ScreenTool : MonoBehaviour
 
     public void OnEmptyBtnClick()
     {
+        this._hexaObj = T_GridController.Instance.GetHexaObjSelected();
         if (this._hexaObj == null) return;
         T_GridController.Instance.ShowEmptyHexa(this._hexaObj);
         this._hexaObj.Init(0);
@@ -89,6 +90,7 @@ public class T_ScreenTool : MonoBehaviour
 
     public void OnHideBtnClick()
     {
+        this._hexaObj = T_GridController.Instance.GetHexaObjSelected();
         if (this._hexaObj == null) return;
         //this._hexaObj.Init(0);
         T_GridController.Instance.ShowEmptyHexa(this._hexaObj);
@@ -106,12 +108,14 @@ public class T_ScreenTool : MonoBehaviour
     {
         if (!isEnable)
         {
-            this._hexaObj = null;
+            T_GridController.Instance.SetHexaObjSeleted(null);
+            //this._hexaObj = null;
             this.HideOnClickHexaDisable();
         }
         else
         {
-            this._hexaObj = hexaObj;
+            T_GridController.Instance.SetHexaObjSeleted(hexaObj);
+            //this._hexaObj = hexaObj;
             this.ShowOnClickHexaEnable();
         }
     }
@@ -124,6 +128,7 @@ public class T_ScreenTool : MonoBehaviour
 
     public void ShowOnClickHexaEnable()
     {
+        this._hexaObj = T_GridController.Instance.GetHexaObjSelected();
         this.RemoveBtn.SetActive(true);
         this.ShowBtn.SetActive(true);
         this.EmptyBtn.SetActive(true);
@@ -196,26 +201,16 @@ public class T_ScreenTool : MonoBehaviour
         return this._hexInEachHexaNumber;
     }
 
-    public T_HexaInBoardObject GetHexaObj()
-    {
-        return this._hexaObj;
-    }
-
     public T_ColorHexaDrag GetColorHexa()
     {
         if (this._colorHexaDrag == null) return null;
         return this._colorHexaDrag;
     }
 
-    public void SetSelectedHexaObj(T_HexaInBoardObject hexaObj, bool isSlected)
-    {
-        if(isSlected) this._hexaInBoardSelecteds.Add(hexaObj);
-        else this._hexaInBoardSelecteds.Remove(hexaObj);
-    }
-
     public T_LevelData GetTLevelData()
     {
-        int count = this._hexaInBoardSelecteds.Count;
+        List<T_HexaInBoardObject> hexaObjSelected = T_GridController.Instance.GetHexaObjsSelected();
+        int count = hexaObjSelected.Count;
         T_LevelData result = new T_LevelData();
         result.Level = 0;
         result.HexaInBoardDatas = new T_HexaInBoardData[count];
@@ -223,7 +218,7 @@ public class T_ScreenTool : MonoBehaviour
         {
             for(int i = 0; i < count; i++)
             {
-                T_HexaInBoardObject hexaObj = this._hexaInBoardSelecteds[i];
+                T_HexaInBoardObject hexaObj = hexaObjSelected[i];
                 T_HexaInBoardData hexaData = hexaObj.GetDataHexa();
                 if (hexaData.HexagonDatas.Length > hexaObj.transform.childCount) hexaData.HexagonDatas = new T_HexaInBoardData[0];
                 result.HexaInBoardDatas[i] = hexaData;
@@ -234,14 +229,15 @@ public class T_ScreenTool : MonoBehaviour
 
     public LevelData GetLevelData()
     {
-        int count = this._hexaInBoardSelecteds.Count;
+        List<T_HexaInBoardObject> hexaObjSelected = T_GridController.Instance.GetHexaObjsSelected();
+        int count = hexaObjSelected.Count;
         LevelData result = new LevelData();
         GridData gridData = new GridData(new GridHexagonData[count]);
         if (count > 0)
         {
             for (int i = 0; i < count; i++)
             {
-                T_HexaInBoardObject hexaObj = this._hexaInBoardSelecteds[i];
+                T_HexaInBoardObject hexaObj = hexaObjSelected[i];
                 T_HexaInBoardData hexaData = hexaObj.GetDataHexa();
                 GridHexagonData gridHexagonData = hexaObj.GetGridHexagonData();
                 gridData.GridHexagonDatas[i] = gridHexagonData;
