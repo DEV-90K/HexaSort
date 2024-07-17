@@ -97,7 +97,7 @@ public class PopupRelicSelecter : PopupBase
     {
         //_Grallery.ShowRelic(_idxGalleryRelic, _selectData.ID);
 
-        ChallengeManager.Instance.OnInit(new GalleryRelicData(_idGallery, _selectData.ID, _idxGalleryRelic, DateTime.Now.ToString()));
+        ChallengeManager.Instance.OnInit(new GalleryRelicData(_idGallery, _selectData.ID, _idxGalleryRelic, DateTime.Now.ToString(), GalleryRelicState.LOCK));
         Hide();
     }
 
@@ -118,8 +118,8 @@ public class PopupRelicSelecter : PopupBase
         _selectData = data;
 
         _RelicName.text = data.Name;
-        _RelicDescription.text = data.Description;
-        _RelicValue.text = data.Coin + "Coin" + "/" + data.Timer + "Minute";
+        _RelicDescription.text = "+ Description: " + data.Description;
+        _RelicValue.text = "+ Display value: " + data.Coin + "Coin" + "/" + data.Timer + "Minute";
         _RelicArt.sprite = relicArt;
     }
 }

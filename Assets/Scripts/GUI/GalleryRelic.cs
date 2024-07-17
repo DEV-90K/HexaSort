@@ -8,7 +8,8 @@ using UnityEngine.UI;
 
 public class GalleryRelic : MonoBehaviour
 {
-    public static Action<int> OnRelicCollection;
+    public static Action<int> OnRelicClaim;
+    public static Action<int> OnCoutDownCompleted;
 
     [Header("Model Selecter")]
     [SerializeField]
@@ -20,15 +21,20 @@ public class GalleryRelic : MonoBehaviour
     [SerializeField]
     private GameObject _ObjCollect;
     [SerializeField]
-    private Button _BtnCollect;
-    [SerializeField]
     private Image _ImgRelic;
     [SerializeField]
-    private TMP_Text _txtCoinCollect;
+    private TMP_Text _txtCoutdown;
     [SerializeField]
-    private TMP_Text _txtCountdownCollect;
+    private TMP_Text _txtClaimCoin;
     [SerializeField]
     private TMP_Text _txtName;
+    [SerializeField]
+    private Button _BtnClaim;
+    [SerializeField]
+    private Button _BtnCollect;
+
+    [SerializeField]
+    private Button _BtnInfo;
 
     private GalleryRelicData _data;
     private RelicData _relicData;
@@ -52,6 +58,7 @@ public class GalleryRelic : MonoBehaviour
         }
         else
         {
+            _relicData = ResourceManager.Instance.GetRelicDataByID(_data.IDRelic);
             SetUpModelCollection();
         }
     }
@@ -85,44 +92,47 @@ public class GalleryRelic : MonoBehaviour
         _ObjSelecter.SetActive(false);
         _ObjCollect.SetActive(true);
 
-        _relicData = ResourceManager.Instance.GetRelicDataByID(_data.IDRelic);
         UpdateTxtName();
         UpdateArtRelic();
-        UpdateTxtCoinCollect();
-        UpdateTxtCountdownCollect();
-    }
+        UpdateTxtCoinClaim();
 
-    private void UpdateTxtCoinCollect()
-    {
-        _txtCoinCollect.text = "+" + _relicData.Coin;
-    }
-
-    private void UpdateTxtCountdownCollect()
-    {
-        //DateTime targetTime = _data.LastTimeSpinFreeClicked.AddMinutes(timeToFree).AddSeconds(60); //Countdown => need add 60
-        DateTime targetTime = DateTime.Parse(_data.LastTimer).AddMinutes(_relicData.Timer).AddSeconds(60);
-        DateTime currTime = DateTime.Now;
-        TimeSpan subTime = targetTime.Subtract(currTime);        
-
-        if (subTime.Hours <= 0 && subTime.Minutes <= 0)
+        if (_data.State == GalleryRelicState.LOCK)
         {
-            _txtCountdownCollect.gameObject.SetActive(false);
-            _txtCoinCollect.gameObject.SetActive(true);
-            _BtnCollect.interactable = true;
-
-            _timer = null;
-            OnRelicCollection?.Invoke(_relicData.Coin);
+            _BtnClaim.gameObject.SetActive(false);
+            _txtCoutdown.gameObject.SetActive(false);
+            _BtnCollect.gameObject.SetActive(true);
+            _BtnInfo.interactable = false;
+            return;
         }
         else
         {
-            _txtCountdownCollect.gameObject.SetActive(true);
-            _txtCoinCollect.gameObject.SetActive(false);
-            _BtnCollect.interactable = false;
+            _BtnCollect.gameObject.SetActive(false);
+            _BtnInfo.interactable = true;
+        }
 
+        TimeSpan subTime = GetTimeFromLastClick();
+        if (subTime.Hours <= 0 && subTime.Minutes <= 0)
+        {
+            _timer = null;
+            _BtnClaim.gameObject.SetActive(true);
+            _txtCoutdown.gameObject.SetActive(false);            
+
+            OnCoutDownCompleted?.Invoke(_relicData.Coin);
+        }
+        else
+        {
             _timer = new TimerUtils.CountdownTimer(subTime.Hours * 60 + subTime.Minutes);
             _timer.OnTimerStop += OnCountdownCompleted;
             _timer.Start();
-        }
+
+            _BtnClaim.gameObject.SetActive(false);
+            _txtCoutdown.gameObject.SetActive(true);
+        }        
+    }
+
+    private void UpdateTxtCoinClaim()
+    {
+        _txtClaimCoin.text = "+" + _relicData.Coin;
     }
 
     private void UpdateTxtName()
@@ -138,14 +148,18 @@ public class GalleryRelic : MonoBehaviour
     private void Start()
     {
         _BtnSelecter.onClick.AddListener(OnClickSelecter);
-        _BtnCollect.onClick.AddListener(OnClickCollection);
+        _BtnClaim.onClick.AddListener(OnClickClaim);
+        _BtnInfo.onClick.AddListener(OnClickInfo);
+        _BtnCollect.onClick.AddListener(OnClickCollect);
 
     }
 
     private void OnDestroy()
     {
         _BtnSelecter.onClick.RemoveListener(OnClickSelecter);
-        _BtnCollect.onClick.RemoveListener(OnClickCollection);
+        _BtnClaim.onClick.RemoveListener(OnClickClaim);
+        _BtnInfo.onClick.RemoveListener(OnClickInfo);
+        _BtnCollect.onClick.RemoveListener(OnClickCollect);
     }
 
     private void Update()
@@ -160,7 +174,7 @@ public class GalleryRelic : MonoBehaviour
     private void UpdateTimer(float minute)
     {
         TimeSpan t = TimeSpan.FromMinutes(minute);
-        _txtCountdownCollect.text = $"{t.Hours}:{t.Minutes}";
+        _txtCoutdown.text = $"{t.Hours}h:{t.Minutes}m";
     }
 
     private void OnClickSelecter()
@@ -168,33 +182,60 @@ public class GalleryRelic : MonoBehaviour
         GUIManager.Instance.ShowPopup<PopupRelicSelecter>(_idGallery, _idRelics, _idx, this);
     }
 
-    private void OnClickCollection()
+    private void OnClickClaim()
     {
+        //TODO: Add coin to player
         _data.LastTimer = DateTime.Now.ToString();
-        UpdateTxtCountdownCollect();
+        TimeSpan timeSpan = GetTimeFromLastClick();
+        _timer = new TimerUtils.CountdownTimer(timeSpan.Hours * 60 + timeSpan.Minutes);
+        _timer.OnTimerStop += OnCountdownCompleted;
+        _timer.Start();
 
-        //TODO: Add coin for player        
+        _BtnClaim.gameObject.SetActive(false);
+        _txtCoutdown.gameObject.SetActive(true);
+
+        OnRelicClaim?.Invoke(_relicData.Coin);
+    }
+
+    private void OnClickInfo()
+    {
+        GUIManager.Instance.ShowPopup<PopupGalleryRelic>(_data);
+    }
+
+    private void OnClickCollect()
+    {
+        ChallengeManager.Instance.OnInit(_data);
     }
 
     private void OnCountdownCompleted()
     {
-        _txtCountdownCollect.gameObject.SetActive(false);
-        _txtCoinCollect.gameObject.SetActive(true);
+        _timer.OnTimerStop -= OnCountdownCompleted;
         _timer = null;
 
-        _BtnCollect.interactable = true;
-        OnRelicCollection?.Invoke(_relicData.Coin);
-        //TODO: Add coin to collect all button
+        _BtnClaim.gameObject.SetActive(true);
+        _txtCoutdown.gameObject.SetActive(false);
+
+        OnCoutDownCompleted?.Invoke(_relicData.Coin);
     }
 
-    public void OnCollect()
+    public void OnClaim()
     {
         if(_ObjCollect.activeSelf == true)
         {
             if(_timer == null)
             {
-                OnClickCollection();
+                OnClickClaim();
             }
         }
+    }
+
+    private TimeSpan GetTimeFromLastClick()
+    {
+        //DateTime targetTime = _data.LastTimeSpinFreeClicked.AddMinutes(timeToFree).AddSeconds(60); //Countdown => need add 60
+        DateTime targetTime = DateTime.Parse(_data.LastTimer).AddMinutes(_relicData.Timer).AddSeconds(60);
+        DateTime currTime = DateTime.Now;
+        TimeSpan subTime = targetTime.Subtract(currTime);
+
+        return subTime;
     }
 }

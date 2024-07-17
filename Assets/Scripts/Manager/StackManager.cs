@@ -16,7 +16,6 @@ public class StackManager : MonoBehaviour, IStackOnPlaced, IStackSphereRadius
 {    
     [SerializeField]
     private Transform[] pointSpawns;
-
     [SerializeField]
     private StackController stackController;
     [SerializeField]

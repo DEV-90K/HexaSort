@@ -23,8 +23,8 @@ public class ButtonReplay : MonoBehaviour
         _btn.onClick.RemoveListener(OnClickBtnReplay);
     }
 
-    private void OnClickBtnReplay()
+    public virtual void OnClickBtnReplay()
     {
         LevelManager.Instance.OnReplay();
-    }
+    }    
 }

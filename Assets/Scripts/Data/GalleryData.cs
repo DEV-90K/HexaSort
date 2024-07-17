@@ -10,10 +10,19 @@ public class GalleryData
     public int[] IDRelics;
 }
 
+public enum GalleryRelicState
+{
+    NONE, 
+    LOCK,
+    COLLECT
+}
+
 public class GalleryRelicData
 {
     public int IDRelic;
     public int IDGallery;
+    public GalleryRelicState State;
+
     public int Position; // Position in Gallery
     public string LastTimer;
 
@@ -26,6 +35,15 @@ public class GalleryRelicData
         IDGallery = iDGallery;
         IDRelic = iDRelic;
         Position = position; //[1 - Capacity]
+        LastTimer = lastTimer;
+    }
+
+    public GalleryRelicData(int iDGallery, int iDRelic, int position, string lastTimer, GalleryRelicState state)
+    {
+        IDRelic = iDRelic;
+        IDGallery = iDGallery;
+        State = state;
+        Position = position;
         LastTimer = lastTimer;
     }
 }

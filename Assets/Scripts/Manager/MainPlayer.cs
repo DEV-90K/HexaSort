@@ -31,8 +31,8 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
         LoadPlayerData();  
         
         List<GalleryRelicData> listData = new List<GalleryRelicData>();
-        listData.Add(new GalleryRelicData(1, 2, 4, DateTime.Now.ToString()));
-        listData.Add(new GalleryRelicData(1, 1, 6, DateTime.Now.AddMinutes(-20).ToString()));
+        listData.Add(new GalleryRelicData(1, 2, 4, DateTime.Now.ToString(), GalleryRelicState.COLLECT));
+        listData.Add(new GalleryRelicData(1, 1, 6, DateTime.Now.AddMinutes(-20).ToString(), GalleryRelicState.COLLECT));
 
         _DictGalleryRelic[1] = listData;
     }

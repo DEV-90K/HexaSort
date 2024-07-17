@@ -41,7 +41,7 @@ public class ChallengeManager : MonoSingleton<ChallengeManager>
 
         OnInit(challengeData, challengePresenterData);
 
-        this.Invoke(() => OnFinishWoned(), 5f);
+        //this.Invoke(() => OnFinishWoned(), 5f);
     }
 
     public void OnInit(ChallengeData challengeData, ChallengePresenterData presenterData)
@@ -67,6 +67,15 @@ public class ChallengeManager : MonoSingleton<ChallengeManager>
         OnInitCurrentChallenge();
     }
 
+    public void OnExit()
+    {
+        _stackManager.CollectRandomImmediate();
+        _gridManager.CollectGridImmediate();
+
+        MainPlayer.instance.CollectGalleryRelic(_galleryRelicData);
+        GUIManager.instance.ShowScreen<ScreenMain>();
+    }
+
     private void OnFinish()
     {
         GameManager.instance.ChangeState(GameState.FINISH);
@@ -78,7 +87,7 @@ public class ChallengeManager : MonoSingleton<ChallengeManager>
     {
         OnFinish();
         this.Invoke(() => HanldeFinish(), 1f);
-    }
+    }    
 
     private void HanldeFinish()
     {
@@ -88,4 +97,26 @@ public class ChallengeManager : MonoSingleton<ChallengeManager>
         MainPlayer.instance.CollectGalleryRelic(_galleryRelicData);
         GUIManager.instance.ShowScreen<ScreenMain>();
     }
+
+    #region Screen Challenge
+    internal void ShowStackLeft()
+    {
+        throw new NotImplementedException();
+    }
+
+    internal bool CanShowLeft()
+    {
+        throw new NotImplementedException();
+    }
+
+    internal void ShowStackRight()
+    {
+        throw new NotImplementedException();
+    }
+
+    internal bool CanShowRight()
+    {
+        throw new NotImplementedException();
+    }
+    #endregion Screen Challenge
 }

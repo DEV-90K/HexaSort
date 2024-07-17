@@ -9,7 +9,7 @@ public class PopupGallery : PopupBase
     [SerializeField]
     private Button _BtnBack;
     [SerializeField]
-    private Button _BtnCollect;
+    private Button _BtnCollectCoin;
     [SerializeField]
     private TMP_Text _TxtCoin;
 
@@ -32,16 +32,16 @@ public class PopupGallery : PopupBase
         base.OnInit(paras);
         _data = ResourceManager.Instance.GetGalleryData();
         _galleryRelicDatas = MainPlayer.Instance.GetGalleryRelicByID(_data.ID);
-        _rels = InitGalleryRelics();
 
+        _amountCoin = 0;
+        _BtnWaiting.gameObject.SetActive(true);
+        _BtnCollectCoin.gameObject.SetActive(false);
+
+        _rels = InitGalleryRelics();
         foreach (GalleryRelicData galleryRelicData in _galleryRelicDatas)
         {
             _rels[galleryRelicData.Position].OnInit(galleryRelicData, _data.ID, _data.IDRelics);
         }
-
-        _amountCoin = 0;
-        _BtnWaiting.gameObject.SetActive(true);
-        _BtnCollect.gameObject.SetActive(false);
     }
 
     private GalleryRelic[] InitGalleryRelics()
@@ -79,18 +79,20 @@ public class PopupGallery : PopupBase
 
     private void OnEnable()
     {
-        GalleryRelic.OnRelicCollection += GalleryRelic_OnRelicCollection;
+        GalleryRelic.OnRelicClaim += GalleryRelic_OnRelicClaim;
+        GalleryRelic.OnCoutDownCompleted += GalleryRelic_OnCoutDownCompleted;
     }
 
     private void OnDisable()
     {
-        GalleryRelic.OnRelicCollection -= GalleryRelic_OnRelicCollection;
+        GalleryRelic.OnRelicClaim -= GalleryRelic_OnRelicClaim;
+        GalleryRelic.OnCoutDownCompleted -= GalleryRelic_OnCoutDownCompleted;
     }
 
     private void Start()
     {
         _BtnBack.onClick.AddListener(OnClickBtnBack);
-        _BtnCollect.onClick.AddListener(OnClickBtnCollect);
+        _BtnCollectCoin.onClick.AddListener(OnClickBtnCollect);
         _BtnWaiting.onClick.AddListener(OnClickBtnWaiting);
     }
 
@@ -108,28 +110,36 @@ public class PopupGallery : PopupBase
     {
         foreach(GalleryRelic rel in _rels)
         {
-            rel.OnCollect();
+            rel.OnClaim();
         }
-
-        _BtnCollect.gameObject.SetActive(false);
-        _BtnWaiting.gameObject.SetActive(true);
-        _amountCoin = 0;
     }
 
     private void OnClickBtnWaiting()
     {
         Debug.Log("OnClickBtnWaiting");
     }
-    private void GalleryRelic_OnRelicCollection(int amount)
+    private void GalleryRelic_OnRelicClaim(int amount)
     {
-        if(_BtnCollect.gameObject.activeSelf == false)
-        {
-            _BtnCollect.gameObject.SetActive(true);
-            _BtnWaiting.gameObject.SetActive(false);
-        }
+        _amountCoin -= amount;
+        UpdateTxtCoin();
 
+        if (_amountCoin <= 0)
+        {
+            _BtnCollectCoin.gameObject.SetActive(false);
+            _BtnWaiting.gameObject.SetActive(true);
+        }
+    }
+
+    private void GalleryRelic_OnCoutDownCompleted(int amount)
+    {
         _amountCoin += amount;
         UpdateTxtCoin();
+
+        if (_amountCoin > 0)
+        {
+            _BtnCollectCoin.gameObject.SetActive(true);
+            _BtnWaiting.gameObject.SetActive(false);
+        }
     }
 
     private void UpdateTxtCoin()
