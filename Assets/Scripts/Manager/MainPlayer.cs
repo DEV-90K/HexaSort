@@ -1,10 +1,14 @@
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MainPlayer : PersistentMonoSingleton<MainPlayer> 
 {
     private const string KEY_PLAYER = "PLAYER_DATA";
     private PlayerData _PlayerData;
+
+    private Dictionary<int, List<GalleryRelicData>> _DictGalleryRelic = new Dictionary<int, List<GalleryRelicData>>(); //int is ID of gallery    
 
     public PlayerData GetPlayerData()
     {
@@ -24,7 +28,36 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
 
     public void LoadData()
     {
-        LoadPlayerData();
+        LoadPlayerData();  
+        
+        List<GalleryRelicData> listData = new List<GalleryRelicData>();
+        listData.Add(new GalleryRelicData(1, 2, 4, DateTime.Now.ToString()));
+        listData.Add(new GalleryRelicData(1, 1, 6, DateTime.Now.AddMinutes(-20).ToString()));
+
+        _DictGalleryRelic[1] = listData;
+    }
+
+    public GalleryRelicData[] GetGalleryRelicByID(int IDGallery)
+    {
+        if(_DictGalleryRelic.ContainsKey(IDGallery))
+        {
+            return _DictGalleryRelic[IDGallery].ToArray();
+        }
+
+        return null;
+    }
+
+    public void CollectGalleryRelic(GalleryRelicData galleryRelicData)
+    {
+        galleryRelicData.LastTimer = DateTime.Now.ToString();
+        if(_DictGalleryRelic.ContainsKey(galleryRelicData.IDGallery))
+        {
+            _DictGalleryRelic[galleryRelicData.IDGallery].Add(galleryRelicData);
+        }
+        else
+        {
+            _DictGalleryRelic[galleryRelicData.IDGallery] = new List<GalleryRelicData> { galleryRelicData };
+        }    
     }
 
     public int GetCoin() => _PlayerData.Coin;

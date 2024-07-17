@@ -17,8 +17,10 @@ public class GUIManager : PersistentMonoSingleton<GUIManager>
 
     public T ShowScreen<T>(params object[] paras) where T : ScreenBase
     {
-        ScreenBase screen = screenManager.GetScreen<T>();
+        HideAllScreen();
+        HideAllPopup();
 
+        ScreenBase screen = screenManager.GetScreen<T>();
         //screen.OnSetup();
         screen.OnInit(paras);
         screen.Show();       
@@ -61,13 +63,23 @@ public class GUIManager : PersistentMonoSingleton<GUIManager>
         }
     }
 
-    public void HideAllPopup<T>() where T : PopupBase
+    public void HideAllPopup()
     {
-        List<T> popupsShowed = popupManager.GetPopupsShowed<T>();
+        List<PopupBase> popupShowed = popupManager.GetPopupsShowed();
 
-        foreach (T popup in popupsShowed)
+        foreach (PopupBase popup in popupShowed)
         {
             popup.Hide();
+        }
+    }
+
+    private void HideAllScreen()
+    {
+        List<ScreenBase> screenShowed = screenManager.GetSceensShowed();
+
+        foreach (ScreenBase screen in screenShowed)
+        {
+            screen.Hide();
         }
     }
 }

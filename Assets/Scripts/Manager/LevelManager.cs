@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEditor;
 using UnityEngine;
 
 public class LevelManager : MonoSingleton<LevelManager>
@@ -29,7 +30,11 @@ public class LevelManager : MonoSingleton<LevelManager>
     private void Start()
     {    
         _hammer.gameObject.SetActive(false);
-        OnInitLevelByID(1);
+
+        //TEST
+        //After get from PlayerData
+        _levelData = ResourceManager.instance.GetLevelByID(1);
+        _presenterData = ResourceManager.instance.GetLevelPresenterDataByID(1);
     }
 
     public LevelPresenterData GetPresenterData()
@@ -70,7 +75,7 @@ public class LevelManager : MonoSingleton<LevelManager>
         OnInit(levelData, presenterData);
     }
 
-    private void OnInitCurrentLevel()
+    public void OnInitCurrentLevel()
     {
         OnInit(_levelData, _presenterData);
     }
@@ -82,6 +87,9 @@ public class LevelManager : MonoSingleton<LevelManager>
         LevelPresenterData presenterData = levelPresenter;
 
         OnFinish();
+
+        //EditorApplication.isPaused = true;
+
         this.Invoke(() => OnInit(levelData, presenterData), 1f);
     }
 
@@ -92,10 +100,12 @@ public class LevelManager : MonoSingleton<LevelManager>
 
         amountHexagon = 0;
 
-        _gridManager.OnInit(levelData.Grid);
-        _stackManager.OnInit(levelData.StackQueueData);
+        _gridManager.OnInit(_levelData.Grid);
 
-        GUIManager.Instance.ShowScreen<ScreenLevel>(presenterData);       
+        _stackManager.Configure(_presenterData.Amount, _presenterData.Probabilities);
+        _stackManager.OnInit(_levelData.StackQueueData);
+
+        GUIManager.Instance.ShowScreen<ScreenLevel>(_presenterData);       
     }
 
     public void OnReplay()
@@ -236,6 +246,23 @@ public class LevelManager : MonoSingleton<LevelManager>
         else if (!_gridManager.CheckEmptyGrid())
         {
             OnFinishLosed();
+        }
+        else
+        {
+            onStackMergeCompleted();
+        }
+    }
+
+    private void onStackMergeCompleted()
+    {
+        GridHexagon[] gridHexagons = _gridManager.GetGridHexagonsUnLockByHexagon(amountHexagon);
+
+        if (gridHexagons.Length > 0)
+        {
+            foreach (GridHexagon grid in gridHexagons)
+            {
+                _stackManager.MergeStackIntoGrid(grid);
+            }
         }
     }
 

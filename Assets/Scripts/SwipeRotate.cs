@@ -5,6 +5,9 @@ using UnityEngine.EventSystems;
 
 public class SwipeRotate : MonoBehaviour
 {
+    [SerializeField]
+    private LayerMask groundLayerMask;
+
     #region With Mouse event
     private float speed = 5f;
     private float startPosX;
@@ -23,9 +26,7 @@ public class SwipeRotate : MonoBehaviour
 
     private void Update()
     {
-        if (IsPointerOverUIObject()) return;
-
-        if(Input.GetMouseButtonDown(0))
+        if(Input.GetMouseButtonDown(0) && CheckZoneMouseDetech())
         {            
             isRotating = true;            
             startPosX = Input.mousePosition.x;
@@ -91,18 +92,17 @@ public class SwipeRotate : MonoBehaviour
     }
     #endregion With Mouse event
 
-    private bool IsPointerOverUIObject()
+    private bool CheckZoneMouseDetech()
     {
-        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
-        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-        List<RaycastResult> results = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        RaycastHit hit;
+        Physics.Raycast(CameraUtils.GetRayFromMouseClicked(), out hit, 500, groundLayerMask);
+        Vector3 mousePos = hit.point;
 
-        //for (int i = 0; i < results.Count; i++)
-        //{
-        //    Debug.Log("Raycast: " + results[i].gameObject.name);
-        //}
+        if(-5f < mousePos.z && mousePos.z < 5f)
+        {
+            return true;
+        }
 
-        return results.Count > 1;
+        return false;
     }
 }

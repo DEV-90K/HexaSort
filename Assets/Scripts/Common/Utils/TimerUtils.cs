@@ -71,6 +71,8 @@ public class TimerUtils : MonoBehaviour
             initialTime = newTime;
             Reset();
         }
+
+        public float GetTime() => Time;
     }
 
     public class StopwatchTimer : Timer

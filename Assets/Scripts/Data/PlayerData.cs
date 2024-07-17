@@ -1,9 +1,12 @@
 using Newtonsoft.Json;
+using System.Collections.Generic;
+
 public class PlayerData
 {
     public int Coin { get; set; }
+    public int Material { get; set; }
 
-    [JsonProperty]
+    [JsonIgnore]
     public PlayerLevelData PlayerLevel { get; private set; }
 
     public PlayerData(int coin, PlayerLevelData playerLevel)

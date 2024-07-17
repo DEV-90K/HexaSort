@@ -1,107 +1,91 @@
+using System;
 using UnityEngine;
 
 public class ChallengeManager : MonoSingleton<ChallengeManager>
 {
-    private enum ChalleneState
-    {
-        NONE,
-        LOADING,
-        PLAYING,
-        PAUSED,
-        FINISHED
-    }
-
     [SerializeField]
     private GridManager _gridManager;
     [SerializeField]
     private StackManager _stackManager;
 
     private ChallengeData _challengeData;
+    private ChallengePresenterData _presenterData;
 
-    private int amountHexagon = 0;
-    private ChalleneState challeneState = ChalleneState.NONE;
+    private GalleryRelicData _galleryRelicData;
 
-    //private void Start()
-    //{
-    //    challeneState = ChalleneState.NONE;
-
-    //    Hexagon.OnVanish += Hexagon_OnVanish;
-    //    StackMerger.OnStackMergeCompleted += StackMerge_OnStackMergeCompleted;
-
-    //    InitChallengeTest();
-    //    GameManager.Instance.ChangeState(GameState.PLAYING);
-    //}
-
-    private void OnDestroy()
+    private void OnEnable()
     {
-        Hexagon.OnVanish -= Hexagon_OnVanish;
+        StackMerger.OnStackMergeCompleted += StackMerge_OnStackMergeCompleted;
+    }
+
+    private void OnDisable()
+    {
         StackMerger.OnStackMergeCompleted -= StackMerge_OnStackMergeCompleted;
     }
 
-    private void InitChallengeTest()
+    private void StackMerge_OnStackMergeCompleted()
     {
-        ChallengeData challengeData = ResourceManager.Instance.GetChallengeByID(1);        
-        OnInit(challengeData);
+
     }
 
-    public void OnInit(ChallengeData challengeData)
+    public void OnInit(GalleryRelicData galleryRelicData)
     {
-        Debug.Log("OnInit ChallengeData: ");
-        challengeData.DebugLogObject();
+        _galleryRelicData = galleryRelicData;
+        //Base on ID of Relic choice Challenge play
+        //ChallengeData challengeData = ResourceManager.instance.GetChallengeByID(_galleryRelicData.IDRelic);
+        //ChallengePresenterData challengePresenterData = ResourceManager.instance.GetChallengePresenterDataByID(_galleryRelicData.IDRelic);
 
-        challeneState = ChalleneState.LOADING;
+        //TEST
+        ChallengeData challengeData = ResourceManager.instance.GetChallengeByID(1);
+        ChallengePresenterData challengePresenterData = ResourceManager.instance.GetChallengePresenterDataByID(1);
 
+        OnInit(challengeData, challengePresenterData);
+
+        this.Invoke(() => OnFinishWoned(), 5f);
+    }
+
+    public void OnInit(ChallengeData challengeData, ChallengePresenterData presenterData)
+    {
         _challengeData = challengeData;
-        amountHexagon = 0;
+        _presenterData = presenterData;
 
-        _gridManager.OnInit(challengeData.Grid);
-        _stackManager.OnInit(challengeData.StackQueueData);
+        _gridManager.OnInit(_challengeData.Grid);
+        _stackManager.OnInit(_challengeData.StackQueueData);
 
-        challeneState = ChalleneState.PLAYING;
+        GUIManager.instance.ShowScreen<ScreenChallenge>(_presenterData);
+    }
+
+    private void OnInitCurrentChallenge()
+    {
+        OnInit(_challengeData, _presenterData);
     }
 
     public void OnReplay()
     {
         _stackManager.CollectRandomImmediate();
         _gridManager.CollectGridImmediate();
-
-        OnInit(_challengeData);
+        OnInitCurrentChallenge();
     }
 
-    public void OnFinish()
+    private void OnFinish()
     {
-        Debug.Log("OnFinish");
-        if (challeneState == ChalleneState.FINISHED)
-            return;
-
-        challeneState = ChalleneState.FINISHED;
-
+        GameManager.instance.ChangeState(GameState.FINISH);
         _gridManager.CollectOccupied();
         _stackManager.CollectRandomed();
-
-        Invoke(nameof(InitChallengeTest), 1f);
     }
 
-    //Test Case Wrong: In Process Merge and Remove
-    private void Hexagon_OnVanish()
+    private void OnFinishWoned()
     {
-        if (challeneState != ChalleneState.PLAYING)
-        {
-            return;
-        }
+        OnFinish();
+        this.Invoke(() => HanldeFinish(), 1f);
     }
 
-    private void StackMerge_OnStackMergeCompleted()
+    private void HanldeFinish()
     {
-        //Debug.Log("Level State: " + EnumUtils.ParseString(levelState));
-        //if (levelState != LevelState.PLAYING)
-        //{
-        //    return;
-        //}
+        //TODO: Add material base presenter data
+        //TODO: Add coin base presenter data
 
-        //if (amountHexagon >= _presenterData.Goal)
-        //{
-        //    OnFinish();
-        //}
+        MainPlayer.instance.CollectGalleryRelic(_galleryRelicData);
+        GUIManager.instance.ShowScreen<ScreenMain>();
     }
 }

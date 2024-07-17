@@ -101,6 +101,21 @@ public class FirebaseManager : PersistentMonoSingleton<FirebaseManager>
         }
     }
 
+    internal ChallengePresenterData[] GetRemoteChallengePresenterDatas()
+    {
+        string key = "ChallengePresenters";
+        try
+        {
+            string value = _remoteConfig.GetRemoteConfigValue(key);
+            ChallengePresenterData[] data = JsonConvert.DeserializeObject<ChallengePresenterData[]>(value);
+            return data;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
     internal MechanicConfig LoadRemoteMechanicConfig()
     {
         string key = "Mechanic";

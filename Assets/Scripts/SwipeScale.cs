@@ -1,10 +1,11 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class SwipeScale : MonoBehaviour
 {
+    [SerializeField]
+    private LayerMask groundLayerMask;
+
     private float speed = 5f;
 
     private bool isRotating = false;
@@ -28,9 +29,7 @@ public class SwipeScale : MonoBehaviour
 
     private void Update()
     {
-        if (IsPointerOverUIObject()) return;
-
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && CheckZoneMouseDetech())
         {
             isRotating = true;
         }
@@ -85,18 +84,16 @@ public class SwipeScale : MonoBehaviour
         UpdateFolloweres();
     }
 
-    private bool IsPointerOverUIObject()
+    private bool CheckZoneMouseDetech()
     {
-        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
-        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-        List<RaycastResult> results = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        RaycastHit hit;
+        Physics.Raycast(CameraUtils.GetRayFromMouseClicked(), out hit, 500, groundLayerMask);
+        Vector3 mousePos = hit.point;
+        if (-5f < mousePos.z && mousePos.z < 5f)
+        {
+            return true;
+        }
 
-        //for (int i = 0; i < results.Count; i++)
-        //{
-        //    Debug.Log("Raycast: " + results[i].gameObject.name);
-        //}
-
-        return results.Count > 1;
+        return false;
     }
 }

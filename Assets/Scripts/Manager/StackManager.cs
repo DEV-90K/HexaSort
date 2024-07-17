@@ -60,6 +60,11 @@ public class StackManager : MonoBehaviour, IStackOnPlaced, IStackSphereRadius
         GenerateStacks();
     }
 
+    public void Configure(int amount, int[] probabilities)
+    {
+        randomSpawner.Configure(amount, probabilities);
+    }
+
     public void OnResert()
     {
         stackHexagons.Clear();

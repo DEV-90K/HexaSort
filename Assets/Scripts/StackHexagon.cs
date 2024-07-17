@@ -169,7 +169,15 @@ public class StackHexagon : PoolMember
         PoolManager.Despawn(this);
     }
 
-    #region Canvas   
+    #region Canvas  
+    public Vector3 GetTopPosition()
+    {
+        Vector3 result = 
+            transform.position + Vector3.up * (Hexagons.Count - 1) * GameConstants.HexagonConstants.HEIGHT 
+            + Vector3.up * (GameConstants.HexagonConstants.HEIGHT / 2f + 0.01f);
+        return result;
+    }
+
     private void UpdateCanvas()
     {
         if (Hexagons == null || Hexagons.Count == 0)
@@ -188,7 +196,7 @@ public class StackHexagon : PoolMember
             }
         }
 
-        canvasStack.transform.position = transform.position + Vector3.up * (Hexagons.Count -1) * GameConstants.HexagonConstants.HEIGHT + Vector3.up * (GameConstants.HexagonConstants.HEIGHT/2f + 0.01f);
+        canvasStack.transform.position = GetTopPosition();
         canvasStack.UpdateTxtNumber(amount);
     }
 

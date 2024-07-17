@@ -11,7 +11,7 @@ public class GridManager : MonoBehaviour
     private GridSpawner _gridSpawner;
 
     private GridData _gridData;
-    private GridHexagon[] _gridHexagons;
+    private GridHexagon[] _gridHexagons;    
 
     protected void Awake()
     {
@@ -45,7 +45,7 @@ public class GridManager : MonoBehaviour
 
     public void CollectOccupied()
     {
-        _gridControl.Collect();
+        _gridControl.CollectAllOccupied();
     }
 
     public void CollectGridImmediate()
@@ -69,6 +69,11 @@ public class GridManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    public GridHexagon[] GetGridHexagonsUnLockByHexagon(int amount)
+    {
+        return _gridControl.UnLockByHexagon(amount);
     }
 
     #region Grid Hexagon Data

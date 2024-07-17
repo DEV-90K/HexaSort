@@ -46,14 +46,15 @@ public class PopupManager : MonoBehaviour
         return cachePopups[typeof(T)] as T;
     }
 
-    public List<T> GetPopupsShowed<T>() where T : PopupBase
+
+    public List<PopupBase> GetPopupsShowed()
     {
-        List<T> list = new List<T>();
+        List<PopupBase> list = new List<PopupBase>();
         foreach (KeyValuePair<System.Type, PopupBase> item in cachePopups)
         {
-            if(item.Value != null && item.Value.gameObject.activeInHierarchy)
+            if (item.Value != null && item.Value.gameObject.activeSelf)
             {
-                list.Add(item.Value as T);
+                list.Add(item.Value);
             }
         }
 

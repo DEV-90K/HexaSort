@@ -5,6 +5,7 @@ public enum GameState
 {
     NONE,
     LOADING,
+    START,
     PLAYING,
     PAUSE,
     FINISH
@@ -18,7 +19,12 @@ public class GameManager : PersistentMonoSingleton<GameManager>
     public void ChangeState(GameState newState)
     {
         state = newState;
-        Debug.Log("GameState Change: " + EnumUtils.ParseString(state));
+        
+        if(state == GameState.START)
+        {
+            GUIManager.instance.ShowScreen<ScreenMain>();
+        }
+
         OnChangeState?.Invoke(state);
     }
 

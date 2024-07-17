@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LoadSystem : MonoBehaviour
-{
+{    
     [SerializeField]
     private float _TimeLoading = 5f;
     [SerializeField]
@@ -14,12 +14,29 @@ public class LoadSystem : MonoBehaviour
 
     private TimerUtils.CountdownTimer _CountDownTimer = null;
 
-    private void Start()
+    private void OnEnable()
     {
+        GameManager.OnChangeState += GameManager_OnChangeState;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.OnChangeState -= GameManager_OnChangeState;
+    }
+
+    private void GameManager_OnChangeState(GameState state)
+    {
+        if(state == GameState.LOADING)
+        {
+            _CountDownTimer.Start();
+        }
+    }
+
+    private void Start()
+    {        
         _CountDownTimer = new TimerUtils.CountdownTimer(_TimeLoading);
         _CountDownTimer.OnTimerStart += EnterLoading;
-        _CountDownTimer.OnTimerStop += ExitLoading;
-        _CountDownTimer.Start();
+        _CountDownTimer.OnTimerStop += ExitLoading;        
     }
 
     private void Update()
@@ -98,8 +115,7 @@ public class LoadSystem : MonoBehaviour
             yield return null;
         }
 
-        //yield return new WaitForSeconds(2f);
-
         SceneManager.UnloadSceneAsync(currentSceneName);
+        GameManager.Instance.ChangeState(GameState.START);
     }
 }

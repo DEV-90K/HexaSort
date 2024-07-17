@@ -3,15 +3,16 @@ using System.Linq;
 using UnityEngine;
 
 public class StackRandomSpawner : StackSpawner
-{
-    [Header("Player Hexagon Colors")]
-    [SerializeField]
-    private Color[] colors;
+{    
     [SerializeField]
     private Vector2Int hexagonClampf;
-
     private int NUMBER_COLOR_IN_STACK = 3;
     private List<StackHexagon> cacheStacks = new List<StackHexagon>();
+
+    private int _amountOfColor;
+    private int[] _probabilitiesOfSimilarColor;
+    private Color[] _cacheColors;
+    private Color[] _colors;
 
     private void Start()
     {
@@ -19,26 +20,13 @@ public class StackRandomSpawner : StackSpawner
 
         HexagonData[] datas = ResourceManager.Instance.GetAllHexagonData();
         List<Color> listColors = new List<Color>();
-        //foreach (HexagonData data in datas)
-        //{
-        //    if (data.ID == 1) continue; //1 is color of grid
-        //    if (ColorUtility.TryParseHtmlString(data.HexColor, out Color color))
-        //    {
-        //        listColors.Add(color);
-        //    }
-        //}
 
         for (int i = 0; i < datas.Length; i++)
         {
             HexagonData data = datas[i];
 
-            if (data.ID == 1)
+            if (data.ID >= 20)
                 continue;
-
-            if(i >= 3)
-            {
-                break;
-            }
 
             if (ColorUtility.TryParseHtmlString(data.HexColor, out Color color))
             {
@@ -46,7 +34,7 @@ public class StackRandomSpawner : StackSpawner
             }
         }
 
-        colors = listColors.ToArray();
+        _cacheColors = listColors.ToArray();
     }
 
     private void LoadConfig()
@@ -74,10 +62,12 @@ public class StackRandomSpawner : StackSpawner
         insHexagonStack.transform.localPosition = Vector3.zero;
         insHexagonStack.transform.localScale = Vector3.one;
 
-        Color[] colors = GetRandomColors(NUMBER_COLOR_IN_STACK);        
-
+        //Color[] colors = GetRandomColors(NUMBER_COLOR_IN_STACK);        
+        Color[] colors = GetRandomColors_v2();
         int numberOfHexagon = Random.Range(hexagonClampf.x, hexagonClampf.y);
-        int[] arrHexagon = GetRandomHexagons(numberOfHexagon, NUMBER_COLOR_IN_STACK);
+        int numberOfSimilar = GetNumberOfSimilar();
+        int[] arrHexagon = GetRandomHexagons(numberOfHexagon, numberOfSimilar);
+
         int amount = 0;
         for (int i = 0; i < arrHexagon.Length; i++)
         {
@@ -87,7 +77,6 @@ public class StackRandomSpawner : StackSpawner
                 Vector3 localPos = Vector3.up * amount * GameConstants.HexagonConstants.HEIGHT;
                 Vector3 pos = insHexagonStack.transform.TransformPoint(localPos);
                 Hexagon insPlayerHexagon = SpawnHexagon(insHexagonStack, color, pos);
-                //insPlayerHexagon.transform.SetParent(insHexagonStack.transform);
                 insPlayerHexagon.transform.localScale = Vector3.one;
                 amount++;
             }
@@ -95,13 +84,66 @@ public class StackRandomSpawner : StackSpawner
 
         if (CheckStackSimilar(insHexagonStack))
         {
-            Debug.Log("RECOURSE");
             insHexagonStack.CollectImmediate();
             return this.Spawn(stack, COUNT);
         }
 
         cacheStacks.Add(insHexagonStack);
         return insHexagonStack;
+    }
+
+    public void Configure(int amount, int[] probabilities)
+    {
+        _amountOfColor = amount;              
+        
+        int total = probabilities.Sum();
+
+        if(total < 100)
+        {
+            Debug.LogWarning("Total probabilities not equal 100");
+            List<int> list = new List<int>();
+            list.AddRange(probabilities);
+            list.Add(100 - total);
+
+            _probabilitiesOfSimilarColor = list.ToArray();
+        }
+        else
+        {
+            _probabilitiesOfSimilarColor = probabilities;
+        }
+
+        if(_amountOfColor < _probabilitiesOfSimilarColor.Length)
+        {
+            Debug.LogError($"Color does not exist for the case of {_probabilitiesOfSimilarColor.Length} colors in the stack");
+            _amountOfColor = _probabilitiesOfSimilarColor.Length;
+        }
+
+        _colors = _cacheColors.Take(_amountOfColor).ToArray();
+    }
+
+    private int GetNumberOfSimilar()
+    {
+        int k = 1000;
+        while(k > 0)
+        {
+            k--;
+
+            int rand = Random.Range(0, 101); // [0, 100]
+
+            int probability = 0;
+            for(int i = 0; i < _probabilitiesOfSimilarColor.Length; i++)
+            {
+                probability += _probabilitiesOfSimilarColor[i];
+
+                if(rand <= probability)
+                {
+                    return i + 1;
+                }
+            }
+        }
+
+        Debug.LogError("Something wrong");
+        return 0;
     }
 
     private bool CheckStackSimilar(StackHexagon stackCompare)
@@ -144,26 +186,33 @@ public class StackRandomSpawner : StackSpawner
     }
 
     //Each stack have many than one color
-    private Color[] GetRandomColors(int numberOfColor)
+    //private Color[] GetRandomColors(int numberOfColor)
+    //{
+    //    List<Color> listColors = new List<Color>();
+    //    listColors.AddRange(_cacheColors);
+
+    //    List<Color> listResults = new List<Color>();
+    //    while (numberOfColor > 0)
+    //    {
+    //        numberOfColor--;
+
+    //        if (listColors.Count <= 0)
+    //            break;
+
+    //        Color color = listColors.OrderBy(x => Random.value).First();
+    //        listColors.Remove(color);
+    //        listResults.Add(color);
+    //    }
+
+    //    return listResults.ToArray();
+    //}
+
+    //Get Random Color base on config amount = _colors.length();
+    private Color[] GetRandomColors_v2()
     {
-        List<Color> listColors = new List<Color>();
-        listColors.AddRange(colors);
-
-        List<Color> listResults = new List<Color>();
-        while (numberOfColor > 0)
-        {
-            numberOfColor--;
-
-            if (listColors.Count <= 0)
-                break;
-
-            Color color = listColors.OrderBy(x => Random.value).First();
-            listColors.Remove(color);
-            listResults.Add(color);
-        }
-
-        return listResults.ToArray();
+        return _colors.OrderBy(x => Random.value).ToArray();
     }
+
 
     //Hexagons same color
     private int[] GetRandomHexagons(int totalHexagon, int numberSplit)
@@ -204,16 +253,5 @@ public class StackRandomSpawner : StackSpawner
     {
         base.OnEnterSpawn();
         ClearCacheStacks();
-    }
-
-    private void ShowStringColorOfStack(StackHexagon stack)
-    {
-        string strColor = "";
-        for (int i = 0; i < stack.Hexagons.Count; i++)
-        {
-            Hexagon hex = stack.Hexagons[i];
-            strColor += ColorUtility.ToHtmlStringRGB(hex.Color) + " ";
-        }
-        Debug.Log("Color: " + strColor);
     }
 }

@@ -45,6 +45,21 @@ public class ScreenManager : MonoBehaviour
         return cacheScreens[typeof(T)] as T;
     }
 
+    public List<ScreenBase> GetSceensShowed()
+    {
+        List<ScreenBase> list = new List<ScreenBase>();
+        foreach (KeyValuePair<System.Type, ScreenBase> item in cacheScreens)
+        {
+            if (item.Value != null && item.Value.gameObject.activeSelf)
+            {
+                list.Add(item.Value);
+            }
+        }
+
+        return list;
+    }
+
+
     public bool CheckScreenShowed<T>() where T : ScreenBase
     {
         if(CheckScreen<T>() && CheckScreenShowedFromCache<T>())
