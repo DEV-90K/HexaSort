@@ -15,7 +15,8 @@ public class T_PanelExport : T_PanelBase
         int.TryParse(this.LevelTxt.text.Trim(), out level);
         //levelData.Level = level;
 
-        LevelData levelData = T_ScreenTool.Instance.GetLevelData();
+        //LevelData levelData = T_ScreenTool.Instance.GetLevelData();
+        LevelData levelData = T_GridController.Instance.GetLevelData();
         string levelFile = string.Format("Level_{0}", level);
         Debug.LogError(JsonConvert.SerializeObject(levelData));
         //WebGLFileSaver.SaveFile(JsonConvert.SerializeObject(levelData), levelFile);

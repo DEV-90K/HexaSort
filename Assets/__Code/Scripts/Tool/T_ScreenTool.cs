@@ -207,7 +207,7 @@ public class T_ScreenTool : MonoBehaviour
         return this._colorHexaDrag;
     }
 
-    public T_LevelData GetTLevelData()
+    /*public T_LevelData GetTLevelData()
     {
         List<T_HexaInBoardObject> hexaObjSelected = T_GridController.Instance.GetHexaObjsSelected();
         int count = hexaObjSelected.Count;
@@ -225,42 +225,5 @@ public class T_ScreenTool : MonoBehaviour
             }
         }
         return result;
-    }
-
-    public LevelData GetLevelData()
-    {
-        List<T_HexaInBoardObject> hexaObjSelected = T_GridController.Instance.GetHexaObjsSelected();
-        int count = hexaObjSelected.Count;
-        LevelData result = new LevelData();
-        GridData gridData = new GridData(new GridHexagonData[count]);
-        if (count > 0)
-        {
-            for (int i = 0; i < count; i++)
-            {
-                T_HexaInBoardObject hexaObj = hexaObjSelected[i];
-                T_HexaInBoardData hexaData = hexaObj.GetDataHexa();
-                GridHexagonData gridHexagonData = hexaObj.GetGridHexagonData();
-                gridData.GridHexagonDatas[i] = gridHexagonData;
-                StackHexagonData stackHexagonData = gridData.GridHexagonDatas[i].StackHexagon;
-                if ((hexaData.HexagonDatas.Length > hexaObj.transform.childCount && hexaData.State != VisualState.HIDE) || hexaObj.GetDataHexa().HexagonDatas.Length == 0) 
-                {
-                    gridData.GridHexagonDatas[i].SetStackHexagonData(null);
-                }
-                else
-                {
-                    List<int> idhexa = new List<int>();
-                    for(int j = 0; j < hexaData.HexagonDatas.Length; j++)
-                    {
-                        int idColor = Array.IndexOf(T_ConfigValue.ColorList, hexaData.HexagonDatas[j].ColorHexa);
-                        idhexa.Add(idColor);
-                    }
-                    stackHexagonData.IDHexes = idhexa.ToArray();
-                    idhexa.Clear();
-                }
-
-            }
-            result.SetGrid(gridData);
-        }
-        return result;
-    }
+    }*/
 }
