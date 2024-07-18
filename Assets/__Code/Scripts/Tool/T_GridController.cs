@@ -271,49 +271,45 @@ public class T_GridController : MonoBehaviour
         return result;
     }
 
-    public string AddIdColor(int id = -1, string idcolor = null)
+    public string AddIdColor(T_HexaInBoardObject hexaObj,int id = -1, string idcolor = null)
     {
         string colorHexa = null;
         if (id != -1)
         {
-            if (id >= this._colors.Count)
-            {
-                Debug.LogError("bbbbbb");
-                return null;
-            }
+            if (id >= this._colors.Count) return null;
             colorHexa = this._colors[id];
+            //Debug.LogError(string.Format("id: {0} + this._colors.Count: {1} + colorHexa: {2}", id, this._colors.Count, colorHexa));
+        }
+        else if (!string.IsNullOrEmpty(idcolor))
+        {
+            colorHexa = this._colors.Where(a => a.Contains(idcolor)).FirstOrDefault();
+            this._countItemColors.RemoveAt(this._countItemColors.Count - 1);
+        }
+
+        if (!string.IsNullOrEmpty(colorHexa)) 
+        {
             this._countItemColors.Add(colorHexa);
-            Debug.LogError(string.Format("id: {0} + this._colors.Count: {1} + colorHexa: {2}", id, this._colors.Count, colorHexa));
-        }
-        if(idcolor != null)
-        {
-            colorHexa = this._colors.Where(a => a.Contains(idcolor)).FirstOrDefault(); 
-        }
-        //if (colorHexa != null) this._countItemColors.Add(colorHexa);
-        if(this._countItemColors.Count > 0)
-        {
-            int count = this._countItemColors.Where(a => a == colorHexa).Count();
-            if(count > 10)
+            if(this._countItemColors.Count > 0)
             {
-                this._colors.Remove(colorHexa);
-                this._countColor -= 1;
-                Debug.LogError("aaaaaa");
-                return null;
+                int count = this._countItemColors.Where(a => a.Contains(colorHexa)).Count();
+                Debug.LogError(string.Format("hexaObj: {0} + colorHexa: {1} + count: {2} + this._countItemColors.Count: {3}", hexaObj, colorHexa, count, this._countItemColors.Count));
+                if (count >= 10)
+                {
+                    Debug.Log(colorHexa);
+                    this._colors.Remove(colorHexa);
+                    Debug.LogError(string.Format("this._colors: {0}", this._colors.Count));
+                    this._countColor -= 1;
+                    return null;
+                }
             }
         }
+
         return colorHexa;
     }
 
     public int GetCountColor()
     {
         return this._countColor;
-    }
-
-    public void RemoveColorItem()
-    {
-        int count = this._countItemColors.Count;
-        if (count > 0)
-            this._countItemColors.RemoveAt(count-1);
     }
 
     public bool CheckListColors()

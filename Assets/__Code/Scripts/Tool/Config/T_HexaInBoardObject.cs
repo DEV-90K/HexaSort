@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Experimental.GlobalIllumination;
+using static UnityEditor.Progress;
 
 public class T_HexaInBoardObject : MonoBehaviour
 {
@@ -77,41 +78,38 @@ public class T_HexaInBoardObject : MonoBehaviour
         }
         else
         {
-            List<string> colors = new List<string>();
-            for(int i = 0; i < nearHexas.Count; i++)
+            /*List<string> colors = new List<string>();
+            for (int i = 0; i < nearHexas.Count; i++)
             {
                 int count = nearHexas[i].GetDataHexa().HexagonDatas.Length;
                 string color = nearHexas[i].GetDataHexa().HexagonDatas[count - 1].ColorHexa;
                 colors.Add(color);
                 //Debug.Log(string.Format("{0}_{1}", this.name, color));
             }
-            this.RandomColorHexa(numberHexa, countColor, colors);
+            this.RandomColorHexa(numberHexa, countColor, colors);*/
+            this.RandomColorHexa(numberHexa, countColor, nearHexas);
             T_GridController.Instance.ShowNumberHexaInHexa(this);
         }
     }
 
-    public void RandomColorHexa(int numberHexa, int countColor, List<string> colorFist = null)
+    public void RandomColorHexa(int numberHexa, int countColor, List<T_HexaInBoardObject> nearHexaObj = null)
     {
         int item = numberHexa - 1;
-        Debug.LogError("qqqq");
         if (item < 0) return;
-        Debug.LogError("wwww");
         int id = UnityEngine.Random.Range(0, countColor);
-        Debug.LogError(T_GridController.Instance.CheckListColors());
+        Debug.Log(string.Format("CheckListColors: {0} + countColor: {1}", T_GridController.Instance.CheckListColors(), countColor));
         if (!T_GridController.Instance.CheckListColors()) return;
-        Debug.LogError("ccccc");
-        string color = T_GridController.Instance.AddIdColor(id);
-        Debug.Log(string.Format("item: {0} + color: {1} + countColor: {2} + id: {3}", item, color, countColor, id));
+        string color = T_GridController.Instance.AddIdColor(this, id);
+        //Debug.Log(string.Format("item: {0} + color: {1} + countColor: {2} + id: {3}", item, color, countColor, id));
         if(string.IsNullOrEmpty(color))
         {
-            //T_GridController.Instance.RemoveColorItem();
             countColor = T_GridController.Instance.GetCountColor();
-            Debug.LogError(string.Format("item: {0} + color: {1} + countColor: {2}", item, color, countColor));
+            //Debug.LogError(string.Format("item: {0} + color: {1} + countColor: {2}", item, color, countColor));
             RandomColorHexa(item + 1, countColor); 
         }
         else
         {
-            if (colorFist == null)
+            if (nearHexaObj == null)
             {
                 this._data.HexagonDatas[item] = new T_HexaInBoardData();
                 this._data.HexagonDatas[item].Id = item + 1;
@@ -125,25 +123,60 @@ public class T_HexaInBoardObject : MonoBehaviour
                 this._data.HexagonDatas[item].ColorHexa = color;
                 if (item == this._data.HexagonDatas.Length - 1)
                 {
-                    string nearSameColor = colorFist.Where(x => x.Contains(this._data.HexagonDatas[item].ColorHexa)).FirstOrDefault();
+                    /*string nearSameColor = colorFist.Where(x => x.Contains(this._data.HexagonDatas[item].ColorHexa)).FirstOrDefault();
                     //Debug.LogError(string.Format("ObjName: {0} + nearSameColor: {1} + item: {2} + LengthData: {3}", this.name, nearSameColor, item, this._data.HexagonDatas.Length - 1));
-                    if (string.IsNullOrEmpty(nearSameColor)) // Nếu màu ô phía trên chưa giống với 1 màu xug quanh
+                    if (string.IsNullOrEmpty(nearSameColor)) // Nếu màu ô phía trên chưa giống với 1 màu xug quanh thì lấy màu giống
                     {
                         for (int i = 0; i < colorFist.Count; i++)
                         {
-                            string nearColor = T_GridController.Instance.AddIdColor(-1, colorFist[i]);
-                            //Debug.Log(string.Format("ObjName: {0} + nearColor: {1} + colorFist: {2}", this.name, nearColor, colorFist[i]));
+                            string nearColor = T_GridController.Instance.AddIdColor(this, -1, colorFist[i]);
+                            Debug.Log(string.Format("ObjName: {0} + nearColor: {1} + colorFist: {2}", this.name, nearColor, colorFist[i]));
                             if (!string.IsNullOrEmpty(nearColor))
                             {
                                 this._data.HexagonDatas[item].ColorHexa = nearColor;
-                                break;
+                                return;
                             }
                         }
-                    }
+                    }*/
+                    GetColorHexaFirst(nearHexaObj, 1, item);
                 }
-                RandomColorHexa(item, countColor, colorFist);
+                RandomColorHexa(item, countColor, nearHexaObj);
             }
         }
+    }
+
+    public void GetColorHexaFirst(List<T_HexaInBoardObject> nearHexaObj, int k, int item)
+    {
+        List<string> colorFist = new List<string>();
+        for (int i = 0; i < nearHexaObj.Count; i++)
+        {
+            int count = nearHexaObj[i].GetDataHexa().HexagonDatas.Length;
+            T_HexaInBoardData hexaData = nearHexaObj[i].GetDataHexa().HexagonDatas[count - k];
+            if (hexaData == null) return;
+            string colorF = hexaData.ColorHexa;
+            colorFist.Add(colorF);
+        }
+        string nearSameColor = colorFist.Where(x => x.Contains(this._data.HexagonDatas[item].ColorHexa)).FirstOrDefault();
+        //Debug.LogError(string.Format("ObjName: {0} + nearSameColor: {1} + item: {2} + LengthData: {3}", this.name, nearSameColor, item, this._data.HexagonDatas.Length - 1));
+        if (string.IsNullOrEmpty(nearSameColor)) // Nếu màu ô phía trên chưa giống với 1 màu xug quanh thì lấy màu giống
+        {
+            for (int i = 0; i < colorFist.Count; i++)
+            {
+                string nearColor = T_GridController.Instance.AddIdColor(this, -1, colorFist[i]);
+                Debug.Log(string.Format("ObjName: {0} + nearColor: {1} + colorFist: {2}", this.name, nearColor, colorFist[i]));
+                if (!string.IsNullOrEmpty(nearColor))
+                {
+                    this._data.HexagonDatas[item].ColorHexa = nearColor;
+                    break;
+                }
+                else if (i == colorFist.Count - 1) // Nếu mấy ô đầu hết màu thì chuyển sang ô tiếp theo
+                {
+                    GetColorHexaFirst(nearHexaObj, k + 1, item);
+                    return;
+                }
+            }
+        }
+        return;
     }
 
     public void CheckHexaInBoard()
