@@ -13,14 +13,14 @@ public class StackMerger : MonoBehaviour
     public List<GridHexagon> listGridHexagonNeedUpdate = new List<GridHexagon>();
     public Stack<GridHexagonNode> nodeVisited = new Stack<GridHexagonNode>();
 
-    private IStackSphereRadius _IStackSphereRadius;
+    private IStackSphereRadius _IStackSphereRadius;    
 
-    private void Awake()
+    private void OnEnable()
     {
         StackController.OnStackPlacedOnGridHexagon += StackController_OnStackPlacedOnGridHexagon;
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         StackController.OnStackPlacedOnGridHexagon -= StackController_OnStackPlacedOnGridHexagon;
     }

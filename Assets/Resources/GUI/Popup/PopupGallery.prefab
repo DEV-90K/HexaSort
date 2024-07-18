@@ -447,6 +447,7 @@ MonoBehaviour:
   _BtnWaiting: {fileID: 3350853519660687475}
   _Contain: {fileID: 3406358658796290152}
   _PrefRelic: {fileID: 8963689862034104796}
+  _TxtGalleryName: {fileID: 61162226431892643}
 --- !u!1 &1883114087301294334
 GameObject:
   m_ObjectHideFlags: 0
@@ -1407,7 +1408,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1133316464362577712
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1663,7 +1664,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: +30 Coin
+  m_text: Select Relic
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7887ab88e22a1bc4ab2986794875f51b, type: 2}
   m_sharedMaterial: {fileID: -1489379929485998742, guid: 7887ab88e22a1bc4ab2986794875f51b, type: 2}

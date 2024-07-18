@@ -238,5 +238,10 @@ public class StackHexagon : PoolMember
 
         return _data;
     }
+
+    public StackHexagonData GetData()
+    {
+        return _data;
+    }
     #endregion Stack Hexagon Data
 }

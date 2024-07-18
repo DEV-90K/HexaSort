@@ -15,11 +15,12 @@ public class PopupGallery : PopupBase
 
     [SerializeField]
     private Button _BtnWaiting;
-
     [SerializeField]
     private Transform _Contain;
     [SerializeField]
     private GalleryRelic _PrefRelic;
+    [SerializeField]
+    private TMP_Text _TxtGalleryName;
 
     private GalleryData _data;
     private GalleryRelicData[] _galleryRelicDatas;
@@ -30,7 +31,9 @@ public class PopupGallery : PopupBase
     public override void OnInit(object[] paras = null)
     {
         base.OnInit(paras);
-        _data = ResourceManager.Instance.GetGalleryData();
+
+        int IDGallery = (int) paras[0];
+        _data = ResourceManager.Instance.GetGalleryDataByID(IDGallery);
         _galleryRelicDatas = MainPlayer.Instance.GetGalleryRelicByID(_data.ID);
 
         _amountCoin = 0;
@@ -42,6 +45,8 @@ public class PopupGallery : PopupBase
         {
             _rels[galleryRelicData.Position].OnInit(galleryRelicData, _data.ID, _data.IDRelics);
         }
+
+        UpdateGalleryName();
     }
 
     private GalleryRelic[] InitGalleryRelics()
@@ -145,5 +150,10 @@ public class PopupGallery : PopupBase
     private void UpdateTxtCoin()
     {
         _TxtCoin.text = _amountCoin.ToString();
+    }
+
+    private void UpdateGalleryName()
+    {
+        _TxtGalleryName.text = _data.Name;
     }
 }

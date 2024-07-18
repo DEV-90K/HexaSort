@@ -3,12 +3,11 @@ using System.Linq;
 using UnityEngine;
 
 public class StackRandomSpawner : StackSpawner
-{    
+{
     [SerializeField]
     private Vector2Int hexagonClampf;
-    private int NUMBER_COLOR_IN_STACK = 3;
-    private List<StackHexagon> cacheStacks = new List<StackHexagon>();
 
+    private List<StackHexagon> cacheStacks = new List<StackHexagon>();
     private int _amountOfColor;
     private int[] _probabilitiesOfSimilarColor;
     private Color[] _cacheColors;
@@ -40,7 +39,7 @@ public class StackRandomSpawner : StackSpawner
     private void LoadConfig()
     {
         StackConfig stackConfig = ResourceManager.Instance.GetStackConfig();
-        NUMBER_COLOR_IN_STACK = stackConfig.NumberOfColor;
+        //NUMBER_COLOR_IN_STACK = stackConfig.NumberOfColor;
         hexagonClampf = new Vector2Int(stackConfig.AmountClampf[0], stackConfig.AmountClampf[1]);
     }
 

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public interface IStackOnPlaced
@@ -38,7 +39,7 @@ public class StackManager : MonoBehaviour, IStackOnPlaced, IStackSphereRadius
     }
 
     private void OnInit()
-    {      
+    {
         stackSpawner = randomSpawner;
         stackMerger.OnResert();
         GenerateStacks();
@@ -46,7 +47,7 @@ public class StackManager : MonoBehaviour, IStackOnPlaced, IStackSphereRadius
 
     public void OnInit(StackQueueData stackData)
     {
-        if(stackData == null)
+        if (stackData == null)
         {
             Debug.Log("Stack Data is null");
             OnInit();

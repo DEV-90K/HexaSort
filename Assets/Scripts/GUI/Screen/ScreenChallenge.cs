@@ -16,6 +16,31 @@ public class ScreenChallenge : ScreenBase
     {
         base.OnInit(paras);
         _challengeManager = ChallengeManager.Instance;
+
+        UpdateStateOfButtonRight();
+        UpdateStateOfButtonLeft();
+    }
+
+    private void OnEnable()
+    {
+        StackChallengeManager.OnAllStackPlaced += SCM_OnAllStackPlaced;
+    }
+
+    private void OnDisable()
+    {
+        StackChallengeManager.OnAllStackPlaced -= SCM_OnAllStackPlaced;
+    }
+
+    private void SCM_OnAllStackPlaced()
+    {
+        if(_btnRight.gameObject.activeSelf)
+        {
+            OnClickBtnRight();
+        }
+        else
+        {
+            OnClickBtnLeft();
+        }
     }
 
     private void Start()
@@ -33,30 +58,24 @@ public class ScreenChallenge : ScreenBase
     private void OnClickBtnLeft()
     {
         _challengeManager.ShowStackLeft();
-
-        if(!_challengeManager.CanShowLeft())
-        {
-            _btnLeft.gameObject.SetActive(false);
-        }
-        else
-        {
-            //When this event occurs, the left button is definitely displayed
-            _btnRight.gameObject.SetActive(true);
-        }
+        UpdateStateOfButtonRight();
+        UpdateStateOfButtonLeft();
     }
 
     private void OnClickBtnRight()
     {
         _challengeManager.ShowStackRight();
+        UpdateStateOfButtonRight();
+        UpdateStateOfButtonLeft();
+    }
 
-        if (!_challengeManager.CanShowRight())
-        {
-            _btnRight.gameObject.SetActive(false);
-        }
-        else
-        {
-            //When this event occurs, the right button is definitely displayed
-            _btnLeft.gameObject.SetActive(true);
-        }
+    private void UpdateStateOfButtonRight()
+    {
+        _btnRight.gameObject.SetActive(_challengeManager.CanShowRight());
+    }
+
+    private void UpdateStateOfButtonLeft()
+    {
+        _btnLeft.gameObject.SetActive(_challengeManager.CanShowLeft());
     }
 }

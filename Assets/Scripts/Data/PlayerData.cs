@@ -9,9 +9,10 @@ public class PlayerData
     [JsonIgnore]
     public PlayerLevelData PlayerLevel { get; private set; }
 
-    public PlayerData(int coin, PlayerLevelData playerLevel)
+    public PlayerData(int coin, int material, PlayerLevelData playerLevel)
     {
         Coin = coin;
+        Material = material;
         PlayerLevel = playerLevel;
     }
 }

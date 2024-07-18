@@ -38,7 +38,7 @@ public class ScreenBase : MonoBehaviour
         }
     }
 
-    private void OnSetup()
+    public void OnSetup()
     {
         // xu ly tai tho
         float ratio = (float)Screen.height / (float)Screen.width;

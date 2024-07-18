@@ -25,6 +25,8 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
     private Dictionary<string, Sprite> _cacheRelicSprite = new Dictionary<string, Sprite>();
     private RelicData[] _relicDatas;
 
+    private GalleryData[] _galleryDatas;
+
     public void LoadResource()
     {
         _levelPresenterDatas = LoadLevelPresenterDatas();
@@ -35,6 +37,8 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
 
         //TEST
         _relicDatas = createRelicData();
+        _galleryDatas = CreateGalleryDatas();
+        _galleryDatas.DebugLogObject();
     }
 
     #region Mechanic Config
@@ -432,29 +436,44 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
     #endregion Relic
 
     #region Gallery
-    public GalleryData GetGalleryData()
+    public GalleryData GetGalleryDataByID(int IDGallery)
     {
-        return createGalleryData();
-    }
-    private GalleryData createGalleryData()
-    {
-        GalleryData galleryData = new GalleryData();
-        galleryData.ID = 1;
-        galleryData.Name = " Gallery 01";
-        galleryData.Capacity = 9;
-        galleryData.IDRelics = new int[] { 1, 2, 3 };
+        for (int i = 0; i < _galleryDatas.Length; i++)
+        {
+            if (_galleryDatas[i].ID == IDGallery)
+            {
+                return _galleryDatas[i];
+            }
+        }
 
-        return galleryData;
+        return null;
     }
 
-    private GalleryRelicData createGalleryRelicData()
+    private GalleryData[] CreateGalleryDatas()
     {
-        GalleryRelicData galleryRelicData = new GalleryRelicData();
-        galleryRelicData.IDGallery = 1;
-        galleryRelicData.IDRelic = 2;
-        galleryRelicData.Position = 4;
+        List<GalleryData> galleryDatas = new List<GalleryData>();
+        GalleryData gd_1 = new GalleryData();
+        gd_1.ID = 1;
+        gd_1.Name = "Gallery 01";
+        gd_1.Capacity = 9;
+        gd_1.IDRelics = new int[] { 1, 2, 3 };
 
-        return galleryRelicData;
+        GalleryData gd_2 = new GalleryData();
+        gd_2.ID = 2;
+        gd_2.Name = "Gallery 02";
+        gd_2.Capacity = 9;
+        gd_2.IDRelics = new int[] { 4, 5, 6, 7, 8 };
+
+        GalleryData gd_3 = new GalleryData();
+        gd_3.ID = 3;
+        gd_3.Name = "Gallery 03";
+        gd_3.Capacity = 9;
+        gd_3.IDRelics = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
+
+        galleryDatas.Add(gd_1);
+        galleryDatas.Add(gd_2);
+        galleryDatas.Add(gd_3);
+        return galleryDatas.ToArray();
     }
 
     private RelicData[] createRelicData()
@@ -486,6 +505,51 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         relic_3.Coin = 7;
         relic_3.ArtPath = "Relics/3";
         data.Add(relic_3);
+
+        RelicData relic_4 = new RelicData();
+        relic_4.ID = 4;
+        relic_4.Description = "This is Description of relic 4";
+        relic_4.Name = "Relic 4";
+        relic_4.Timer = 24;
+        relic_4.Coin = 14;
+        relic_4.ArtPath = "Relics/4";
+        data.Add(relic_4);
+
+        RelicData relic_5 = new RelicData();
+        relic_5.ID = 5;
+        relic_5.Description = "This is Description of relic 5";
+        relic_5.Name = "Relic 5";
+        relic_5.Timer = 23;
+        relic_5.Coin = 7;
+        relic_5.ArtPath = "Relics/3";
+        data.Add(relic_3);
+
+        RelicData relic_6 = new RelicData();
+        relic_6.ID = 6;
+        relic_6.Description = "This is Description of relic 6";
+        relic_6.Name = "Relic 6";
+        relic_6.Timer = 23;
+        relic_6.Coin = 7;
+        relic_6.ArtPath = "Relics/6";
+        data.Add(relic_6);
+
+        RelicData relic_7 = new RelicData();
+        relic_7.ID = 7;
+        relic_7.Description = "This is Description of relic 7";
+        relic_7.Name = "Relic 7";
+        relic_7.Timer = 23;
+        relic_7.Coin = 7;
+        relic_7.ArtPath = "Relics/3";
+        data.Add(relic_7);
+
+        RelicData relic_8 = new RelicData();
+        relic_8.ID = 8;
+        relic_8.Description = "This is Description of relic 8";
+        relic_8.Name = "Relic 8";
+        relic_8.Timer = 23;
+        relic_8.Coin = 7;
+        relic_8.ArtPath = "Relics/3";
+        data.Add(relic_8);
 
         return data.ToArray();
     }

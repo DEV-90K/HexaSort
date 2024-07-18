@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Button))]
-public class ButtonChallengeExit : MonoBehaviour
+public class ButtonExit : MonoBehaviour
 {
     private Button _btnExit;
 
@@ -20,11 +20,11 @@ public class ButtonChallengeExit : MonoBehaviour
 
     private void OnDestroy()
     {
-        _btnExit.onClick.RemoveListener(OnClickExit);        
+        _btnExit.onClick.RemoveListener(OnClickExit);
     }
 
-    private void OnClickExit()
+    public virtual void OnClickExit()
     {
-        ChallengeManager.Instance.OnExit();
+        LevelManager.Instance.OnExit();
     }
 }

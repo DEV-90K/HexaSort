@@ -97,8 +97,10 @@ public class PopupRelicSelecter : PopupBase
     {
         //_Grallery.ShowRelic(_idxGalleryRelic, _selectData.ID);
 
+        GUIManager.Instance.HideScreen<ScreenMain>();
+        GUIManager.Instance.HideAllPopup();
+
         ChallengeManager.Instance.OnInit(new GalleryRelicData(_idGallery, _selectData.ID, _idxGalleryRelic, DateTime.Now.ToString(), GalleryRelicState.LOCK));
-        Hide();
     }
 
     public void ShowSelection(RelicData data, Sprite relicArt)

@@ -44,7 +44,7 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
             return _DictGalleryRelic[IDGallery].ToArray();
         }
 
-        return null;
+        return Array.Empty<GalleryRelicData>();
     }
 
     public void CollectGalleryRelic(GalleryRelicData galleryRelicData)
@@ -63,6 +63,11 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
     public int GetCoin() => _PlayerData.Coin;
     public void AddCoin(int amount) => _PlayerData.Coin += amount;
     public void SubCoin(int amount) => _PlayerData.Coin -= amount;
+
+    public int GetMaterial() => _PlayerData.Material;
+    public void AddMaterial(int amount) => _PlayerData.Material += amount;
+    public void SubMaterial(int amount) => _PlayerData.Material -= amount;
+
     public void CachePlayerLevelData()
     {
         LevelData levelData = LevelManager.instance.GetCurrentLevelPlayingData();
@@ -127,8 +132,9 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
         PlayerLevelData levelData = new PlayerLevelData(IDLevel, level);
 
         int coin = 50;
+        int material = 20;
 
-        return new PlayerData(coin, levelData);
+        return new PlayerData(coin, material, levelData);
     }
 
     #endregion Player Data

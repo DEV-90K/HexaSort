@@ -30,7 +30,7 @@ public class LevelManager : MonoSingleton<LevelManager>
     private void Start()
     {    
         _hammer.gameObject.SetActive(false);
-
+        _stackManager.gameObject.SetActive(false);
         //TEST
         //After get from PlayerData
         _levelData = ResourceManager.instance.GetLevelByID(1);
@@ -102,6 +102,7 @@ public class LevelManager : MonoSingleton<LevelManager>
 
         _gridManager.OnInit(_levelData.Grid);
 
+        _stackManager.gameObject.SetActive(true);
         _stackManager.Configure(_presenterData.Amount, _presenterData.Probabilities);
         _stackManager.OnInit(_levelData.StackQueueData);
 
@@ -115,6 +116,16 @@ public class LevelManager : MonoSingleton<LevelManager>
         OnInitCurrentLevel();
     }
 
+    public void OnExit()
+    {
+        _gridManager.CollectGridImmediate();
+        _stackManager.CollectRandomImmediate();
+        _stackManager.gameObject.SetActive(false);
+        //TODO: Save Level Data To Player
+        GUIManager.instance.HideScreen<ScreenLevel>();
+        GUIManager.instance.ShowScreen<ScreenMain>();
+    }
+
     private void OnFinish()
     {
         GameManager.instance.ChangeState(GameState.FINISH);
@@ -125,12 +136,14 @@ public class LevelManager : MonoSingleton<LevelManager>
     private void OnFinishLosed()
     {
         OnFinish();
+        _stackManager.gameObject.SetActive(false);
         this.Invoke(() => OnInitCurrentLevel(), 1f);
     }
 
     private void OnFinishWoned()
     {
         OnFinish();
+        _stackManager.gameObject.SetActive(false);
         this.Invoke(() => OnInitNextLevel(), 1f);
     }
 

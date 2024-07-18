@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Device;
 
 public class GUIManager : PersistentMonoSingleton<GUIManager>
 {
@@ -17,13 +18,10 @@ public class GUIManager : PersistentMonoSingleton<GUIManager>
 
     public T ShowScreen<T>(params object[] paras) where T : ScreenBase
     {
-        HideAllScreen();
-        HideAllPopup();
-
         ScreenBase screen = screenManager.GetScreen<T>();
-        //screen.OnSetup();
+        screen.OnSetup();
         screen.OnInit(paras);
-        screen.Show();       
+        screen.Show();
 
         return screen as T;
     }
