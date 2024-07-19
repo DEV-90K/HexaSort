@@ -27,6 +27,7 @@ public class Hexagon : PoolMember
 
     public void OnInit(HexagonData data)
     {
+        if (data == null) return;
         _data = data;
 
         if (ColorUtility.TryParseHtmlString(data.HexColor, out Color color))

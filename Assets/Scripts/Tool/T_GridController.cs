@@ -123,11 +123,11 @@ public class T_GridController : MonoBehaviour
         Height = 4;
         this._countColor = color;
         int sumHexa = Width * Height, sumStackHexa = color * numberHexa, quantityStackHexaInHexa = sumStackHexa / sumHexa;
-        for(int i = 0; i < color; i++)
+        for (int i = 0; i < color; i++)
         {
             this._colors.Add(T_ConfigValue.ColorList[i]);
         }
-        
+
         this._camera.transform.position = new Vector3(1, 6, 0);
         this._camera.transform.rotation = Quaternion.Euler(new Vector3(40, 0, 0));
 
@@ -337,12 +337,12 @@ public class T_GridController : MonoBehaviour
             if(this._countItemColors.Count > 0)
             {
                 int count = this._countItemColors.Where(a => a.Contains(colorHexa)).Count();
-                Debug.LogError(string.Format("hexaObj: {0} + colorHexa: {1} + count: {2} + this._countItemColors.Count: {3}", hexaObj, colorHexa, count, this._countItemColors.Count));
+                //Debug.LogError(string.Format("hexaObj: {0} + colorHexa: {1} + count: {2} + this._countItemColors.Count: {3}", hexaObj, colorHexa, count, this._countItemColors.Count));
                 if (count > 10)
                 {
-                    Debug.Log(colorHexa);
+                 //   Debug.Log(colorHexa);
                     this._colors.Remove(colorHexa);
-                    Debug.LogError(string.Format("this._colors: {0}", this._colors.Count));
+                  //  Debug.LogError(string.Format("this._colors: {0}", this._colors.Count));
                     this._countColor -= 1;
                     return null;
                 }
