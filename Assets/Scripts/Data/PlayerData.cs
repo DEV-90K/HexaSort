@@ -1,0 +1,40 @@
+using Newtonsoft.Json;
+using System.Collections.Generic;
+
+public class PlayerData
+{
+    public int Coin { get; set; }
+    public int Material { get; set; }
+
+    [JsonIgnore]
+    public PlayerLevelData PlayerLevel { get; private set; }
+
+    public PlayerData(int coin, int material, PlayerLevelData playerLevel)
+    {
+        Coin = coin;
+        Material = material;
+        PlayerLevel = playerLevel;
+    }
+}
+
+public class PlayerLevelData
+{
+    public int IDLevel { get; private set; } // Max Level Already Playing
+    public LevelData Level { get; private set; } //Data Of Current Player Playing
+
+    public PlayerLevelData(int iDLevel, LevelData level)
+    {
+        IDLevel = iDLevel;
+        Level = level;
+    }
+
+    public void UpdateIDLevel(int id)
+    { 
+        this.IDLevel = id;
+    }
+
+    public void UpdateLevelData(LevelData level)
+    {
+        this.Level = level.CopyObject();
+    }
+}

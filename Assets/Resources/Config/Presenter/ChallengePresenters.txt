@@ -1,0 +1,1 @@
+[{"Challenge":1,"Coin":20,"Material":15},{"Challenge":2,"Coin":25,"Material":35},{"Challenge":3,"Coin":40,"Material":50}]
