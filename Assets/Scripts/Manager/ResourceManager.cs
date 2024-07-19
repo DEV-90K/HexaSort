@@ -50,7 +50,7 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
 
     private MechanicConfig LoadMechanicConfig()
     {
-        MechanicConfig config = FirebaseManager.instance.LoadRemoteMechanicConfig();
+        MechanicConfig config = null;//FirebaseManager.instance.LoadRemoteMechanicConfig();
 
         if(config == null)
         {
@@ -123,7 +123,7 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
 
     private LevelData LoadLevelData(int IDLevel)
     {
-        LevelData levelData = FirebaseManager.instance.GetRemoteLevelData(IDLevel);
+        LevelData levelData = null; //FirebaseManager.instance.GetRemoteLevelData(IDLevel);
 
         if(levelData == null)
         {
@@ -183,9 +183,9 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
 
     private LevelPresenterData[] LoadLevelPresenterDatas()
     {
-        LevelPresenterData[] presenterDatas = FirebaseManager.instance.GetRemoteLevelPresenterDatas();
+        LevelPresenterData[] presenterDatas = null; // FirebaseManager.instance.GetRemoteLevelPresenterDatas();
 
-        if(presenterDatas == null)
+        if (presenterDatas == null)
         {
             presenterDatas = LoadLocalLevelPresenterDatas();
         }
@@ -241,7 +241,7 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
 
     private ChallengeData LoadChallengeData(int IDChallenge)
     {
-        ChallengeData challengeData = FirebaseManager.instance.GetRemoteChallengeData(IDChallenge);
+        ChallengeData challengeData = null; //FirebaseManager.instance.GetRemoteChallengeData(IDChallenge);
 
         if (challengeData == null)
         {
@@ -303,7 +303,7 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
 
     private ChallengePresenterData[] LoadChallengePresenterDatas()
     {
-        ChallengePresenterData[] presenterDatas = FirebaseManager.instance.GetRemoteChallengePresenterDatas();
+        ChallengePresenterData[] presenterDatas = null; //FirebaseManager.instance.GetRemoteChallengePresenterDatas();
 
         if (presenterDatas == null)
         {
@@ -374,9 +374,9 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
     private HexagonData[] LoadHexagonData()
     {
         //return CreateHexagonData();
-        HexagonData[] datas = FirebaseManager.instance.GetRemoteHexagons();
+        HexagonData[] datas = null; //FirebaseManager.instance.GetRemoteHexagons();
 
-        if(datas == null)
+        if (datas == null)
         {
             datas = LoadLocalHexagonDatas();
         }

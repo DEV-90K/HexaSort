@@ -1,4 +1,4 @@
-using UnityEngine;
+/*using UnityEngine;
 using System;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -148,3 +148,4 @@ public class FirebaseManager : PersistentMonoSingleton<FirebaseManager>
         }
     }
 }
+*/

@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 public class GridData
 {
     [JsonProperty]
-    public GridHexagonData[] GridHexagonDatas { get; private set; }
+    public GridHexagonData[] GridHexagonDatas { get; set; }
 
     public GridData(GridHexagonData[] gridHexagonDatas)
     {

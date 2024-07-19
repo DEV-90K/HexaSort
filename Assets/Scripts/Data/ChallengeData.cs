@@ -12,6 +12,11 @@ public class ChallengeData
     {
     }
 
+    public ChallengeData(GridData gridData)
+    {
+        this.Grid = gridData;
+    }
+
     public ChallengeData(StackQueueData stackQueueData)
     {
         StackQueueData = stackQueueData;

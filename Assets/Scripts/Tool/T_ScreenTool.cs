@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class T_ConfigValue
@@ -209,10 +210,17 @@ public class T_ScreenTool : MonoBehaviour
 
     public void OnDemoBtnClick()
     {
-        T_GUIManager.Instance.ShowDemo();
+        //T_GUIManager.Instance.ShowDemo();
         LevelData level = T_GridController.Instance.GetLevelData();
         Debug.LogError(JsonConvert.SerializeObject(level));
-        T_LevelManager.Instance.LoadLevelByData(level);
+        //T_LevelManager.Instance.LoadLevelByData(level);
+        ChallengeData challengeData = new ChallengeData(level.Grid);
+        ChallengePresenterData challengePresenterData = new ChallengePresenterData(1);
+        T_LevelManager.Instance.SetChallengeData(challengeData, challengePresenterData);
+
+        SceneManager.LoadScene("Game");
+  
+        
     }
 
     /*public T_LevelData GetTLevelData()

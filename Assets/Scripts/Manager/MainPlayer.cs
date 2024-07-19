@@ -93,7 +93,7 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
         if(playerData == null)
         {
             Debug.Log("Load From Remote");
-            playerData = FirebaseManager.instance.LoadRemotePlayerData(); //Fisrt Time Install Game
+          //  playerData = FirebaseManager.instance.LoadRemotePlayerData(); //Fisrt Time Install Game
             //TEST
             playerData = null;
         }

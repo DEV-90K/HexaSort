@@ -4,7 +4,7 @@ using System;
 public class StackHexagonData
 {
     [JsonProperty]
-    public int[] IDHexes {  get; private set; }
+    public int[] IDHexes {  get; set; }
 
     public StackHexagonData(int[] hexColors)
     {

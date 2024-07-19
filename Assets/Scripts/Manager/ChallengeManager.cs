@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -16,6 +17,8 @@ public class ChallengeManager : MonoSingleton<ChallengeManager>
     private void Start()
     {
         _stackManager.OnStackMergeCompleted += SCM_OnStackMergeCompleted;
+
+        this.OnInit(T_LevelManager.Instance.challengeData, T_LevelManager.Instance.challengePresenterData);
     }
 
     private void OnDestroy()
@@ -48,6 +51,7 @@ public class ChallengeManager : MonoSingleton<ChallengeManager>
 
     public void OnInit(ChallengeData challengeData, ChallengePresenterData presenterData)
     {
+        Debug.Log(JsonConvert.SerializeObject(challengeData));
         _challengeData = challengeData;
         _presenterData = presenterData;
 

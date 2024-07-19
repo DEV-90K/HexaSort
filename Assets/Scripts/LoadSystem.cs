@@ -73,7 +73,7 @@ public class LoadSystem : MonoBehaviour
         {
             try
             {
-                await FirebaseManager.Instance.ConnectToFirebase();
+                await Task.Delay(100); //FirebaseManager.Instance.ConnectToFirebase();
                 Debug.Log("Return FirebaseTask");
                 return;
             }

@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using UnityEngine;
-using UnityUtils;
-using static UnityEditor.FilePathAttribute;
 
 public class T_GridController : MonoBehaviour
 {
@@ -80,9 +76,9 @@ public class T_GridController : MonoBehaviour
         if (count > 0) this.DestroyChildGrid();
         this._childsGrid.Clear();
         Vector3 cellCenter = this._grid.CellToWorld(new Vector3Int(1, 0, 0));
-        for (int xSwizzle = -1; xSwizzle <= 0; xSwizzle++)
+        for (int xSwizzle = -1; xSwizzle <= 1; xSwizzle++)
         {
-            for (int zSwizzle = -1; zSwizzle <= 0; zSwizzle++)
+            for (int zSwizzle = -2; zSwizzle <= 1; zSwizzle++)
             {
                 Vector3 cellPos = _grid.CellToWorld(new Vector3Int(xSwizzle, zSwizzle, 0));
 
@@ -286,7 +282,7 @@ public class T_GridController : MonoBehaviour
                 StackHexagonData stackHexagonData = gridData.GridHexagonDatas[i].StackHexagon;
                 if ((hexaData.HexagonDatas.Length > hexaObj.transform.childCount && hexaData.State != VisualState.HIDE) || hexaObj.GetDataHexa().HexagonDatas.Length == 0)
                 {
-                    gridData.GridHexagonDatas[i].SetStackHexagonData(null);
+                    gridData.GridHexagonDatas[i].UpdateStackHexagonData(null);
                 }
                 else
                 {
@@ -301,7 +297,7 @@ public class T_GridController : MonoBehaviour
                 }
 
             }
-            result.SetGrid(gridData);
+            result.UpdateGridData(gridData);
         }
         return result;
     }
