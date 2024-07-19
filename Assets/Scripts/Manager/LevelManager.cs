@@ -26,8 +26,8 @@ public class LevelManager : MonoSingleton<LevelManager>
         _hammer.gameObject.SetActive(false);
         //TEST
         //After get from PlayerData
-        _levelData = ResourceManager.instance.GetLevelByID(1);
-        _presenterData = ResourceManager.instance.GetLevelPresenterDataByID(1);
+     /*   _levelData = ResourceManager.instance.GetLevelByID(1);
+        _presenterData = ResourceManager.instance.GetLevelPresenterDataByID(1);*/
     }
 
     private void OnDestroy()

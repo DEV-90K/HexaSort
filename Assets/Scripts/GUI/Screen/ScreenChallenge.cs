@@ -98,6 +98,6 @@ public class ScreenChallenge : ScreenBase
 
     private void UpdateTxtCoin()
     {
-        _txtCoin.text = MainPlayer.Instance.GetCoin().ToString();
+        _txtCoin.text = "0"; //MainPlayer.Instance.GetCoin().ToString();
     }
 }

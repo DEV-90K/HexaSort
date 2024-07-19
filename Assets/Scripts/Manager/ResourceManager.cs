@@ -27,6 +27,12 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
 
     private GalleryData[] _galleryDatas;
 
+    protected override void Awake()
+    {
+        base.Awake();
+        this.LoadResource();
+    }
+
     public void LoadResource()
     {
         _levelPresenterDatas = LoadLevelPresenterDatas();
