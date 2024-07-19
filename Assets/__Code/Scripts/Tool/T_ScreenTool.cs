@@ -207,6 +207,14 @@ public class T_ScreenTool : MonoBehaviour
         return this._colorHexaDrag;
     }
 
+    public void OnDemoBtnClick()
+    {
+        T_GUIManager.Instance.ShowDemo();
+        LevelData level = T_GridController.Instance.GetLevelData();
+        Debug.LogError(JsonConvert.SerializeObject(level));
+        T_LevelManager.Instance.LoadLevelByData(level);
+    }
+
     /*public T_LevelData GetTLevelData()
     {
         List<T_HexaInBoardObject> hexaObjSelected = T_GridController.Instance.GetHexaObjsSelected();

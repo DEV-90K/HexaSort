@@ -21,6 +21,7 @@ public class T_HexaInBoardObject : MonoBehaviour
     private string _deactive = "#ffffff";
     private string _active = "#06D001";
     private string _hide = "#686D76";
+    private int _numberHexa;
 
     public void Init(int numberHexaInHexa)
     {
@@ -68,8 +69,12 @@ public class T_HexaInBoardObject : MonoBehaviour
         this._data.Id = 0;
         this._data.IsSelected = false;
         this._data.State = VisualState.SHOW;
-        this._data.ColorHexa = this._deactive;
+        //this._data.ColorHexa = this._deactive;
+        this._data.ColorHexa = this._active;
+        this._hexaColor = T_Utils.ConvertToColor(this._data.ColorHexa); // 
         this._data.HexagonDatas = new T_HexaInBoardData[numberHexa];
+
+        this._numberHexa = numberHexa;
 
         if (nearHexas.Count == 0)
         {
@@ -121,8 +126,9 @@ public class T_HexaInBoardObject : MonoBehaviour
                 this._data.HexagonDatas[item] = new T_HexaInBoardData();
                 this._data.HexagonDatas[item].Id = item + 1;
                 this._data.HexagonDatas[item].ColorHexa = color;
-                if (item == this._data.HexagonDatas.Length - 1)
+                if (item == this._numberHexa - 1)
                 {
+                    Debug.Log(string.Format("item: {0} + this._numberHexa - 1: {1}", item, this._data.HexagonDatas.Length - 1));
                     /*string nearSameColor = colorFist.Where(x => x.Contains(this._data.HexagonDatas[item].ColorHexa)).FirstOrDefault();
                     //Debug.LogError(string.Format("ObjName: {0} + nearSameColor: {1} + item: {2} + LengthData: {3}", this.name, nearSameColor, item, this._data.HexagonDatas.Length - 1));
                     if (string.IsNullOrEmpty(nearSameColor)) // Nếu màu ô phía trên chưa giống với 1 màu xug quanh thì lấy màu giống
@@ -143,6 +149,13 @@ public class T_HexaInBoardObject : MonoBehaviour
                 RandomColorHexa(item, countColor, nearHexaObj);
             }
         }
+    }
+
+    public void InitDemo(T_HexaInBoardData data)
+    {
+        this._data = data;
+        this._hexaColor = T_Utils.ConvertToColor(this._data.ColorHexa);
+        T_GridController.Instance.ShowNumberHexaInHexa(this);
     }
 
     public void GetColorHexaFirst(List<T_HexaInBoardObject> nearHexaObj, int k, int item)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using UnityEngine;
 using UnityUtils;
@@ -152,11 +153,45 @@ public class T_GridController : MonoBehaviour
                 hexaObj.InitChallenge(quantityStackHexaInHexa, this._countColor, nearHexas);
                 hexaObj.InitData(numberHexa, Width, Height);
                 this._childsGrid.Add(hexa);
+                this.SetSelectedHexaObj(hexaObj, true);
                 nearHexas.Clear();
             }
         }
         this._countItemColors.Clear();
         this._colors.Clear();
+    }
+
+    public void InitDemo(int numberHexa, int color)
+    {
+        Width = 3;
+        Height = 4;
+        int sumHexa = Width * Height, sumStackHexa = color * numberHexa, quantityStackHexaInHexa = sumStackHexa / sumHexa;
+
+        this._camera.transform.position = new Vector3(1, 6, 0);
+        this._camera.transform.rotation = Quaternion.Euler(new Vector3(40, 0, 0));
+
+        //this._camera.transform.position = new Vector3(12.5f, 19, 0);
+        for (int x = 0; x < Width; x++)
+        {
+            for (int z = 0; z < Height; z++)
+            {
+                GameObject hexa = Instantiate(Hexagon, transform);
+                hexa.name = string.Format("{0} - {1}", x, z);
+
+                if (z % 2 == 0)
+                {
+                    hexa.transform.position = new Vector3(x * this._tileXOffset, 0, z * this._tileZOffset);
+                }
+                else
+                {
+                    hexa.transform.position = new Vector3(x * this._tileXOffset + this._tileXOffset / 2, 0, z * this._tileZOffset);
+                }
+                T_HexaInBoardObject hexaObj = hexa.GetComponent<T_HexaInBoardObject>();
+                T_HexaInBoardObject currenthexa = this._hexaInBoardSelecteds.Where(a => a.name.Contains(hexa.name)).FirstOrDefault();
+                hexaObj.InitDemo(currenthexa.GetDataHexa());
+            }
+        }
+
     }
 
     public void SetSelectedHexaObj(T_HexaInBoardObject hexaObj, bool isSlected)
@@ -283,9 +318,8 @@ public class T_GridController : MonoBehaviour
         else if (!string.IsNullOrEmpty(idcolor))
         {
             colorHexa = this._colors.Where(a => a.Contains(idcolor)).FirstOrDefault();
-            this._countItemColors.RemoveAt(this._countItemColors.Count - 1);
+            if (!string.IsNullOrEmpty(colorHexa)) this._countItemColors.RemoveAt(this._countItemColors.Count - 1);
         }
-
         if (!string.IsNullOrEmpty(colorHexa)) 
         {
             this._countItemColors.Add(colorHexa);
@@ -293,7 +327,7 @@ public class T_GridController : MonoBehaviour
             {
                 int count = this._countItemColors.Where(a => a.Contains(colorHexa)).Count();
                 Debug.LogError(string.Format("hexaObj: {0} + colorHexa: {1} + count: {2} + this._countItemColors.Count: {3}", hexaObj, colorHexa, count, this._countItemColors.Count));
-                if (count >= 10)
+                if (count > 10)
                 {
                     Debug.Log(colorHexa);
                     this._colors.Remove(colorHexa);

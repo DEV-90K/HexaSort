@@ -14,6 +14,11 @@ public class LevelData
     {
     }
 
+    public LevelData(LevelData data)
+    {
+        this.Grid = data.Grid;
+    }
+
     public void SetGrid(GridData gridData)
     {
         this.Grid = gridData;
