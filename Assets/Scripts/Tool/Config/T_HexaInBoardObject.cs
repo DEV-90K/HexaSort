@@ -69,9 +69,9 @@ public class T_HexaInBoardObject : MonoBehaviour
         this._data.Id = 0;
         this._data.IsSelected = false;
         this._data.State = VisualState.SHOW;
-        //this._data.ColorHexa = this._deactive;
-        this._data.ColorHexa = this._active;
-        this._hexaColor = T_Utils.ConvertToColor(this._data.ColorHexa); // 
+        this._data.ColorHexa = this._deactive;
+        //this._data.ColorHexa = this._active;
+        //this._hexaColor = T_Utils.ConvertToColor(this._data.ColorHexa); // 
         this._data.HexagonDatas = new T_HexaInBoardData[numberHexa];
 
         this._numberHexa = numberHexa;
@@ -79,7 +79,7 @@ public class T_HexaInBoardObject : MonoBehaviour
         if (nearHexas.Count == 0)
         {
             this.RandomColorHexa(numberHexa, countColor);
-            T_GridController.Instance.ShowNumberHexaInHexa(this);
+            //T_GridController.Instance.ShowNumberHexaInHexa(this);
         }
         else
         {
@@ -93,7 +93,7 @@ public class T_HexaInBoardObject : MonoBehaviour
             }
             this.RandomColorHexa(numberHexa, countColor, colors);*/
             this.RandomColorHexa(numberHexa, countColor, nearHexas);
-            T_GridController.Instance.ShowNumberHexaInHexa(this);
+            //T_GridController.Instance.ShowNumberHexaInHexa(this);
         }
     }
 

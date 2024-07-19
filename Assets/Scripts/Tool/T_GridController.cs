@@ -87,9 +87,25 @@ public class T_GridController : MonoBehaviour
                 gObj.name = string.Format("{0}_{1}", xSwizzle, zSwizzle);
                 gObj.transform.position = cellPos;
                 T_HexaInBoardObject hexaObj = gObj.GetComponent<T_HexaInBoardObject>();
+                List<T_HexaInBoardObject> nearHexas = new List<T_HexaInBoardObject>();
+                if (this._childsGrid.Count > 0)
+                {
+                    for (int a = 0; a < this._childsGrid.Count; a++)
+                    {
+                        Transform pos = this._childsGrid[a].transform;
+                        Vector3 equals = pos.localPosition - hexaObj.transform.localPosition;
+                        if ((float)System.Math.Round(equals.magnitude, 1) == this._tileXOffset)
+                        {
+                            T_HexaInBoardObject nearHexaObj = pos.GetComponent<T_HexaInBoardObject>();
+                            nearHexas.Add(nearHexaObj);
+                            Debug.Log(string.Format("{0} + {1}", hexaObj, nearHexaObj));
+                        }
+                    }
+                }
                 hexaObj.Init(numberHexa);
                 hexaObj.InitData(numberHexa, xSwizzle, zSwizzle);
                 this._childsGrid.Add(gObj);
+                nearHexas.Clear();
             }
         }
     }
@@ -115,7 +131,6 @@ public class T_GridController : MonoBehaviour
         this._camera.transform.position = new Vector3(1, 6, 0);
         this._camera.transform.rotation = Quaternion.Euler(new Vector3(40, 0, 0));
 
-        //this._camera.transform.position = new Vector3(12.5f, 19, 0);
         for (int x = 0; x < Width; x++)
         {
             for (int z = 0; z < Height; z++)
@@ -147,7 +162,7 @@ public class T_GridController : MonoBehaviour
                     }
                 }
                 hexaObj.InitChallenge(quantityStackHexaInHexa, this._countColor, nearHexas);
-                hexaObj.InitData(numberHexa, Width, Height);
+                hexaObj.InitData(numberHexa, x, z);
                 this._childsGrid.Add(hexa);
                 this.SetSelectedHexaObj(hexaObj, true);
                 nearHexas.Clear();
