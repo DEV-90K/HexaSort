@@ -21,6 +21,7 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
 
     private HexagonData[] _hexagonDatas;
     private Dictionary<int, HexagonData> _cacheHexagonData = new Dictionary<int, HexagonData>();
+    private Dictionary<string, HexagonData> _cacheHexagonDataByColor = new Dictionary<string, HexagonData>();
 
     private Dictionary<string, Sprite> _cacheRelicSprite = new Dictionary<string, Sprite>();
     private RelicData[] _relicDatas;
@@ -358,7 +359,7 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         {
             if (_hexagonDatas[i].ID == IDHex)
             {
-                _cacheHexagonData[IDHex] = _hexagonDatas[i];
+                _cacheHexagonData[IDHex] = _hexagonDatas[i];                
                 return _cacheHexagonData[IDHex];
             }
         }

@@ -17,8 +17,8 @@ public class PopupLevelWoned : PopupBase
 
     public override void OnInit(object[] paras)
     {
-        base.OnInit(paras);
-        _presenterData = new LevelPresenterData();
+        base.OnInit(paras);        
+        _presenterData = (LevelPresenterData)paras[0];        
     }
 
     public override void Show()

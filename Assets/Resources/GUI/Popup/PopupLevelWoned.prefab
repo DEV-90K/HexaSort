@@ -1579,3 +1579,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dd2696959715654b93da5d14b5bb4fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canReused: 1
+  _BtnReward: {fileID: 7500293545763141602}
+  _TextCoin: {fileID: 8617110911890885997}
+  _TextMaterial: {fileID: 2028353550224565595}

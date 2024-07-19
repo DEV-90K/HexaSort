@@ -29,6 +29,7 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
     public void LoadData()
     {
         _PlayerData = LoadPlayerData();
+        Debug.Log("PlayerData Load");
         _PlayerData.DebugLogObject();
 
         List<GalleryRelicData> listData = new List<GalleryRelicData>();
@@ -69,21 +70,28 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
     public void AddMaterial(int amount) => _PlayerData.Material += amount;
     public void SubMaterial(int amount) => _PlayerData.Material -= amount;
 
-    public void CachePlayerLevelData()
+    private void CachePlayerLevelData()
     {
-        LevelData levelData = LevelManager.instance.GetCurrentLevelPlayingData();
-        int IDLevel = LevelManager.instance.GetCurrentLevelPlayingID();
+        LevelData levelData = LevelManager.instance.GetLevelData();
+        LevelPresenterData levelPresenterData = LevelManager.instance.GetPresenterData();
 
-        if(IDLevel > _PlayerData.PlayerLevel.IDLevel)
+        _PlayerData.PlayerLevel.UpdateLevelData(levelData);
+        _PlayerData.PlayerLevel.UpdateLevelPresenterData(levelPresenterData);
+    } 
+
+    public void CacheIDLevel(int IDLevel)
+    {
+        if (IDLevel > _PlayerData.PlayerLevel.IDLevel)
         {
             _PlayerData.PlayerLevel.UpdateIDLevel(IDLevel);
         }
-
-        _PlayerData.PlayerLevel.UpdateLevelData(levelData);
-
-        _PlayerData.DebugLogObject();
-    } 
+    }
     
+    public PlayerLevelData GetPlayerLevelData()
+    {
+        return _PlayerData.PlayerLevel;
+    }
+
     #region Player Data
     private PlayerData LoadPlayerData()
     {
@@ -131,9 +139,10 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
     private PlayerData CreatePlayerData()
     {
         LevelData level = ResourceManager.instance.GetLevelByID(1);
+        LevelPresenterData levelPresenterData = ResourceManager.instance.GetLevelPresenterDataByID(1);
         int IDLevel = 2;
 
-        PlayerLevelData levelData = new PlayerLevelData(IDLevel, level);
+        PlayerLevelData levelData = new PlayerLevelData(IDLevel, level, levelPresenterData);
 
         int coin = 50;
         int material = 20;
@@ -167,12 +176,14 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
     }
     #endregion PlayerPrefab Load
 
-    //private void OnApplicationQuit()
-    //{
-    //    Debug.Log("On Application Quit");
-    //    CachePlayerLevelData();
-    //    SavePlayerDataFromPlayerPrefab(_PlayerData);
-    //}
+    private void OnApplicationQuit()
+    {
+        Debug.Log("On Application Quit");
+        CachePlayerLevelData();
+        SavePlayerDataFromPlayerPrefab(_PlayerData);
+        Debug.Log("PlayerData Save");
+        _PlayerData.DebugLogObject();
+    }
 
     //[RuntimeInitializeOnLoadMethod]
     //private static void OnApplicationLoad()

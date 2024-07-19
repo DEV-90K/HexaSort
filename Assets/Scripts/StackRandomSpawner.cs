@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using UnityEngine;
 
@@ -10,30 +11,46 @@ public class StackRandomSpawner : StackSpawner
     private List<StackHexagon> cacheStacks = new List<StackHexagon>();
     private int _amountOfColor;
     private int[] _probabilitiesOfSimilarColor;
-    private Color[] _cacheColors;
-    private Color[] _colors;
+    //private Color[] _cacheColors;
+    //private Color[] _colors;
+
+    private HexagonData[] _hexagonDatas;
+    private HexagonData[] _cacheHexagonDatas;
 
     private void Start()
     {
         LoadConfig();
 
         HexagonData[] datas = ResourceManager.Instance.GetAllHexagonData();
-        List<Color> listColors = new List<Color>();
+        //List<Color> listColors = new List<Color>();
 
-        for (int i = 0; i < datas.Length; i++)
+        //for (int i = 0; i < datas.Length; i++)
+        //{
+        //    HexagonData data = datas[i];
+
+        //    if (data.ID >= 20)
+        //        continue;
+
+        //    if (ColorUtility.TryParseHtmlString(data.HexColor, out Color color))
+        //    {
+        //        listColors.Add(color);
+        //    }
+        //}
+
+        //_cacheColors = listColors.ToArray();
+
+        List<HexagonData> list = new List<HexagonData>();
+        foreach (HexagonData data in datas)
         {
-            HexagonData data = datas[i];
-
-            if (data.ID >= 20)
-                continue;
-
-            if (ColorUtility.TryParseHtmlString(data.HexColor, out Color color))
+            if(data.ID >= 20)
             {
-                listColors.Add(color);
+                continue;
             }
+
+            list.Add(data);
         }
 
-        _cacheColors = listColors.ToArray();
+        _cacheHexagonDatas = list.ToArray();
     }
 
     private void LoadConfig()
@@ -45,7 +62,7 @@ public class StackRandomSpawner : StackSpawner
 
     public override StackHexagon Spawn(Transform stack, int COUNT = 0)
     {
-        if(COUNT > 100)
+        if (COUNT > 100)
         {
             Debug.LogError("Some thing wrong");
             return null;
@@ -53,16 +70,24 @@ public class StackRandomSpawner : StackSpawner
         else
         {
             COUNT++;
-        }    
+        }
+
+        HexagonData[] hexagons = GetRandomHexagonDatas();
+        int[] IDHexs = new int[hexagons.Length];
+
+        for (int i = 0; i < hexagons.Length; i++)
+        {
+            IDHexs[i] = hexagons[i].ID;
+        }
+        StackHexagonData stackData = new StackHexagonData(IDHexs);
 
         StackHexagon insHexagonStack = SpawnStack(stack.position);
         insHexagonStack.name = $"Hexagon Stack"; //{stack.GetSiblingIndex()}
         insHexagonStack.transform.SetParent(stack);
         insHexagonStack.transform.localPosition = Vector3.zero;
         insHexagonStack.transform.localScale = Vector3.one;
+        insHexagonStack.SetData(stackData);
 
-        //Color[] colors = GetRandomColors(NUMBER_COLOR_IN_STACK);        
-        Color[] colors = GetRandomColors_v2();
         int numberOfHexagon = Random.Range(hexagonClampf.x, hexagonClampf.y);
         int numberOfSimilar = GetNumberOfSimilar();
         int[] arrHexagon = GetRandomHexagons(numberOfHexagon, numberOfSimilar);
@@ -70,12 +95,13 @@ public class StackRandomSpawner : StackSpawner
         int amount = 0;
         for (int i = 0; i < arrHexagon.Length; i++)
         {
-            Color color = colors[i];
+            HexagonData hexagonData = hexagons[i];
+
             for (int j = 0; j < arrHexagon[i]; j++)
             {
                 Vector3 localPos = Vector3.up * amount * GameConstants.HexagonConstants.HEIGHT;
                 Vector3 pos = insHexagonStack.transform.TransformPoint(localPos);
-                Hexagon insPlayerHexagon = SpawnHexagon(insHexagonStack, color, pos);
+                Hexagon insPlayerHexagon = SpawnHexagon(insHexagonStack, hexagonData, pos);
                 insPlayerHexagon.transform.localScale = Vector3.one;
                 amount++;
             }
@@ -117,7 +143,8 @@ public class StackRandomSpawner : StackSpawner
             _amountOfColor = _probabilitiesOfSimilarColor.Length;
         }
 
-        _colors = _cacheColors.Take(_amountOfColor).ToArray();
+        //_colors = _cacheColors.Take(_amountOfColor).ToArray();
+        _hexagonDatas = _cacheHexagonDatas.Take(_amountOfColor).ToArray();
     }
 
     private int GetNumberOfSimilar()
@@ -184,32 +211,15 @@ public class StackRandomSpawner : StackSpawner
         return false;
     }
 
-    //Each stack have many than one color
-    //private Color[] GetRandomColors(int numberOfColor)
+    //Get Random Color base on config amount = _colors.length();
+    //private Color[] GetRandomColors_v2()
     //{
-    //    List<Color> listColors = new List<Color>();
-    //    listColors.AddRange(_cacheColors);
-
-    //    List<Color> listResults = new List<Color>();
-    //    while (numberOfColor > 0)
-    //    {
-    //        numberOfColor--;
-
-    //        if (listColors.Count <= 0)
-    //            break;
-
-    //        Color color = listColors.OrderBy(x => Random.value).First();
-    //        listColors.Remove(color);
-    //        listResults.Add(color);
-    //    }
-
-    //    return listResults.ToArray();
+    //    return _colors.OrderBy(x => Random.value).ToArray();
     //}
 
-    //Get Random Color base on config amount = _colors.length();
-    private Color[] GetRandomColors_v2()
+    private HexagonData[] GetRandomHexagonDatas()
     {
-        return _colors.OrderBy(x => Random.value).ToArray();
+        return _hexagonDatas.OrderBy(x => Random.value).ToArray();
     }
 
 

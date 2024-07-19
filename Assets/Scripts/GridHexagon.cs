@@ -129,22 +129,6 @@ public class GridHexagon : PoolMember
         Color = contactColor;
     }
 
-    #region Grid Hexagon Data
-    internal GridHexagonData GetCurrentGridHexagonPlayingData()
-    {
-        if(CheckOccupied())
-        {
-            _data.UpdateStackHexagonData(StackOfCell.GetCurrentStackHexagonPlayingData());
-        }   
-        else
-        {
-            _data.UpdateStackHexagonData(null);
-        }
-
-        return _data;
-    }
-    #endregion Grid Hexagon Data
-
     private void updateColorByState()
     {
         if(State == GridHexagonState.NONE || State == GridHexagonState.UNLOCK || State == GridHexagonState.NORMAL)
@@ -181,14 +165,28 @@ public class GridHexagon : PoolMember
         }
     }
 
-
     public bool CheckUnLockByHexagon(int amount)
     {
         return amount >= _data.UnLockGoal;
     }
-
     public void OnUnLock()
     {
         State = GridHexagonState.NORMAL;
     }
+
+    #region Grid Hexagon Data
+    internal GridHexagonData GetCurrentGridHexagonPlayingData()
+    {
+        if (CheckOccupied())
+        {
+            _data.UpdateStackHexagonData(StackOfCell.GetCurrentStackHexagonPlayingData());
+        }
+        else
+        {
+            _data.UpdateStackHexagonData(null);
+        }
+
+        return _data;
+    }
+    #endregion Grid Hexagon Data
 }

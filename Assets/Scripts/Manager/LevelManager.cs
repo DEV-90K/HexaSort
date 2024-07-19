@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using UnityEditor;
 using UnityEngine;
 
 public class LevelManager : MonoSingleton<LevelManager>
@@ -25,19 +24,23 @@ public class LevelManager : MonoSingleton<LevelManager>
         _stackManager.OnStackMergeCompleted += StackManager_OnStackMergeCompleted;
         _hammer.gameObject.SetActive(false);
         //TEST
-        //After get from PlayerData
-        _levelData = ResourceManager.instance.GetLevelByID(1);
-        _presenterData = ResourceManager.instance.GetLevelPresenterDataByID(1);
+        PlayerLevelData playerLevelData = MainPlayer.instance.GetPlayerLevelData().CopyObject();
+
+        if(playerLevelData != null)
+        {
+            _levelData = playerLevelData.Level;
+            _presenterData = playerLevelData.LevelPresenter;
+        }
+        else
+        {
+            _levelData = ResourceManager.instance.GetLevelByID(playerLevelData.IDLevel);
+            _presenterData = ResourceManager.instance.GetLevelPresenterDataByID(playerLevelData.IDLevel);
+        }
     }
 
     private void OnDestroy()
     {
         _stackManager.OnStackMergeCompleted -= StackManager_OnStackMergeCompleted;
-    }
-
-    public LevelPresenterData GetPresenterData()
-    {
-        return _presenterData;
     }
 
     public int GetAmountHexagon()
@@ -85,9 +88,6 @@ public class LevelManager : MonoSingleton<LevelManager>
         LevelPresenterData presenterData = levelPresenter;
 
         OnFinish();
-
-        //EditorApplication.isPaused = true;
-
         this.Invoke(() => OnInit(levelData, presenterData), 1f);
     }
 
@@ -101,6 +101,7 @@ public class LevelManager : MonoSingleton<LevelManager>
         _stackManager.Configure(_presenterData.Amount, _presenterData.Probabilities);
         _stackManager.OnInit(_levelData.StackQueueData);
 
+        MainPlayer.instance.CacheIDLevel(presenterData.Level);
         GUIManager.Instance.ShowScreen<ScreenLevel>(_presenterData);       
     }
 
@@ -113,9 +114,12 @@ public class LevelManager : MonoSingleton<LevelManager>
 
     public void OnExit()
     {
+        //TODO: Save Level Data To Player 
+        CacheCurrentLevelPlayingData();
+
         _gridManager.CollectGridImmediate();
         _stackManager.CollectRandomImmediate();
-        //TODO: Save Level Data To Player
+               
         GUIManager.instance.HideScreen<ScreenLevel>();
         GUIManager.instance.ShowScreen<ScreenMain>();
     }
@@ -284,20 +288,28 @@ public class LevelManager : MonoSingleton<LevelManager>
     }
 
     #region Level Data
+    private void CacheCurrentLevelPlayingData()
+    {
+        _levelData = GetCurrentLevelPlayingData();
+    }
+
+    public LevelPresenterData GetPresenterData()
+    {
+        return _presenterData;
+    }
+
+    public LevelData GetLevelData()
+    {
+        return _levelData;
+    }
+
     internal LevelData GetCurrentLevelPlayingData()
     {
         GridHexagonData[] gridHexagonDatas =  _gridManager.GetCurrentGridPlayingData();
         GridData gridData = new GridData(gridHexagonDatas);
-
-        _levelData.UpdateGridData(gridData);
-
-        return _levelData;
-    }
-
-    internal int GetCurrentLevelPlayingID()
-    {
-        return _presenterData.Level;
+        StackQueueData stackQueueData = _levelData.StackQueueData.CopyObject();
+        LevelData data = new LevelData(gridData, stackQueueData);
+        return data;
     }
     #endregion Level Data
-
 }

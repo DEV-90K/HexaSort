@@ -13,8 +13,22 @@ public class Hexagon : PoolMember
     public Color Color
     {
         get => renderer.material.color;
-        set => renderer.material.color = value;
+
+        set
+        {
+            renderer.material.color = value;
+
+            if(_data == null)
+            {
+
+            }
+        }
     }
+    //{
+    //    get => renderer.material.color;
+    //    set => renderer.material.color = value;
+    //}
+
 
     private HexagonData _data;
 
@@ -110,8 +124,10 @@ public class Hexagon : PoolMember
         PoolManager.Despawn(this);
     }
 
+    #region Hexagon Data
     internal HexagonData GetCurrentHexagonPlayingData()
-    {
+    {      
         return _data;
     }
+    #endregion Hexagon Data
 }
