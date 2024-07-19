@@ -9,5 +9,6 @@ public class ButtonChallengeExit : ButtonExit
     public override void OnClickExit()
     {
         ChallengeManager.Instance.OnExit();
+        GUIManager.Instance.HideScreen<ScreenChallenge>();
     }
 }

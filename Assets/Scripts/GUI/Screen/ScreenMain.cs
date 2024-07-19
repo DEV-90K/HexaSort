@@ -31,7 +31,7 @@ public class ScreenMain : ScreenBase
     }
 
     private void OnClickBtnPlay()
-    {        
+    {
         LevelManager.Instance.OnInitCurrentLevel();
         Hide();
     }

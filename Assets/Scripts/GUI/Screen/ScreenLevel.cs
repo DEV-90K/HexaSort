@@ -6,17 +6,42 @@ using UnityEngine.UI;
 public class ScreenLevel : ScreenBase, IBoostHammer, IBoostSwap
 {
     [SerializeField]
-    private TMP_Text txtRatio;
+    private TMP_Text _txtRatio;
     [SerializeField]
-    private Image imgFill;
+    private TMP_Text _txtCoin;
+    [SerializeField]
+    private Image _imgFill;
 
     [SerializeField]
-    private ButtonBoostHammer btnBoostHammer;
+    private ButtonBoostHammer _btnBoostHammer;
     [SerializeField]
-    private ButtonBoostSwap btnBoostSwap;
+    private ButtonBoostSwap _btnBoostSwap;
 
     private LevelPresenterData presenterData;
     private int amount = 0;
+
+    public override void OnInit(params object[] paras)
+    {
+        base.OnInit(paras);
+        presenterData = (LevelPresenterData)paras[0];
+        Show();
+    }
+
+    public override void Show()
+    {
+        base.Show();
+        amount = LevelManager.Instance.GetAmountHexagon();
+        UpdateTxtRatio(amount);
+        UpdateImgFill(amount / (float)presenterData.Goal);
+        UpdateTxtPlayerCoin();
+        GameManager.Instance.ChangeState(GameState.LEVEL_PLAYING);
+    }
+
+    public override void Hide()
+    {
+        base.Hide();
+        GameManager.Instance.ChangeState(GameState.FINISH);
+    }
 
     private void OnEnable()
     {
@@ -62,44 +87,25 @@ public class ScreenLevel : ScreenBase, IBoostHammer, IBoostSwap
     }
     #endregion Boost Swap
 
-    protected override void Awake()
+    private void Start()
     {
-        base.Awake();
-        btnBoostHammer.OnInit(this);
-        btnBoostSwap.OnInit(this);
-    }
-
-    public override void OnInit(params object[] paras)
-    {
-        base.OnInit(paras);
-
-        if (paras.Length > 1)
-            presenterData = (LevelPresenterData)paras[0];
-        else
-            presenterData = LevelManager.Instance.GetPresenterData();
-
-        amount = LevelManager.Instance.GetAmountHexagon();
-
-        UpdateTxtRatio(amount);
-        UpdateImgFill(amount/(float)presenterData.Goal);
-
-        Show();        
-    }
-
-    public override void Show()
-    {
-        base.Show();
-        GameManager.Instance.ChangeState(GameState.PLAYING);
+        _btnBoostHammer.OnInit(this);
+        _btnBoostSwap.OnInit(this);
     }
 
     private void UpdateTxtRatio(int amount)
     {
-        txtRatio.text = $"{Mathf.Min(amount, presenterData.Goal)}/{presenterData.Goal}";        
+        _txtRatio.text = $"{Mathf.Min(amount, presenterData.Goal)}/{presenterData.Goal}";        
     }
 
     private void UpdateImgFill(float ratio)
     {
-        imgFill.fillAmount = Mathf.Min(ratio, 1);
+        _imgFill.fillAmount = Mathf.Min(ratio, 1);
+    }
+
+    private void UpdateTxtPlayerCoin()
+    {
+        _txtCoin.text = MainPlayer.Instance.GetCoin().ToString();
     }
 
     private void Hexagon_OnVanish()

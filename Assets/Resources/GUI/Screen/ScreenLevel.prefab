@@ -396,10 +396,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canReused: 0
-  txtRatio: {fileID: 5913150706835963418}
-  imgFill: {fileID: 8603619327087058964}
-  btnBoostHammer: {fileID: 6897072991697662497}
-  btnBoostSwap: {fileID: 7744013926426609100}
+  _txtRatio: {fileID: 5913150706835963418}
+  _txtCoin: {fileID: 3430408129060998902}
+  _imgFill: {fileID: 8603619327087058964}
+  _btnBoostHammer: {fileID: 6897072991697662497}
+  _btnBoostSwap: {fileID: 7744013926426609100}
 --- !u!1 &2549799691320822083
 GameObject:
   m_ObjectHideFlags: 0
@@ -1331,7 +1332,7 @@ MonoBehaviour:
   m_fontSizeMin: 1
   m_fontSizeMax: 50
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0

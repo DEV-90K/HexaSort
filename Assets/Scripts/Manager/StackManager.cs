@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,9 @@ public interface IStackSphereRadius
 }
 
 public class StackManager : MonoBehaviour, IStackOnPlaced, IStackSphereRadius
-{    
+{
+    public Action OnStackMergeCompleted;
+
     [SerializeField]
     private Transform[] pointSpawns;
     [SerializeField]
@@ -30,12 +33,34 @@ public class StackManager : MonoBehaviour, IStackOnPlaced, IStackSphereRadius
 
     private List<StackHexagon> stackHexagons;
     private List<StackHexagon> stackCollects;
-
+    
     private void Awake()
     {
         stackHexagons = new List<StackHexagon>();
         stackController.OnInit(this, this);
         stackMerger.OnInit(this);
+    }
+
+    private void Start()
+    {
+        stackMerger.OnStackMergeCompleted += StackMerger_OnStackMergeCompleted;
+        stackController.OnStackPlacedOnGridHexagon += StackController_OnStackPlacedOnGridHexagon;
+    }
+
+    private void OnDestroy()
+    {
+        stackMerger.OnStackMergeCompleted -= StackMerger_OnStackMergeCompleted;
+        stackController.OnStackPlacedOnGridHexagon -= StackController_OnStackPlacedOnGridHexagon;
+    }
+
+    private void StackMerger_OnStackMergeCompleted()
+    {
+        OnStackMergeCompleted?.Invoke();
+    }
+
+    private void StackController_OnStackPlacedOnGridHexagon(GridHexagon grid)
+    {
+        stackMerger.EventOnStackPlacedOnGridHexagon(grid);
     }
 
     private void OnInit()

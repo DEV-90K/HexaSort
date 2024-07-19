@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,8 @@ public class ScreenChallenge : ScreenBase
     private Button _btnLeft;
     [SerializeField]
     private Button _btnRight;
+    [SerializeField]
+    private TMP_Text _txtCoin;
 
     private ChallengeManager _challengeManager;
 
@@ -17,8 +20,22 @@ public class ScreenChallenge : ScreenBase
         base.OnInit(paras);
         _challengeManager = ChallengeManager.Instance;
 
+        Show();
+    }
+
+    public override void Show()
+    {
+        base.Show();
         UpdateStateOfButtonRight();
         UpdateStateOfButtonLeft();
+        UpdateTxtCoin();
+        GameManager.Instance.ChangeState(GameState.CHALLENGE_PLAYING);
+    }
+
+    public override void Hide()
+    {
+        base.Hide();        
+        GameManager.Instance.ChangeState(GameState.FINISH);
     }
 
     private void OnEnable()
@@ -77,5 +94,10 @@ public class ScreenChallenge : ScreenBase
     private void UpdateStateOfButtonLeft()
     {
         _btnLeft.gameObject.SetActive(_challengeManager.CanShowLeft());
+    }
+
+    private void UpdateTxtCoin()
+    {
+        _txtCoin.text = MainPlayer.Instance.GetCoin().ToString();
     }
 }

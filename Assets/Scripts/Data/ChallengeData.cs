@@ -29,20 +29,10 @@ public class ChallengePresenterData
 {
     [JsonProperty]
     public int Challenge { get; private set; }
-    [JsonProperty]
-    public int Coin { get; private set; }
-    [JsonProperty]
-    public int Material { get; private set; }
 
-    public ChallengePresenterData()
-    {
-    }
-
-    public ChallengePresenterData(int challenge, int coin, int material)
+    public ChallengePresenterData(int challenge)
     {
         Challenge = challenge;
-        Coin = coin;
-        Material = material;
     }
 
     public void UpdateChallenge(int IDChallenge)

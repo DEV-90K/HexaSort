@@ -28,8 +28,9 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
 
     public void LoadData()
     {
-        LoadPlayerData();  
-        
+        _PlayerData = LoadPlayerData();
+        _PlayerData.DebugLogObject();
+
         List<GalleryRelicData> listData = new List<GalleryRelicData>();
         listData.Add(new GalleryRelicData(1, 2, 4, DateTime.Now.ToString(), GalleryRelicState.COLLECT));
         listData.Add(new GalleryRelicData(1, 1, 6, DateTime.Now.AddMinutes(-20).ToString(), GalleryRelicState.COLLECT));
@@ -93,12 +94,17 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
         {
             Debug.Log("Load From Remote");
             playerData = FirebaseManager.instance.LoadRemotePlayerData(); //Fisrt Time Install Game
+            //TEST
+            playerData = null;
         }
 
         if(playerData == null)
         {
             Debug.Log("Load From Local");
             playerData = LoadLocalPlayerData();
+
+            //TEST
+            playerData = null;
         }
 
         if(playerData == null)
@@ -106,8 +112,6 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
             Debug.Log("Create New");
             playerData = CreatePlayerData();
         }
-
-        playerData.DebugLogObject();
 
         return playerData;
     }
@@ -138,6 +142,7 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
     }
 
     #endregion Player Data
+
     #region PlayerPrefab Load
     private PlayerData LoadPlayDataFromPlayerPrefab()
     {

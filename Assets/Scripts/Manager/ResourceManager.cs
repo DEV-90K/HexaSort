@@ -311,11 +311,9 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         }
 
         if(presenterDatas == null)
-        {
+        {   
             presenterDatas = CreateChallengePresenterDatas();
-        }
-
-        presenterDatas.DebugLogObject();
+        }        
         
         return presenterDatas;
     }
@@ -336,9 +334,9 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
     private ChallengePresenterData[] CreateChallengePresenterDatas()
     {
         List<ChallengePresenterData> challengePresenters = new List<ChallengePresenterData>();
-        ChallengePresenterData challengePresentersData_1 = new ChallengePresenterData(1, 20, 15);
-        ChallengePresenterData challengePresentersData_2 = new ChallengePresenterData(2, 25, 35);
-        ChallengePresenterData challengePresentersData_3 = new ChallengePresenterData(3, 40, 50);
+        ChallengePresenterData challengePresentersData_1 = new ChallengePresenterData(1);
+        ChallengePresenterData challengePresentersData_2 = new ChallengePresenterData(2);
+        ChallengePresenterData challengePresentersData_3 = new ChallengePresenterData(3);
 
         challengePresenters.Add(challengePresentersData_1);
         challengePresenters.Add(challengePresentersData_2);
@@ -456,19 +454,19 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         gd_1.ID = 1;
         gd_1.Name = "Gallery 01";
         gd_1.Capacity = 9;
-        gd_1.IDRelics = new int[] { 1, 2, 3 };
+        gd_1.IDRelics = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
 
         GalleryData gd_2 = new GalleryData();
         gd_2.ID = 2;
         gd_2.Name = "Gallery 02";
         gd_2.Capacity = 9;
-        gd_2.IDRelics = new int[] { 4, 5, 6, 7, 8 };
+        gd_2.IDRelics = new int[] { 9, 10, 11, 12, 13, 14, 15, 16 };
 
         GalleryData gd_3 = new GalleryData();
         gd_3.ID = 3;
         gd_3.Name = "Gallery 03";
         gd_3.Capacity = 9;
-        gd_3.IDRelics = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
+        gd_3.IDRelics = new int[] { 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27,28 };
 
         galleryDatas.Add(gd_1);
         galleryDatas.Add(gd_2);
@@ -522,7 +520,7 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         relic_5.Timer = 23;
         relic_5.Coin = 7;
         relic_5.ArtPath = "Relics/3";
-        data.Add(relic_3);
+        data.Add(relic_5);
 
         RelicData relic_6 = new RelicData();
         relic_6.ID = 6;
@@ -550,6 +548,187 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         relic_8.Coin = 7;
         relic_8.ArtPath = "Relics/3";
         data.Add(relic_8);
+
+        RelicData relic_9 = new RelicData();
+        relic_9.ID = 9;
+        relic_9.Description = "This is Description of relic 9";
+        relic_9.Name = "Relic 9";
+        relic_9.Timer = 23;
+        relic_9.Coin = 7;
+        relic_9.ArtPath = "Relics/3";
+        data.Add(relic_9);
+
+        RelicData relic_10 = new RelicData();
+        relic_10.ID = 10;
+        relic_10.Description = "This is Description of relic 10";
+        relic_10.Name = "Relic 10";
+        relic_10.Timer = 23;
+        relic_10.Coin = 7;
+        relic_10.ArtPath = "Relics/3";
+        data.Add(relic_10);
+
+        RelicData relic_11 = new RelicData();
+        relic_11.ID = 11;
+        relic_11.Description = "This is Description of relic 11";
+        relic_11.Name = "Relic 11";
+        relic_11.Timer = 23;
+        relic_11.Coin = 7;
+        relic_11.ArtPath = "Relics/3";
+        data.Add(relic_11);
+
+        RelicData relic_12 = new RelicData();
+        relic_12.ID = 12;
+        relic_12.Description = "This is Description of relic 12";
+        relic_12.Name = "Relic 12";
+        relic_12.Timer = 23;
+        relic_12.Coin = 7;
+        relic_12.ArtPath = "Relics/3";
+        data.Add(relic_12);
+
+        RelicData relic_13 = new RelicData();
+        relic_13.ID = 13;
+        relic_13.Description = "This is Description of relic 13";
+        relic_13.Name = "Relic 13";
+        relic_13.Timer = 23;
+        relic_13.Coin = 7;
+        relic_13.ArtPath = "Relics/3";
+        data.Add(relic_13);
+
+        RelicData relic_14 = new RelicData();
+        relic_14.ID = 14;
+        relic_14.Description = "This is Description of relic 14";
+        relic_14.Name = "Relic 14";
+        relic_14.Timer = 23;
+        relic_14.Coin = 7;
+        relic_14.ArtPath = "Relics/3";
+        data.Add(relic_14);
+
+        RelicData relic_15 = new RelicData();
+        relic_15.ID = 15;
+        relic_15.Description = "This is Description of relic 15";
+        relic_15.Name = "Relic 15";
+        relic_15.Timer = 23;
+        relic_15.Coin = 7;
+        relic_15.ArtPath = "Relics/3";
+        data.Add(relic_15);
+
+        RelicData relic_16 = new RelicData();
+        relic_16.ID = 16;
+        relic_16.Description = "This is Description of relic 16";
+        relic_16.Name = "Relic 16";
+        relic_16.Timer = 23;
+        relic_16.Coin = 7;
+        relic_16.ArtPath = "Relics/3";
+        data.Add(relic_16);
+
+        RelicData relic_17 = new RelicData();
+        relic_17.ID = 17;
+        relic_17.Description = "This is Description of relic 17";
+        relic_17.Name = "Relic 17";
+        relic_17.Timer = 23;
+        relic_17.Coin = 7;
+        relic_17.ArtPath = "Relics/3";
+        data.Add(relic_17);
+
+        RelicData relic_18 = new RelicData();
+        relic_18.ID = 18;
+        relic_18.Description = "This is Description of relic 18";
+        relic_18.Name = "Relic 18";
+        relic_18.Timer = 23;
+        relic_18.Coin = 7;
+        relic_18.ArtPath = "Relics/3";
+        data.Add(relic_18);
+
+        RelicData relic_19 = new RelicData();
+        relic_19.ID = 19;
+        relic_19.Description = "This is Description of relic 19";
+        relic_19.Name = "Relic 19";
+        relic_19.Timer = 23;
+        relic_19.Coin = 7;
+        relic_19.ArtPath = "Relics/3";
+        data.Add(relic_19);
+
+        RelicData relic_20 = new RelicData();
+        relic_20.ID = 20;
+        relic_20.Description = "This is Description of relic 20";
+        relic_20.Name = "Relic 20";
+        relic_20.Timer = 23;
+        relic_20.Coin = 7;
+        relic_20.ArtPath = "Relics/3";
+        data.Add(relic_20);
+
+        RelicData relic_21 = new RelicData();
+        relic_21.ID = 21;
+        relic_21.Description = "This is Description of relic 21";
+        relic_21.Name = "Relic 21";
+        relic_21.Timer = 23;
+        relic_21.Coin = 7;
+        relic_21.ArtPath = "Relics/3";
+        data.Add(relic_21);
+
+        RelicData relic_22 = new RelicData();
+        relic_22.ID = 22;
+        relic_22.Description = "This is Description of relic 22";
+        relic_22.Name = "Relic 22";
+        relic_22.Timer = 23;
+        relic_22.Coin = 7;
+        relic_22.ArtPath = "Relics/3";
+        data.Add(relic_22);
+
+        RelicData relic_23 = new RelicData();
+        relic_23.ID = 23;
+        relic_23.Description = "This is Description of relic 23";
+        relic_23.Name = "Relic 23";
+        relic_23.Timer = 23;
+        relic_23.Coin = 7;
+        relic_23.ArtPath = "Relics/3";
+        data.Add(relic_23);
+
+        RelicData relic_24 = new RelicData();
+        relic_24.ID = 24;
+        relic_24.Description = "This is Description of relic 24";
+        relic_24.Name = "Relic 24";
+        relic_24.Timer = 22;
+        relic_24.Coin = 7;
+        relic_24.ArtPath = "Relics/3";
+        data.Add(relic_24);
+
+        RelicData relic_25 = new RelicData();
+        relic_25.ID = 25;
+        relic_25.Description = "This is Description of relic 25";
+        relic_25.Name = "Relic 25";
+        relic_25.Timer = 22;
+        relic_25.Coin = 7;
+        relic_25.ArtPath = "Relics/3";
+        data.Add(relic_25);
+
+        RelicData relic_26 = new RelicData();
+        relic_26.ID = 26;
+        relic_26.Description = "This is Description of relic 26";
+        relic_26.Name = "Relic 26";
+        relic_26.Timer = 22;
+        relic_26.Coin = 7;
+        relic_26.ArtPath = "Relics/3";
+        data.Add(relic_26);
+
+        RelicData relic_27 = new RelicData();
+        relic_27.ID = 27;
+        relic_27.Description = "This is Description of relic 27";
+        relic_27.Name = "Relic 27";
+        relic_27.Timer = 22;
+        relic_27.Coin = 7;
+        relic_27.ArtPath = "Relics/3";
+        data.Add(relic_27);
+
+        RelicData relic_28 = new RelicData();
+        relic_28.ID = 28;
+        relic_28.Description = "This is Description of relic 28";
+        relic_28.Name = "Relic 28";
+        relic_28.Timer = 22;
+        relic_28.Coin = 7;
+        relic_28.ArtPath = "Relics/3";
+        data.Add(relic_28);
+
 
         return data.ToArray();
     }

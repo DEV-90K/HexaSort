@@ -108,6 +108,7 @@ public class PopupGallery : PopupBase
 
     private void OnClickBtnBack()
     {
+        GUIManager.Instance.ShowScreen<ScreenMain>();
         Hide();
     }
 

@@ -1176,68 +1176,6 @@ Transform:
   - {fileID: 450081960}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1276263749
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1276263750}
-  - component: {fileID: 1276263752}
-  - component: {fileID: 1276263751}
-  m_Layer: 0
-  m_Name: StackSpawner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1276263750
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1276263749}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1505127991}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1276263751
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1276263749}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb814bba439eddd49ba04ba500f9c533, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hexagonStack: {fileID: 1421524477317019889, guid: 6781c8713805f6e439366faa82bfbbec, type: 3}
-  playerHexagon: {fileID: 7853804604023892965, guid: 7f99a515520a5e2469c415a0a3191801, type: 3}
---- !u!114 &1276263752
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1276263749}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fa47a1cae0671d449d50d7235a73fed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hexagonStack: {fileID: 1421524477317019889, guid: 6781c8713805f6e439366faa82bfbbec, type: 3}
-  playerHexagon: {fileID: 7853804604023892965, guid: 7f99a515520a5e2469c415a0a3191801, type: 3}
-  hexagonClampf: {x: 8, y: 10}
 --- !u!1 &1310398553
 GameObject:
   m_ObjectHideFlags: 0
@@ -1350,7 +1288,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1403551021}
-  - component: {fileID: 1403551020}
+  - component: {fileID: 1403551022}
   m_Layer: 0
   m_Name: StackController
   m_TagString: Untagged
@@ -1358,7 +1296,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1403551020
+--- !u!4 &1403551021
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1403551019}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1505127991}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1403551022
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1379,21 +1332,6 @@ MonoBehaviour:
   groundLayerMask:
     serializedVersion: 2
     m_Bits: 512
---- !u!4 &1403551021
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1403551019}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1505127991}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1440442834
 GameObject:
   m_ObjectHideFlags: 0
@@ -1450,7 +1388,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1472350978}
-  - component: {fileID: 1472350977}
+  - component: {fileID: 1472350979}
   m_Layer: 0
   m_Name: StackMerger
   m_TagString: Untagged
@@ -1458,22 +1396,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1472350977
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1472350976}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c35e6a698169dec4e86561aeb01dc52a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gridHexagonLayerMask:
-    serializedVersion: 2
-    m_Bits: 256
-  listGridHexagonNeedUpdate: []
 --- !u!4 &1472350978
 Transform:
   m_ObjectHideFlags: 0
@@ -1489,6 +1411,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1505127991}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1472350979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1472350976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c35e6a698169dec4e86561aeb01dc52a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridHexagonLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
+  listGridHexagonNeedUpdate: []
 --- !u!1 &1474444471
 GameObject:
   m_ObjectHideFlags: 0
@@ -1499,7 +1437,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1474444472}
   - component: {fileID: 1474444473}
-  - component: {fileID: 1474444474}
   m_Layer: 0
   m_Name: Stack Manager
   m_TagString: Untagged
@@ -1545,24 +1482,6 @@ MonoBehaviour:
   stackMerger: {fileID: 2144823433}
   randomSpawner: {fileID: 3740777}
   dataSpawner: {fileID: 3740776}
---- !u!114 &1474444474
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1474444471}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83eac6efb972c2647a072b69223bc81c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pointSpawns:
-  - {fileID: 1725776343}
-  - {fileID: 339653566}
-  - {fileID: 1806850721}
-  stackController: {fileID: 623327729}
-  stackMerger: {fileID: 2144823433}
 --- !u!1 &1505127989
 GameObject:
   m_ObjectHideFlags: 0
@@ -1574,7 +1493,7 @@ GameObject:
   - component: {fileID: 1505127991}
   - component: {fileID: 1505127990}
   m_Layer: 0
-  m_Name: Stack Manager (1)
+  m_Name: Stack Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1596,8 +1515,8 @@ MonoBehaviour:
   - {fileID: 1725776343}
   - {fileID: 339653566}
   - {fileID: 1806850721}
-  stackController: {fileID: 1403551020}
-  stackMerger: {fileID: 1472350977}
+  stackController: {fileID: 1403551022}
+  stackMerger: {fileID: 1472350979}
 --- !u!4 &1505127991
 Transform:
   m_ObjectHideFlags: 0
@@ -1611,7 +1530,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1276263750}
   - {fileID: 1403551021}
   - {fileID: 1472350978}
   m_Father: {fileID: 1440442835}

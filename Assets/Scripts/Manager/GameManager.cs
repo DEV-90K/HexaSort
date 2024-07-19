@@ -6,7 +6,8 @@ public enum GameState
     NONE,
     LOADING,
     START,
-    PLAYING,
+    LEVEL_PLAYING,
+    CHALLENGE_PLAYING,
     PAUSE,
     FINISH
 }
@@ -22,7 +23,20 @@ public class GameManager : PersistentMonoSingleton<GameManager>
         
         if(state == GameState.START)
         {
+            LevelManager.instance.gameObject.SetActive(false);
+            ChallengeManager.instance.gameObject.SetActive(false);
+
             GUIManager.instance.ShowScreen<ScreenMain>();
+        }
+        else if(state == GameState.LEVEL_PLAYING)
+        {
+            LevelManager.instance.gameObject.SetActive(true);
+            ChallengeManager.instance.gameObject.SetActive(false);
+        }
+        else if(state == GameState.CHALLENGE_PLAYING)
+        {
+            LevelManager.instance.gameObject.SetActive(false);
+            ChallengeManager.instance.gameObject.SetActive(true);
         }
 
         OnChangeState?.Invoke(state);

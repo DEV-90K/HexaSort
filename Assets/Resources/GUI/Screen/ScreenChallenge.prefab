@@ -290,7 +290,7 @@ MonoBehaviour:
   m_fontSizeMin: 1
   m_fontSizeMax: 50
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -1626,3 +1626,4 @@ MonoBehaviour:
   canReused: 0
   _btnLeft: {fileID: 618317211213368191}
   _btnRight: {fileID: 3253358785904635921}
+  _txtCoin: {fileID: 2466439687711883465}

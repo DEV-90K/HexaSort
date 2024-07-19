@@ -63,24 +63,6 @@ public class GalleryRelic : MonoBehaviour
         }
     }
 
-    public void ShowRelic(int idxGalleryRelic, int idRelic)
-    {
-        GalleryRelicData galleryRelicData = new GalleryRelicData();
-        galleryRelicData.IDRelic = idRelic;
-        galleryRelicData.LastTimer = DateTime.Now.ToString();
-
-        _data = galleryRelicData;
-
-        if (_data == null)
-        {
-            SetUpModelSelecter();
-        }
-        else
-        {
-            SetUpModelCollection();
-        }
-    }
-
     private void SetUpModelSelecter()
     {
         _ObjCollect.SetActive(false);
@@ -205,6 +187,8 @@ public class GalleryRelic : MonoBehaviour
     private void OnClickCollect()
     {
         ChallengeManager.Instance.OnInit(_data);
+        GUIManager.Instance.HidePopup<PopupGallery>();
+        GUIManager.Instance.HideScreen<ScreenMain>();
     }
 
     private void OnCountdownCompleted()

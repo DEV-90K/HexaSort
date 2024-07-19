@@ -11,35 +11,25 @@ public class ChallengeManager : MonoSingleton<ChallengeManager>
 
     private ChallengeData _challengeData;
     private ChallengePresenterData _presenterData;
-
     private GalleryRelicData _galleryRelicData;
-
-    private void OnEnable()
-    {
-        StackMerger.OnStackMergeCompleted += StackMerge_OnStackMergeCompleted;
-    }
-
-    private void OnDisable()
-    {
-        StackMerger.OnStackMergeCompleted -= StackMerge_OnStackMergeCompleted;
-    }
 
     private void Start()
     {
-        _stackManager.gameObject.SetActive(false);
+        _stackManager.OnStackMergeCompleted += SCM_OnStackMergeCompleted;
     }
 
-    private void Update()
+    private void OnDestroy()
     {
-        if(Input.GetKeyUp(KeyCode.W))
+        _stackManager.OnStackMergeCompleted -= SCM_OnStackMergeCompleted;
+    }
+
+    private void SCM_OnStackMergeCompleted()
+    {
+        GridHexagon[] gridHexagons = _gridManager.GetGridHexagonContainStack();
+        if(gridHexagons.Length == 0)
         {
             OnFinishWoned();
         }
-    }
-
-    private void StackMerge_OnStackMergeCompleted()
-    {
-        //TODO: Check win challenge here
     }
 
     public void OnInit(GalleryRelicData galleryRelicData)
@@ -50,8 +40,8 @@ public class ChallengeManager : MonoSingleton<ChallengeManager>
         //ChallengePresenterData challengePresenterData = ResourceManager.instance.GetChallengePresenterDataByID(_galleryRelicData.IDRelic);
 
         //TEST
-        ChallengeData challengeData = ResourceManager.instance.GetChallengeByID(1);
-        ChallengePresenterData challengePresenterData = ResourceManager.instance.GetChallengePresenterDataByID(1);
+        ChallengeData challengeData = ResourceManager.instance.GetChallengeByID(2);
+        ChallengePresenterData challengePresenterData = ResourceManager.instance.GetChallengePresenterDataByID(2);
 
         OnInit(challengeData, challengePresenterData);
     }
@@ -62,11 +52,8 @@ public class ChallengeManager : MonoSingleton<ChallengeManager>
         _presenterData = presenterData;
 
         _gridManager.OnInit(_challengeData.Grid);
-
-        _stackManager.gameObject.SetActive(true);
         _stackManager.OnInit(_challengeData.StackQueueData);
 
-        Debug.Log("Run Here");
         GUIManager.instance.ShowScreen<ScreenChallenge>(_presenterData);
     }
 
@@ -87,8 +74,7 @@ public class ChallengeManager : MonoSingleton<ChallengeManager>
         _stackManager.CollectRandomImmediate();
         _gridManager.CollectGridImmediate();
 
-        _stackManager.gameObject.SetActive(false);
-        MainPlayer.instance.CollectGalleryRelic(_galleryRelicData);
+        MainPlayer.instance.CollectGalleryRelic(_galleryRelicData);        
         GUIManager.instance.ShowScreen<ScreenMain>();
     }
 
@@ -122,7 +108,6 @@ public class ChallengeManager : MonoSingleton<ChallengeManager>
     public void OnFinishLosed()
     {
         OnFinish();
-        _stackManager.gameObject.SetActive(false);
         StartCoroutine(IE_FinishLosed(1f));
     }
 

@@ -29,10 +29,13 @@ public class PopupBoostSwap : PopupBase
     private GridHexagon gridSwap;
     private Vector3 originPosStackContact;
 
+    private LevelPresenterData _presenterData;
+
     public override void OnInit(object[] paras)
     {
         base.OnInit(paras);
         _able = (IBoostSwap) paras[0];
+        _presenterData = LevelManager.Instance.GetPresenterData();
     }
 
     public override void Show()
@@ -55,7 +58,7 @@ public class PopupBoostSwap : PopupBase
 
     private void OnClickButton()
     {
-        GUIManager.Instance.ShowScreen<ScreenLevel>();
+        GUIManager.Instance.ShowScreen<ScreenLevel>(_presenterData);
         Hide();
     }
 
@@ -249,7 +252,7 @@ public class PopupBoostSwap : PopupBase
     private IEnumerator IE_OnBoostSwapCompleted()
     {
         yield return new WaitForSeconds(0f);
-        GUIManager.Instance.ShowScreen<ScreenLevel>();
+        GUIManager.Instance.ShowScreen<ScreenLevel>(_presenterData);
         Hide();
     }
 }

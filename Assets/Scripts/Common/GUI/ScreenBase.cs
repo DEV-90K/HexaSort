@@ -28,7 +28,7 @@ public class ScreenBase : MonoBehaviour
         Invoke(nameof(Hide), delay);
     }
 
-    public void Hide()
+    public virtual void Hide()
     {
         gameObject.SetActive(false);
 

@@ -26,5 +26,6 @@ public class ButtonExit : MonoBehaviour
     public virtual void OnClickExit()
     {
         LevelManager.Instance.OnExit();
+        GUIManager.Instance.HideScreen<ScreenLevel>();
     }
 }

@@ -6,24 +6,14 @@ using UnityEngine;
 
 public class StackMerger : MonoBehaviour
 {
-    public static Action OnStackMergeCompleted;
+    public Action OnStackMergeCompleted;
+
     [SerializeField]
     private LayerMask gridHexagonLayerMask;
-
     public List<GridHexagon> listGridHexagonNeedUpdate = new List<GridHexagon>();
     public Stack<GridHexagonNode> nodeVisited = new Stack<GridHexagonNode>();
 
     private IStackSphereRadius _IStackSphereRadius;    
-
-    private void OnEnable()
-    {
-        StackController.OnStackPlacedOnGridHexagon += StackController_OnStackPlacedOnGridHexagon;
-    }
-
-    private void OnDisable()
-    {
-        StackController.OnStackPlacedOnGridHexagon -= StackController_OnStackPlacedOnGridHexagon;
-    }
 
     public void OnInit(IStackSphereRadius StackSphereRadius)
     {
@@ -33,9 +23,8 @@ public class StackMerger : MonoBehaviour
     {
         listGridHexagonNeedUpdate.Clear();
     }
-    private void StackController_OnStackPlacedOnGridHexagon(GridHexagon gridHexagon)
+    public void EventOnStackPlacedOnGridHexagon(GridHexagon gridHexagon)
     {
-        Debug.Log("StackController_OnStackPlacedOnGridHexagon");
         listGridHexagonNeedUpdate.Add(gridHexagon);
         if (listGridHexagonNeedUpdate.Count == 1)
         {

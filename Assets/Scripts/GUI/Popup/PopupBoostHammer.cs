@@ -22,11 +22,13 @@ public class PopupBoostHammer : PopupBase
     private LayerMask playerHexagon;
 
     private IBoostHammer _able;
+    private LevelPresenterData _presenterData;
 
     public override void OnInit(object[] paras)
     {
         base.OnInit(paras);
         _able = (IBoostHammer)paras[0];
+        _presenterData = LevelManager.Instance.GetPresenterData();
     }
 
     public override void Show()
@@ -45,8 +47,8 @@ public class PopupBoostHammer : PopupBase
     }
 
     private void OnClickBtnClose()
-    {        
-        GUIManager.Instance.ShowScreen<ScreenLevel>();
+    {
+        GUIManager.Instance.ShowScreen<ScreenLevel>(_presenterData);
         Hide();
     }
 
@@ -109,7 +111,7 @@ public class PopupBoostHammer : PopupBase
     private IEnumerator IE_OnBoostHammerCompleted()
     {
         yield return new WaitForSeconds(2f);
-        GUIManager.Instance.ShowScreen<ScreenLevel>();
+        GUIManager.Instance.ShowScreen<ScreenLevel>(_presenterData);
         Hide();
     }    
 }

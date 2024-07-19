@@ -1,9 +1,12 @@
+using System;
 using System.Collections;
 using UnityEditor;
 using UnityEngine;
 
 public class LevelManager : MonoSingleton<LevelManager>
 {
+    public Action OnStackMergeCompleted;
+
     [SerializeField]
     private GridManager _gridManager;
     [SerializeField]
@@ -17,24 +20,19 @@ public class LevelManager : MonoSingleton<LevelManager>
 
     private int amountHexagon = 0;
 
-    private void OnEnable()
-    {
-        StackMerger.OnStackMergeCompleted += StackMerge_OnStackMergeCompleted;
-    }
-
-    private void OnDisable()
-    {
-        StackMerger.OnStackMergeCompleted -= StackMerge_OnStackMergeCompleted;
-    }
-
     private void Start()
-    {    
+    {
+        _stackManager.OnStackMergeCompleted += StackManager_OnStackMergeCompleted;
         _hammer.gameObject.SetActive(false);
-        _stackManager.gameObject.SetActive(false);
         //TEST
         //After get from PlayerData
         _levelData = ResourceManager.instance.GetLevelByID(1);
         _presenterData = ResourceManager.instance.GetLevelPresenterDataByID(1);
+    }
+
+    private void OnDestroy()
+    {
+        _stackManager.OnStackMergeCompleted -= StackManager_OnStackMergeCompleted;
     }
 
     public LevelPresenterData GetPresenterData()
@@ -52,7 +50,7 @@ public class LevelManager : MonoSingleton<LevelManager>
         amountHexagon = amount;
     }
     
-    private void OnInitLevelByID(int IDLevel)
+    public void OnInitLevelByID(int IDLevel)
     {
         LevelData levelData = ResourceManager.instance.GetLevelByID(IDLevel);
         LevelPresenterData presenterData = ResourceManager.instance.GetLevelPresenterDataByID(IDLevel);
@@ -60,7 +58,7 @@ public class LevelManager : MonoSingleton<LevelManager>
         OnInit(levelData, presenterData);
     }
 
-    private void OnInitNextLevel()
+    public void OnInitNextLevel()
     {
         int IDLevel = _presenterData.Level;
         LevelData levelData = ResourceManager.instance.GetLevelByID(IDLevel + 1);
@@ -97,12 +95,9 @@ public class LevelManager : MonoSingleton<LevelManager>
     {
         _levelData = levelData;
         _presenterData = presenterData;
-
         amountHexagon = 0;
-
         _gridManager.OnInit(_levelData.Grid);
 
-        _stackManager.gameObject.SetActive(true);
         _stackManager.Configure(_presenterData.Amount, _presenterData.Probabilities);
         _stackManager.OnInit(_levelData.StackQueueData);
 
@@ -120,7 +115,6 @@ public class LevelManager : MonoSingleton<LevelManager>
     {
         _gridManager.CollectGridImmediate();
         _stackManager.CollectRandomImmediate();
-        _stackManager.gameObject.SetActive(false);
         //TODO: Save Level Data To Player
         GUIManager.instance.HideScreen<ScreenLevel>();
         GUIManager.instance.ShowScreen<ScreenMain>();
@@ -136,15 +130,25 @@ public class LevelManager : MonoSingleton<LevelManager>
     private void OnFinishLosed()
     {
         OnFinish();
-        _stackManager.gameObject.SetActive(false);
-        this.Invoke(() => OnInitCurrentLevel(), 1f);
+        StartCoroutine(IE_FinishLosed(1f));
+    }
+
+    private IEnumerator IE_FinishLosed(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        GUIManager.instance.ShowPopup<PopupLevelLosed>(_presenterData);
     }
 
     private void OnFinishWoned()
     {
         OnFinish();
-        _stackManager.gameObject.SetActive(false);
-        this.Invoke(() => OnInitNextLevel(), 1f);
+        StartCoroutine(IE_FinishWoned(1f));
+    }
+
+    private IEnumerator IE_FinishWoned(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        GUIManager.instance.ShowPopup<PopupLevelWoned>(_presenterData);
     }
 
     #region Boost Hammer
@@ -249,7 +253,7 @@ public class LevelManager : MonoSingleton<LevelManager>
     }
     #endregion Boost Refresh
 
-    private void StackMerge_OnStackMergeCompleted()
+    private void StackManager_OnStackMergeCompleted()
     {
 
         if (amountHexagon >= _presenterData.Goal)

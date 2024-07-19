@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class StackController : MonoBehaviour
 {
-    public static Action<GridHexagon> OnStackPlacedOnGridHexagon;
+    public Action<GridHexagon> OnStackPlacedOnGridHexagon;
     public static Action<bool> OnStackMoving;
 
 

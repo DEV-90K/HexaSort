@@ -37,10 +37,13 @@ public class LevelPresenterData
     [JsonProperty]
     public int Goal { get; private set; }
     [JsonProperty]
+    public int Coin { get; private set; } = 0;
+    [JsonProperty]
+    public int Material { get; private set; } = 0;
+    [JsonProperty]
     public int Amount { get; private set; } = 3; // Amount of color appearing in the level with idHex from 1 to Amount 
     [JsonProperty]
-    public int[] Probabilities { get; private set; } = new int[] { 40, 30, 30 }; //Probability of random type of stack 1 color, 2 color ... total element = 100;
-
+    public int[] Probabilities { get; private set; } = new int[] { 40, 30, 30 }; //Probability of random type of stack 1 color, 2 color ... total = 100;
     public LevelPresenterData()
     {
     }
@@ -51,8 +54,10 @@ public class LevelPresenterData
         Goal = goal;
     }
 
-    public LevelPresenterData(int level, int goal, int amount, int[] probabilities) : this(level, goal)
+    public LevelPresenterData(int level, int goal, int coin, int material, int amount, int[] probabilities) : this(level, goal)
     {
+        Coin = coin;
+        Material = material;
         Amount = amount;
         Probabilities = probabilities;
     }

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class StackChallengeManager : MonoBehaviour, IStackOnPlaced, IStackSphereRadius
 {
+    public Action OnStackMergeCompleted;
     public static Action OnAllStackPlaced;
 
     [SerializeField]
@@ -25,8 +26,30 @@ public class StackChallengeManager : MonoBehaviour, IStackOnPlaced, IStackSphere
     {        
         stackHexagons = new List<StackHexagon>();
         stackHexagonsShowed = new List<StackHexagon>();
+    }
+
+    private void Start()
+    {
+        stackController.OnStackPlacedOnGridHexagon += StackController_OnStackPlacedOnGridHexagon;
+        stackMerger.OnStackMergeCompleted += StackMerger_OnStackMergeCompleted;
         stackController.OnInit(this, this);
         stackMerger.OnInit(this);
+    }
+
+    private void OnDestroy()
+    {
+        stackMerger.OnStackMergeCompleted -= StackMerger_OnStackMergeCompleted;
+        stackController.OnStackPlacedOnGridHexagon -= StackController_OnStackPlacedOnGridHexagon;
+    }
+
+    private void StackController_OnStackPlacedOnGridHexagon(GridHexagon grid)
+    {        
+        stackMerger.EventOnStackPlacedOnGridHexagon(grid);
+    }
+
+    private void StackMerger_OnStackMergeCompleted()
+    {
+        OnStackMergeCompleted?.Invoke();
     }
 
     public void OnInit(StackQueueData stackData)
@@ -64,9 +87,6 @@ public class StackChallengeManager : MonoBehaviour, IStackOnPlaced, IStackSphere
         stackHexagons.Remove(stack);
         stackHexagonsShowed.Remove(stack);
 
-        Debug.Log("Stack Hexagons Lengt: " + stackHexagons.Count);
-        Debug.Log("IDX: " + _idx);
-
         if (stackHexagons.Count == 0)
         {
             ChallengeManager.Instance.OnFinishLosed();
@@ -81,7 +101,6 @@ public class StackChallengeManager : MonoBehaviour, IStackOnPlaced, IStackSphere
 
     private void GenerateStacks()
     {
-        Debug.Log("Geerate Stacks");
         foreach (StackHexagon stact in stackHexagonsShowed)
         {
             stact.gameObject.SetActive(false);
@@ -103,13 +122,6 @@ public class StackChallengeManager : MonoBehaviour, IStackOnPlaced, IStackSphere
 
     public void CollectRandomed()
     {
-        //stackCollects = new List<StackHexagon>();
-        //foreach (StackHexagon stack in stackHexagons)
-        //{
-        //    stackCollects.Add(stack);
-        //    stack.CollectPlayerHexagon(null);
-        //}
-
         foreach(StackHexagon stack in stackHexagons)
         {
             stack.CollectImmediate();
