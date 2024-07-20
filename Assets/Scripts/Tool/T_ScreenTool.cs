@@ -223,6 +223,11 @@ public class T_ScreenTool : MonoBehaviour
         
     }
 
+    public void OnChallengeBtnClick()
+    {
+        T_GridController.Instance.SetUpChallenge();
+    }
+
     /*public T_LevelData GetTLevelData()
     {
         List<T_HexaInBoardObject> hexaObjSelected = T_GridController.Instance.GetHexaObjsSelected();

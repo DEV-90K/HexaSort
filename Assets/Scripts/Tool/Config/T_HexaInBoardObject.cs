@@ -151,13 +151,6 @@ public class T_HexaInBoardObject : MonoBehaviour
         }
     }
 
-    public void InitDemo(T_HexaInBoardData data)
-    {
-        this._data = data;
-        this._hexaColor = T_Utils.ConvertToColor(this._data.ColorHexa);
-        T_GridController.Instance.ShowNumberHexaInHexa(this);
-    }
-
     public void GetColorHexaFirst(List<T_HexaInBoardObject> nearHexaObj, int k, int item)
     {
         List<string> colorFist = new List<string>();

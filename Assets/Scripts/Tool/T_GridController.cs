@@ -76,9 +76,9 @@ public class T_GridController : MonoBehaviour
         if (count > 0) this.DestroyChildGrid();
         this._childsGrid.Clear();
         Vector3 cellCenter = this._grid.CellToWorld(new Vector3Int(1, 0, 0));
-        for (int xSwizzle = -1; xSwizzle <= 1; xSwizzle++)
+        for (int xSwizzle = -CellSize; xSwizzle <= CellSize; xSwizzle++)
         {
-            for (int zSwizzle = -2; zSwizzle <= 1; zSwizzle++)
+            for (int zSwizzle = -CellSize; zSwizzle <= CellSize; zSwizzle++)
             {
                 Vector3 cellPos = _grid.CellToWorld(new Vector3Int(xSwizzle, zSwizzle, 0));
 
@@ -87,25 +87,9 @@ public class T_GridController : MonoBehaviour
                 gObj.name = string.Format("{0}_{1}", xSwizzle, zSwizzle);
                 gObj.transform.position = cellPos;
                 T_HexaInBoardObject hexaObj = gObj.GetComponent<T_HexaInBoardObject>();
-                List<T_HexaInBoardObject> nearHexas = new List<T_HexaInBoardObject>();
-                if (this._childsGrid.Count > 0)
-                {
-                    for (int a = 0; a < this._childsGrid.Count; a++)
-                    {
-                        Transform pos = this._childsGrid[a].transform;
-                        Vector3 equals = pos.localPosition - hexaObj.transform.localPosition;
-                        if ((float)System.Math.Round(equals.magnitude, 1) == this._tileXOffset)
-                        {
-                            T_HexaInBoardObject nearHexaObj = pos.GetComponent<T_HexaInBoardObject>();
-                            nearHexas.Add(nearHexaObj);
-                            Debug.Log(string.Format("{0} + {1}", hexaObj, nearHexaObj));
-                        }
-                    }
-                }
                 hexaObj.Init(numberHexa);
                 hexaObj.InitData(numberHexa, xSwizzle, zSwizzle);
                 this._childsGrid.Add(gObj);
-                nearHexas.Clear();
             }
         }
     }
@@ -128,7 +112,8 @@ public class T_GridController : MonoBehaviour
             this._colors.Add(T_ConfigValue.ColorList[i]);
         }
 
-        this._camera.transform.position = new Vector3(1, 6, 0);
+        //this._camera.transform.position = new Vector3(1, 6, 0);
+        this._camera.transform.position = new Vector3(13, 15, 0);
         this._camera.transform.rotation = Quaternion.Euler(new Vector3(40, 0, 0));
 
         for (int x = 0; x < Width; x++)
@@ -158,51 +143,19 @@ public class T_GridController : MonoBehaviour
                         {
                             T_HexaInBoardObject nearHexaObj = pos.GetComponent<T_HexaInBoardObject>();
                             nearHexas.Add(nearHexaObj);
+                            //Debug.Log(string.Format("{0} + {1}", hexaObj, nearHexaObj));
                         }
                     }
                 }
                 hexaObj.InitChallenge(quantityStackHexaInHexa, this._countColor, nearHexas);
                 hexaObj.InitData(numberHexa, x, z);
                 this._childsGrid.Add(hexa);
-                this.SetSelectedHexaObj(hexaObj, true);
+                //this.SetSelectedHexaObj(hexaObj, true);
                 nearHexas.Clear();
             }
         }
         this._countItemColors.Clear();
         this._colors.Clear();
-    }
-
-    public void InitDemo(int numberHexa, int color)
-    {
-        Width = 3;
-        Height = 4;
-        int sumHexa = Width * Height, sumStackHexa = color * numberHexa, quantityStackHexaInHexa = sumStackHexa / sumHexa;
-
-        this._camera.transform.position = new Vector3(1, 6, 0);
-        this._camera.transform.rotation = Quaternion.Euler(new Vector3(40, 0, 0));
-
-        //this._camera.transform.position = new Vector3(12.5f, 19, 0);
-        for (int x = 0; x < Width; x++)
-        {
-            for (int z = 0; z < Height; z++)
-            {
-                GameObject hexa = Instantiate(Hexagon, transform);
-                hexa.name = string.Format("{0} - {1}", x, z);
-
-                if (z % 2 == 0)
-                {
-                    hexa.transform.position = new Vector3(x * this._tileXOffset, 0, z * this._tileZOffset);
-                }
-                else
-                {
-                    hexa.transform.position = new Vector3(x * this._tileXOffset + this._tileXOffset / 2, 0, z * this._tileZOffset);
-                }
-                T_HexaInBoardObject hexaObj = hexa.GetComponent<T_HexaInBoardObject>();
-                T_HexaInBoardObject currenthexa = this._hexaInBoardSelecteds.Where(a => a.name.Contains(hexa.name)).FirstOrDefault();
-                hexaObj.InitDemo(currenthexa.GetDataHexa());
-            }
-        }
-
     }
 
     public void SetSelectedHexaObj(T_HexaInBoardObject hexaObj, bool isSlected)
@@ -366,5 +319,11 @@ public class T_GridController : MonoBehaviour
     {
         return array.GroupBy(x => x)
                       .ToDictionary(g => g.Key, g => g.Count());
+    }
+
+    public void SetUpChallenge()
+    {
+        int totalHexaSelected = this._hexaInBoardSelecteds.Count;
+
     }
 }
