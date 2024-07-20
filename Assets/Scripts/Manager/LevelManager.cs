@@ -134,6 +134,7 @@ public class LevelManager : MonoSingleton<LevelManager>
     private void OnFinishLosed()
     {
         OnFinish();
+        GameManager.Instance.ChangeState(GameState.PAUSE);
         StartCoroutine(IE_FinishLosed(1f));
     }
 
@@ -146,6 +147,7 @@ public class LevelManager : MonoSingleton<LevelManager>
     private void OnFinishWoned()
     {
         OnFinish();
+        GameManager.Instance.ChangeState(GameState.PAUSE);
         StartCoroutine(IE_FinishWoned(1f));
     }
 
@@ -288,7 +290,7 @@ public class LevelManager : MonoSingleton<LevelManager>
     }
 
     #region Level Data
-    private void CacheCurrentLevelPlayingData()
+    public void CacheCurrentLevelPlayingData()
     {
         _levelData = GetCurrentLevelPlayingData();
     }

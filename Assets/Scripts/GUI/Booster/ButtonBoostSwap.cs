@@ -21,6 +21,11 @@ public class ButtonBoostSwap : MonoBehaviour
 
     private void OnClickButton()
     {
+        if (GameManager.Instance.IsState(GameState.PAUSE))
+        {
+            return;
+        }
+
         GUIManager.Instance.HideScreen<ScreenLevel>();
         GUIManager.Instance.ShowPopup<PopupBoostSwap>(_able);
     }

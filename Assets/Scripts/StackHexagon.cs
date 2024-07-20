@@ -24,6 +24,7 @@ public class StackHexagon : PoolMember
             hexagonIns.Configure(this);
             AddPlayerHexagon(hexagonIns);
         }
+        ShowCanvas();
     }
 
     public void OnResert()
@@ -190,6 +191,7 @@ public class StackHexagon : PoolMember
     //When in processing merge and remove > 10;
     public void HideCanvas()
     {
+        Debug.Log("Hide Canvas: " + gameObject.GetInstanceID());
         canvasStack.gameObject.SetActive(false);
     }
     #endregion Canvas
@@ -217,7 +219,7 @@ public class StackHexagon : PoolMember
 
     internal void SetData(StackHexagonData stackData)
     {
-        _data = stackData;
+        _data = stackData;        
     }
     #endregion Stack Hexagon Data
 }

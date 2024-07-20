@@ -12,9 +12,11 @@ public class StackMerger : MonoBehaviour
     private LayerMask gridHexagonLayerMask;
     public List<GridHexagon> listGridHexagonNeedUpdate = new List<GridHexagon>();
     public Stack<GridHexagonNode> nodeVisited = new Stack<GridHexagonNode>();
+    public int idxRootVisited = 0;
 
-    private IStackSphereRadius _IStackSphereRadius;    
-
+    private IStackSphereRadius _IStackSphereRadius; 
+    private bool _CanMerge = false;
+    private bool _HasIEProcessing = false;
     public void OnInit(IStackSphereRadius StackSphereRadius)
     {
         _IStackSphereRadius = StackSphereRadius;
@@ -23,10 +25,22 @@ public class StackMerger : MonoBehaviour
     {
         listGridHexagonNeedUpdate.Clear();
     }
+
+    public void OnPauseGame()
+    {
+        _CanMerge = false;
+    }
+
+    public void OnPlayGame()
+    {
+        _CanMerge = true;
+    }
+
     public void EventOnStackPlacedOnGridHexagon(GridHexagon gridHexagon)
     {
-        listGridHexagonNeedUpdate.Add(gridHexagon);
-        if (listGridHexagonNeedUpdate.Count == 1)
+        //listGridHexagonNeedUpdate.Add(gridHexagon);        
+        listGridHexagonNeedUpdate.Insert(idxRootVisited, gridHexagon);
+        if (listGridHexagonNeedUpdate.Count == 1 && _CanMerge == true && _HasIEProcessing == false)
         {
             StartCoroutine(IE_OnStackPlacedOnGridHexagon(gridHexagon));
         }
@@ -34,28 +48,33 @@ public class StackMerger : MonoBehaviour
     public void OnStackPlacedOnGridHexagon(GridHexagon gridHexagon)
     {
         Debug.Log("OnStackPlacedOnGridHexagon");
-        listGridHexagonNeedUpdate.Add(gridHexagon);
-        if (listGridHexagonNeedUpdate.Count == 1)
+        listGridHexagonNeedUpdate.Insert(idxRootVisited, gridHexagon);
+        //listGridHexagonNeedUpdate.Add(gridHexagon);
+
+        if (listGridHexagonNeedUpdate.Count == 1 && _CanMerge == true && _HasIEProcessing == false)
         {
             StartCoroutine(IE_OnStackPlacedOnGridHexagon(gridHexagon));
         }
     }
     private IEnumerator IE_OnStackPlacedOnGridHexagon(GridHexagon gridHexagon)
     {
+        _HasIEProcessing = true;
         while (listGridHexagonNeedUpdate.Count > 0)
         {
-            GridHexagon merge = listGridHexagonNeedUpdate[listGridHexagonNeedUpdate.Count - 1];
+            idxRootVisited = listGridHexagonNeedUpdate.Count - 1;
+            GridHexagon merge = listGridHexagonNeedUpdate[idxRootVisited];
             listGridHexagonNeedUpdate.Remove(merge);
 
             if (merge.CheckOccupied())
-            {
-                CreateTree(merge);
+            {                
+                CreateTree(merge);               
                 yield return IE_HandleTree_Algorithm_1();
                 //yield return IE_HandleTree();
                 //yield return IE_CheckForMerge(merge);
             }
         }
 
+        _HasIEProcessing = false;
         OnStackMergeCompleted?.Invoke();
     }
 

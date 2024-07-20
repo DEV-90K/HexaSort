@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +14,27 @@ public class ScreenMain : ScreenBase
     private Button _BtnGrallery_2;
     [SerializeField]
     private Button _BtnGrallery_3;
+    [SerializeField]
+    private TMP_Text _txtCoin;
+    [SerializeField]
+    private TMP_Text _txtMaterial;
+
+    private int _coin;
+    private int _material;
+
+    public override void OnInit(params object[] paras)
+    {
+        base.OnInit(paras);
+        _coin = MainPlayer.Instance.GetCoin();
+        _material = MainPlayer.Instance.GetMaterial();
+    }
+
+    public override void Show()
+    {
+        base.Show();
+        UpdateTxtCoin();
+        UpdateTxtMaterial();
+    }
 
     private void Start()
     {
@@ -49,5 +71,15 @@ public class ScreenMain : ScreenBase
     private void OnClickGrallery_3()
     {
         GUIManager.Instance.ShowPopup<PopupGallery>(3);
+    }
+
+    private void UpdateTxtCoin()
+    {
+        _txtCoin.text = _coin.ToString();
+    }
+
+    private void UpdateTxtMaterial()
+    {
+        _txtMaterial.text = _material.ToString();
     }
 }

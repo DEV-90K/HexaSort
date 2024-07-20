@@ -113,6 +113,7 @@ public class StackRandomSpawner : StackSpawner
             return this.Spawn(stack, COUNT);
         }
 
+        insHexagonStack.ShowCanvas();
         cacheStacks.Add(insHexagonStack);
         return insHexagonStack;
     }

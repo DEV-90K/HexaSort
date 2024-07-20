@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public interface IGridPortability
@@ -8,17 +11,17 @@ public interface IGridPortability
     public Vector3 ConvertToWorldPos(Vector3Int gridPos);
 }
 public class GridUnit : MonoBehaviour, IGridPortability
-{
+{    
     [SerializeField]
     private Grid _grid;
-
     [SerializeField]
     private SwipeRotate _SwipeRotate;
     [SerializeField]
     private SwipeScale _SwipeScale;
-
     [SerializeField]
     private Transform[] _Followeres;
+    [SerializeField]
+    private LayerMask GridLayer;
 
     private void OnEnable()
     {

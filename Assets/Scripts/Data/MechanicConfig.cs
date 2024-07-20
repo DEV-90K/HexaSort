@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class MechanicConfig
 {
-    public StackConfig StackConfig;
+    public StackConfig StackConfig = null;
+    public LevelConfig LevelConfig = null;
 }
 
 public class StackConfig
@@ -17,5 +18,19 @@ public class StackConfig
     {
         this.AmountClampf = AmountClampf;
         this.NumberOfColor = NumberOfColor;
+    }
+}
+
+public class LevelConfig
+{
+    [JsonProperty]
+    public LevelPresenterData PresenterData { get; private set; }
+    [JsonProperty]
+    public int[] SpaceClampf { get; private set; } = new int[2] { 20, 10 }; //Space Clampf Random Of Level EX: CurrentLevel 60 => Randomfrom [60 - SpaceClampf[0], 60 - SpaceClampf[1]];
+
+    public LevelConfig(LevelPresenterData presenterData, int[] spaceClampf)
+    {
+        PresenterData = presenterData;
+        SpaceClampf = spaceClampf;
     }
 }

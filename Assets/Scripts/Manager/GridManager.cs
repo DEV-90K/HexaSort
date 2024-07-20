@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
+    public static Action<float> OnInitCompleted;
+
     [SerializeField]
     private GridUnit _GridUnit;
     [SerializeField]
@@ -24,8 +27,28 @@ public class GridManager : MonoBehaviour
 
         GridHexagon[] gridHexagons = _gridSpawner.Spawn(_gridData);
         _gridHexagons = gridHexagons;
+
         _gridControl.OnInit(gridHexagons);
         _GridUnit.OnInit();
+
+        float radius = GetMaxRadius();
+        Debug.Log("Radius: " + radius);
+        OnInitCompleted?.Invoke(radius);
+    }
+
+    private float GetMaxRadius()
+    {
+        float radius = 0;
+        Vector2 center = _GridUnit.transform.position.With(y: 0);
+        foreach (GridHexagon gridData in _gridHexagons)
+        {            
+            Vector2 pos = gridData.transform.position.With(y: 0);
+            float newRadis = Vector2.Distance(center, pos);
+            if (radius < newRadis) 
+                radius = newRadis;            
+        }
+
+        return radius;
     }
 
     public GridHexagon[] GetGridHexagonContainStack()

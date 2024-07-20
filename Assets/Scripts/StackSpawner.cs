@@ -13,17 +13,6 @@ public abstract class StackSpawner : MonoBehaviour
         return stackHexagon;
     }
 
-    protected Hexagon SpawnHexagon(StackHexagon stack, Color color, Vector3 pos)
-    {
-        Hexagon insPlayerHexagon = PoolManager.Spawn<Hexagon>(PoolType.HEXAGON, pos, Quaternion.identity);
-        insPlayerHexagon.OnSetUp();
-        insPlayerHexagon.Color = color;
-        insPlayerHexagon.SetParent(stack.transform);
-        insPlayerHexagon.Configure(stack);
-        stack.AddPlayerHexagon(insPlayerHexagon);
-        return insPlayerHexagon;
-    }
-
     protected Hexagon SpawnHexagon(StackHexagon stack, HexagonData data, Vector3 pos)
     {
         Hexagon insPlayerHexagon = PoolManager.Spawn<Hexagon>(PoolType.HEXAGON, pos, Quaternion.identity);

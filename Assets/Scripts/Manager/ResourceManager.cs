@@ -49,6 +49,11 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         return _mechanicConfig.StackConfig;
     }
 
+    private LevelConfig GetLevelConfig()
+    {
+        return _mechanicConfig.LevelConfig;
+    }
+
     private MechanicConfig LoadMechanicConfig()
     {
         MechanicConfig config = FirebaseManager.instance.LoadRemoteMechanicConfig();
@@ -65,8 +70,6 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
             config = CreateMechanicConfig();            
         }
 
-        config.DebugLogObject();
-
         return config;
     }
 
@@ -74,7 +77,10 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
     {
         MechanicConfig config = new MechanicConfig();
         config.StackConfig = new StackConfig(new int[] {6, 8}, 3);
-        
+
+        LevelConfig levelConfig = new LevelConfig(new LevelPresenterData(0, 110, 60, 16, 8, new int[4] { 30, 40, 20, 10 }), new int[2] { 20, 10 });
+        config.LevelConfig = levelConfig;
+
         return config;
     }
 
@@ -112,7 +118,9 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
 
     private LevelData GetLevelDataByRandom(int IDMax)
     {
-        int IDLevel = UnityEngine.Random.Range(1, IDMax);
+        int[] SpaceClampf = GetLevelConfig().SpaceClampf;
+        int IDLevel = UnityEngine.Random.Range(Mathf.Max(IDMax - SpaceClampf[0], 1), Mathf.Max(IDMax - SpaceClampf[1], 1));
+        //int IDLevel = UnityEngine.Random.Range(1, IDMax);
 
         if (_levelDataDict.ContainsKey(IDLevel))
         {
@@ -178,8 +186,11 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
 
     private LevelPresenterData GetLevelPresenterDataByRandom()
     {
-        int IDXLevel = UnityEngine.Random.Range(0, _levelPresenterDatas.Length);
-        return _levelPresenterDatas[IDXLevel].CopyObject();
+
+        //int IDXLevel = UnityEngine.Random.Range(0, _levelPresenterDatas.Length);
+        //return _levelPresenterDatas[IDXLevel].CopyObject();
+
+        return GetLevelConfig().PresenterData.CopyObject();
     }
 
     private LevelPresenterData[] LoadLevelPresenterDatas()

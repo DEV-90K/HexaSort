@@ -21,14 +21,42 @@ public class StackController : MonoBehaviour
     private StackHexagon stackContact;
     private GridHexagon gridHexagonContact;
 
+    private bool _CanControl = false;
+
     public void OnInit(IStackOnPlaced stackPlaceable, IStackSphereRadius stackSphereRadius)
     {
         _stackPlaceable = stackPlaceable;
         _IStackSphereRadius = stackSphereRadius;
     }
 
+    public void OnPauseGame()
+    {
+        _CanControl = false;
+    }
+
+    public void OnPlayGame()
+    {
+        _CanControl = true;
+    }
+
     private void Update()
     {
+        if (_CanControl == false)
+        {
+            if(stackContact != null)
+            {
+                stackContact.transform.position = originPosStackContact;
+                stackContact = null;
+            }
+
+            if(gridHexagonContact != null)
+            {
+                gridHexagonContact.ShowColor();
+                gridHexagonContact = null;
+            }
+            return;
+        }
+
         Controlling();
     }
 
@@ -186,5 +214,10 @@ public class StackController : MonoBehaviour
     private Ray GetRayFromMouseClicked()
     {
         return Camera.main.ScreenPointToRay(Input.mousePosition);
+    }
+
+    internal void OnResert()
+    {
+        //NOOB
     }
 }

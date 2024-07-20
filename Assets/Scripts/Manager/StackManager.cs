@@ -43,12 +43,14 @@ public class StackManager : MonoBehaviour, IStackOnPlaced, IStackSphereRadius
 
     private void Start()
     {
+        GameManager.OnChangeState += GameManager_OnChangeState;
         stackMerger.OnStackMergeCompleted += StackMerger_OnStackMergeCompleted;
         stackController.OnStackPlacedOnGridHexagon += StackController_OnStackPlacedOnGridHexagon;
     }
 
     private void OnDestroy()
     {
+        GameManager.OnChangeState -= GameManager_OnChangeState;
         stackMerger.OnStackMergeCompleted -= StackMerger_OnStackMergeCompleted;
         stackController.OnStackPlacedOnGridHexagon -= StackController_OnStackPlacedOnGridHexagon;
     }
@@ -63,10 +65,25 @@ public class StackManager : MonoBehaviour, IStackOnPlaced, IStackSphereRadius
         stackMerger.EventOnStackPlacedOnGridHexagon(grid);
     }
 
+    private void GameManager_OnChangeState(GameState state)
+    {
+        if(state == GameState.PAUSE)
+        {
+            stackMerger.OnPauseGame();
+            stackController.OnPauseGame();
+        }
+        else if(state == GameState.LEVEL_PLAYING || state == GameState.CHALLENGE_PLAYING)
+        {
+            stackMerger.OnPlayGame();
+            stackController.OnPlayGame();
+        }
+    }
+
     private void OnInit()
     {
         stackSpawner = randomSpawner;
         stackMerger.OnResert();
+        stackController.OnResert();
         GenerateStacks();
     }
 

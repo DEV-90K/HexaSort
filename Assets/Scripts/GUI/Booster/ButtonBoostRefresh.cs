@@ -14,6 +14,11 @@ public class ButtonBoostRefresh : MonoBehaviour
 
     private void OnClickButton()
     {
+        if (GameManager.Instance.IsState(GameState.PAUSE))
+        {
+            return;
+        }
+
         LevelManager.Instance.OnBoostRefresh();
     }
 }

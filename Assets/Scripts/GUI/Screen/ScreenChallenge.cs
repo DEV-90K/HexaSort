@@ -12,14 +12,19 @@ public class ScreenChallenge : ScreenBase
     private Button _btnRight;
     [SerializeField]
     private TMP_Text _txtCoin;
+    [SerializeField]
+    private TMP_Text _txtMaterial;
 
     private ChallengeManager _challengeManager;
+    private int _coin;
+    private int _material;
 
     public override void OnInit(params object[] paras)
     {
         base.OnInit(paras);
         _challengeManager = ChallengeManager.Instance;
-
+        _coin = MainPlayer.Instance.GetCoin();
+        _material = MainPlayer.Instance.GetMaterial();
         Show();
     }
 
@@ -29,6 +34,7 @@ public class ScreenChallenge : ScreenBase
         UpdateStateOfButtonRight();
         UpdateStateOfButtonLeft();
         UpdateTxtCoin();
+        UpdateTxtMaterial();
         GameManager.Instance.ChangeState(GameState.CHALLENGE_PLAYING);
     }
 
@@ -74,6 +80,11 @@ public class ScreenChallenge : ScreenBase
 
     private void OnClickBtnLeft()
     {
+        if (GameManager.Instance.IsState(GameState.PAUSE))
+        {
+            return;
+        }
+
         _challengeManager.ShowStackLeft();
         UpdateStateOfButtonRight();
         UpdateStateOfButtonLeft();
@@ -81,6 +92,11 @@ public class ScreenChallenge : ScreenBase
 
     private void OnClickBtnRight()
     {
+        if (GameManager.Instance.IsState(GameState.PAUSE))
+        {
+            return;
+        }
+
         _challengeManager.ShowStackRight();
         UpdateStateOfButtonRight();
         UpdateStateOfButtonLeft();
@@ -98,6 +114,11 @@ public class ScreenChallenge : ScreenBase
 
     private void UpdateTxtCoin()
     {
-        _txtCoin.text = MainPlayer.Instance.GetCoin().ToString();
+        _txtCoin.text = _coin.ToString();
+    }
+
+    private void UpdateTxtMaterial()
+    {
+        _txtMaterial.text = _material.ToString();
     }
 }

@@ -11,7 +11,6 @@ public class StackDataSpawner : StackSpawner
         Debug.Log("OnInit StackData Spawner");
         idx = 0;
         _stackDatas = stackData.StackHexagonDatas.OfType<StackHexagonData>().ToList();
-        _stackDatas.DebugLogObject();
     }
 
     public override StackHexagon Spawn(Transform tfPos, int COUNT = 0)

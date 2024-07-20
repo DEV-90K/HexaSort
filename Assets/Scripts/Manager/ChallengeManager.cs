@@ -88,17 +88,12 @@ public class ChallengeManager : MonoSingleton<ChallengeManager>
     private void OnFinishWoned()
     {
         OnFinish();
-        _stackManager.gameObject.SetActive(false);
         StartCoroutine(IE_FinishWoned(1f));
     }    
 
     private IEnumerator IE_FinishWoned(float delay)
     {
         yield return new WaitForSeconds(delay);
-        //TODO: Add material base presenter data
-        //MainPlayer.instance.AddMaterial(_presenterData.Material);
-        //TODO: Add coin base presenter data        
-        //MainPlayer.instance.AddCoin(_presenterData.Coin);
 
         _galleryRelicData.State = GalleryRelicState.COLLECT;
         MainPlayer.instance.CollectGalleryRelic(_galleryRelicData);

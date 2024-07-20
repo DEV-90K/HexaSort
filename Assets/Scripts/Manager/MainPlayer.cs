@@ -179,6 +179,12 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
     private void OnApplicationQuit()
     {
         Debug.Log("On Application Quit");
+
+        if(GameManager.instance.IsState(GameState.LEVEL_PLAYING))
+        {
+            LevelManager.instance.CacheCurrentLevelPlayingData();
+        }
+
         CachePlayerLevelData();
         SavePlayerDataFromPlayerPrefab(_PlayerData);
         Debug.Log("PlayerData Save");
