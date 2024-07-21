@@ -3,7 +3,8 @@ using UnityEngine;
 
 public enum VisualState
 {
-    SHOW, 
+    SHOW,
+    EMPTY,
     HIDE
 }
 public class T_LevelData

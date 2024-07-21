@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using UnityEngine;
+using static Unity.VisualScripting.Metadata;
 
 public class T_GridController : MonoBehaviour
 {
@@ -22,6 +24,7 @@ public class T_GridController : MonoBehaviour
     private T_HexaInBoardObject _hexaObjSelected; // Hexa đang được selected ra
     private List<string> _colors; // Ban đầu có bao nhiêu màu
     private List<string> _countItemColors; // Dùng để check xem màu đấy đã dùng hết chưa
+    private Dictionary<string, StackHexagonData> _hexaStacks;
 
     private float _tileXOffset = 1.735f;
     private float _tileZOffset = 1.567f;
@@ -43,12 +46,12 @@ public class T_GridController : MonoBehaviour
         this._hexaInBoardSelecteds = new List<T_HexaInBoardObject>();
         this._countItemColors = new List<string>();
         this._colors = new List<string>();
+        this._hexaStacks = new Dictionary<string, StackHexagonData>();
     }
     private void Start()
     {
         this._colorNumber = T_ScreenTool.Instance.GetColorNumber();
         this._hexaNumber = T_ScreenTool.Instance.GetHexaInEachHexaNumber();
-        //this.Init();
     }
 
     private void LateUpdate()
@@ -70,7 +73,7 @@ public class T_GridController : MonoBehaviour
         }
     }
 
-    public void Init(int numberHexa)
+    public void Init(int numberHexa, Dictionary<string, T_HexaInBoardData> hexaObjSelected = null)
     {
         int count = this.transform.childCount;
         if (count > 0) this.DestroyChildGrid();
@@ -89,6 +92,17 @@ public class T_GridController : MonoBehaviour
                 T_HexaInBoardObject hexaObj = gObj.GetComponent<T_HexaInBoardObject>();
                 hexaObj.Init(numberHexa);
                 hexaObj.InitData(numberHexa, xSwizzle, zSwizzle);
+                if(hexaObjSelected != null)
+                {
+                    if (hexaObjSelected.ContainsKey(gObj.name))
+                    {
+                        /*hexaObj.SetDataHexa(hexaObjSelected[gObj.name]);
+                        if (hexaObj.GetDataHexa().State == VisualState.SHOW)
+                            this.ShowEmptyHexa(hexaObj);*/
+                        hexaObj.Init(hexaObjSelected[gObj.name]);
+                        this._hexaInBoardSelecteds.Add(hexaObj);
+                    }
+                }
                 this._childsGrid.Add(gObj);
             }
         }
@@ -183,12 +197,15 @@ public class T_GridController : MonoBehaviour
         if (childCount > 1) this.DestroyChildHexa(this._childHexas);
         for(int i = 0; i < hexaData.HexagonDatas.Length; i++)
         {
-            GameObject gObj = Instantiate(this._modelHexa.gameObject, gObjHexa.transform);
-            gObj.transform.localPosition = new Vector3(0, (i+1) * this._location, 0);
-            MeshRenderer model = gObj.GetComponent<MeshRenderer>();
-            model.material.color = T_Utils.ConvertToColor(hexaData.HexagonDatas[i].ColorHexa);
-            //if(hexaData.HexagonDatas[i] != null) model.material.color = T_Utils.ConvertToColor(hexaData.HexagonDatas[i].ColorHexa);
-            this._childHexas.Add(gObj);
+            if (hexaData.HexagonDatas[i] != null) //
+            {
+                GameObject gObj = Instantiate(this._modelHexa.gameObject, gObjHexa.transform);
+                gObj.transform.localPosition = new Vector3(0, (i+1) * this._location, 0);
+                MeshRenderer model = gObj.GetComponent<MeshRenderer>();
+                model.material.color = T_Utils.ConvertToColor(hexaData.HexagonDatas[i].ColorHexa);
+                //if(hexaData.HexagonDatas[i] != null) model.material.color = T_Utils.ConvertToColor(hexaData.HexagonDatas[i].ColorHexa);
+                this._childHexas.Add(gObj);
+            }
         }
     }
 
@@ -293,9 +310,7 @@ public class T_GridController : MonoBehaviour
                 //Debug.LogError(string.Format("hexaObj: {0} + colorHexa: {1} + count: {2} + this._countItemColors.Count: {3}", hexaObj, colorHexa, count, this._countItemColors.Count));
                 if (count > 10)
                 {
-                 //   Debug.Log(colorHexa);
                     this._colors.Remove(colorHexa);
-                  //  Debug.LogError(string.Format("this._colors: {0}", this._colors.Count));
                     this._countColor -= 1;
                     return null;
                 }
@@ -323,7 +338,87 @@ public class T_GridController : MonoBehaviour
 
     public void SetUpChallenge()
     {
-        int totalHexaSelected = this._hexaInBoardSelecteds.Count;
+        int totalHexaSelected = this._hexaInBoardSelecteds.Count, quantityInStack = 5, sameColorHexasToLose = 10;
+        int sumHexa = quantityInStack * totalHexaSelected;
+        int countcolor = sumHexa / sameColorHexasToLose;
+        this._countColor = countcolor;
+        this.ResetHexaSelected();
+        if (this._colors.Count > 0) this._colors.Clear();
+        for (int i = 0; i < this._countColor; i++)
+        {
+            this._colors.Add(T_ConfigValue.ColorList[i]);
+        }
+        for(int i = 0; i < totalHexaSelected; i++)
+        {
+            T_HexaInBoardObject hexaObj = this._hexaInBoardSelecteds[i];
+            T_HexaInBoardData hexaData = hexaObj.GetDataHexa();
+            hexaData.HexagonDatas = new T_HexaInBoardData[quantityInStack];
+            List<T_HexaInBoardObject> neightborHexa = GetNeighborHexaObjSelected(hexaObj);
+            hexaObj.InitChallenge(quantityInStack, countcolor, neightborHexa);
+            neightborHexa.Clear();
+        }
+    }
 
+    public void ResetHexaSelected()
+    {
+        int totalHexaSelected = this._hexaInBoardSelecteds.Count;
+        for (int i = 0; i < totalHexaSelected; i++)
+        {
+            T_HexaInBoardObject hexaObj = this._hexaInBoardSelecteds[i];
+            T_HexaInBoardData hexaData = hexaObj.GetDataHexa();
+            hexaData.HexagonDatas = new T_HexaInBoardData[0];
+        }
+    }
+
+    public List<T_HexaInBoardObject> GetNeighborHexaObjSelected(T_HexaInBoardObject hexaObj)
+    {
+        float radiusHexa = 1.7321f;
+        radiusHexa = (float)System.Math.Round(radiusHexa, 1);
+        List<T_HexaInBoardObject> neighborHexa = new List<T_HexaInBoardObject>();
+        List<T_HexaInBoardObject> hexaObjs = this.GetHexaObjsSelected();
+        int totalHexaSelected = hexaObjs.Count;
+        if(totalHexaSelected > 0)
+        {
+            for (int i = 0; i < totalHexaSelected; i++)
+            {
+                if (hexaObjs[i].name.Contains(hexaObj.name)) 
+                    continue;
+                T_HexaInBoardData hexaData = hexaObjs[i].GetDataHexa();
+                float radius = (hexaObjs[i].transform.localPosition - hexaObj.transform.localPosition).magnitude;
+                //Debug.LogError(string.Format("hexaObj: {0} + hexaObj: {1} + hexaObjs[{2}]: {3}", (float)System.Math.Round(radius, 1), hexaObj, i, hexaObjs[i]));
+                if((float)System.Math.Round(radius, 1) == radiusHexa && hexaData.HexagonDatas.Length > 0)
+                {
+                    neighborHexa.Add(hexaObjs[i]);
+                }
+            }
+        }
+        return neighborHexa;
+    }
+
+    public void SetStackHexa(T_HexaInBoardObject hexaObj)
+    {
+        StackHexagonData stackData = new StackHexagonData();
+        List<int> idHexas = new List<int>();
+        T_HexaInBoardData hexaData = hexaObj.GetDataHexa();
+        for(int i = 0; i < hexaData.HexagonDatas.Length; i++)
+        {
+            int idColor = Array.IndexOf(T_ConfigValue.ColorList, hexaData.HexagonDatas[i].ColorHexa);
+            idHexas.Add(idColor);
+        }
+        stackData.IDHexes = idHexas.ToArray();
+        this._hexaStacks[hexaObj.name] = stackData;
+        //Debug.Log(this._hexaStacks.Count);
+        this.ShowEmptyHexa(hexaObj);
+    }
+
+    public StackQueueData GetStackQueueData()
+    {
+        StackQueueData stackQueueData = new StackQueueData(new StackHexagonData[this._hexaStacks.Count]);
+        for(int i = 0; i < this._hexaStacks.Count; i++)
+        {
+            StackHexagonData data = this._hexaStacks.Values.ElementAt(i);
+            stackQueueData.StackHexagonDatas[i] = data;
+        }
+        return stackQueueData;
     }
 }

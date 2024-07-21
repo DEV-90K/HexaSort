@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ScreenChallenge : ScreenBase
 {
+    public static ScreenChallenge Instance;
     [SerializeField]
     private Button _btnLeft;
     [SerializeField]
@@ -17,9 +20,9 @@ public class ScreenChallenge : ScreenBase
 
     public override void OnInit(params object[] paras)
     {
+        Instance = this;
         base.OnInit(paras);
         _challengeManager = ChallengeManager.Instance;
-
         Show();
     }
 
@@ -99,5 +102,10 @@ public class ScreenChallenge : ScreenBase
     private void UpdateTxtCoin()
     {
         _txtCoin.text = "0"; //MainPlayer.Instance.GetCoin().ToString();
+    }
+
+    public void OnBackBtnClick()
+    {
+        SceneManager.LoadScene("Tool");
     }
 }

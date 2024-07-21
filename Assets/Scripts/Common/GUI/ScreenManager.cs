@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class ScreenManager : MonoBehaviour
 {
+    public static ScreenManager instance;
     [SerializeField]
     private Transform screenRoot;
 
@@ -10,12 +11,22 @@ public class ScreenManager : MonoBehaviour
 
     private Dictionary<System.Type, ScreenBase> screens = new Dictionary<System.Type, ScreenBase>();
     private Dictionary<System.Type, ScreenBase> cacheScreens = new Dictionary<System.Type, ScreenBase>();
+    public Dictionary<string, T_HexaInBoardData> hexasSelected;
+
+    public int colorNumber;
+    public int hexInEachHexaNumber;
 
     #region Screens
 
     private void Awake()
     {
+        instance = this;
         ClearScreens();
+        hexasSelected = new Dictionary<string, T_HexaInBoardData>();
+        this.hexasSelected = T_LevelManager.Instance.hexasSelected;
+        this.colorNumber = T_LevelManager.Instance.colorNumber;
+        this.hexInEachHexaNumber = T_LevelManager.Instance.hexInEachHexaNumber;
+        DontDestroyOnLoad(this);
     }
     private void ClearScreens()
     {

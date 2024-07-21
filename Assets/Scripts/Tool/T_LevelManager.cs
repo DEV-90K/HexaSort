@@ -5,13 +5,18 @@ using UnityEngine;
 public class T_LevelManager : MonoBehaviour
 {
     public static T_LevelManager Instance;
-    private LevelData _currentLevel;
     public ChallengeData challengeData;
     public ChallengePresenterData challengePresenterData;
+    public Dictionary<string, T_HexaInBoardData> hexasSelected;
+    private LevelData _currentLevel;
+
+    public int colorNumber;
+    public int hexInEachHexaNumber;
 
     private void Awake()
     {
         Instance = this;
+        this.hexasSelected = new Dictionary<string, T_HexaInBoardData>();
         DontDestroyOnLoad(this);
     }
 
@@ -31,5 +36,19 @@ public class T_LevelManager : MonoBehaviour
     {
         this.challengeData = challenge;
         this.challengePresenterData = challengePresenter;
+    }
+
+    public void SetHexaSelected(List<T_HexaInBoardObject> hexasSelected)
+    {
+        foreach(var item in hexasSelected)
+        {
+            this.hexasSelected[item.name] = item.GetDataHexa();
+        }
+    }
+
+    public void SetLevel(int hexInEachHexaNumber, int colorNumber)
+    {
+        this.hexInEachHexaNumber = hexInEachHexaNumber;
+        this.colorNumber = colorNumber;
     }
 }

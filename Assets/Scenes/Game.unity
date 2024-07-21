@@ -713,13 +713,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerHexagonLayerMask:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 0
   gridHexagonLayerMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 0
   groundLayerMask:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 0
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

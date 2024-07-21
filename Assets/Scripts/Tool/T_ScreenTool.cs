@@ -33,6 +33,7 @@ public class T_ScreenTool : MonoBehaviour
     public GameObject ShowBtn;
     public GameObject EmptyBtn;
     public GameObject HideBtn;
+    public GameObject StackBtn;
 
     public T_PanelSetup PanelSetup;
     public T_PanelColorGroup PanelColorGroup;
@@ -42,6 +43,7 @@ public class T_ScreenTool : MonoBehaviour
     private T_HexaInBoardObject _hexaObj;
     private int _hexInEachHexaNumber;
     private int _colorNumber;
+    private bool _isChallenge;
     private void Awake()
     {
         Instance = this;
@@ -52,6 +54,8 @@ public class T_ScreenTool : MonoBehaviour
         this.HideOnClickHexaDisable();
         this.PanelSetup.Hide();
         this.PanelExport.Hide();
+
+        this._isChallenge = false;
     }
 
     public void InitLevel(int hexInEachHexaNumber, int colorNumber)
@@ -64,7 +68,7 @@ public class T_ScreenTool : MonoBehaviour
         this._hexaObj = T_GridController.Instance.GetHexaObjSelected();
         if (this._hexaObj == null) return;
         T_GridController.Instance.ShowEmptyHexa(this._hexaObj);
-        this._hexaObj.SetVisualState(VisualState.SHOW);
+        this._hexaObj.SetVisualState(VisualState.EMPTY);
         this._hexaObj.SetSelectedHexa(false);
         this.HideOnClickHexaDisable();
     }
@@ -85,7 +89,7 @@ public class T_ScreenTool : MonoBehaviour
         if (this._hexaObj == null) return;
         T_GridController.Instance.ShowEmptyHexa(this._hexaObj);
         this._hexaObj.Init(0);
-        this._hexaObj.SetVisualState(VisualState.SHOW);
+        this._hexaObj.SetVisualState(VisualState.EMPTY);
         this.HideOnClickHexaDisable();
     }
 
@@ -134,6 +138,7 @@ public class T_ScreenTool : MonoBehaviour
         this.ShowBtn.SetActive(true);
         this.EmptyBtn.SetActive(true);
         this.HideBtn.SetActive(true);
+        this.StackBtn.SetActive(true);
         this.ColumnHexa.gameObject.SetActive(true);
         this.ColumnHexa.ShowColumnHexa(this._hexaObj);
         this.PanelColorGroup.Show();
@@ -147,6 +152,7 @@ public class T_ScreenTool : MonoBehaviour
         this.ShowBtn.SetActive(false);
         this.EmptyBtn.SetActive(false);
         this.HideBtn.SetActive(false);
+        this.StackBtn.SetActive(false);
         this.ColumnHexa.gameObject.SetActive(false);
         this.PanelColorGroup.Hide();
     }
@@ -212,11 +218,12 @@ public class T_ScreenTool : MonoBehaviour
     {
         //T_GUIManager.Instance.ShowDemo();
         LevelData level = T_GridController.Instance.GetLevelData();
-        Debug.LogError(JsonConvert.SerializeObject(level));
         //T_LevelManager.Instance.LoadLevelByData(level);
-        ChallengeData challengeData = new ChallengeData(level.Grid);
+        StackQueueData queueData = T_GridController.Instance.GetStackQueueData();
+        ChallengeData challengeData = new ChallengeData(level.Grid, queueData);
         ChallengePresenterData challengePresenterData = new ChallengePresenterData(1);
         T_LevelManager.Instance.SetChallengeData(challengeData, challengePresenterData);
+        T_LevelManager.Instance.SetHexaSelected(T_GridController.Instance.GetHexaObjsSelected());
 
         SceneManager.LoadScene("Game");
   
@@ -225,7 +232,21 @@ public class T_ScreenTool : MonoBehaviour
 
     public void OnChallengeBtnClick()
     {
+        this._isChallenge = !this._isChallenge;
+        /*if (this._isChallenge)
+        {
+            T_GridController.Instance.SetUpChallenge();
+        }*/
         T_GridController.Instance.SetUpChallenge();
+
+    }
+
+    public void OnStackBtnClick()
+    {
+        /*if(this._isChallenge)
+        {
+        }*/
+            T_GridController.Instance.SetStackHexa(this._hexaObj);
     }
 
     /*public T_LevelData GetTLevelData()

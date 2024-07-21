@@ -22,6 +22,7 @@ public class T_PanelSetup : T_PanelBase
         int numberColor = int.Parse(this.NumberColorTxt.text);
 
         T_ScreenTool.Instance.InitLevel(numberHexa, numberColor);
+        T_LevelManager.Instance.SetLevel(numberHexa, numberColor);
         T_GameController.Instance.ShowGrid();
         T_GridController.Instance.Init(10);
 

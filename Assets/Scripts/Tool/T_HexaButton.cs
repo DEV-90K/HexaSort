@@ -81,7 +81,7 @@ public class T_HexaButton : MonoBehaviour, IDropHandler
             hexaData.Id = count + 1;
             hexaData.ColorHexa = draggableItem.GetColorId();
             hexaData.IsSelected = false;
-            hexaData.State = VisualState.SHOW;
+            hexaData.State = VisualState.EMPTY;
             hexaButton.Init(hexaData);
             T_ColumnHexa.Instance.AddDataToObj(hexaButton, current.GetHexaData().Id);
         }
