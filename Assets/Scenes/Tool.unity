@@ -14988,7 +14988,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e445df723dae314697d3a74c7a3f4df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hexasSelected: []
+  colorNumber: 0
+  hexInEachHexaNumber: 0
 --- !u!1 &2057970458
 GameObject:
   m_ObjectHideFlags: 0
@@ -15233,3 +15234,4 @@ SceneRoots:
   - {fileID: 237354157}
   - {fileID: 2057970461}
   - {fileID: 2027150471}
+  - {fileID: 1782563802}

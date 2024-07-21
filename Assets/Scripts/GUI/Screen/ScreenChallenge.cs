@@ -106,6 +106,7 @@ public class ScreenChallenge : ScreenBase
 
     public void OnBackBtnClick()
     {
+        ScreenManager.instance.CacheData();
         SceneManager.LoadScene("Tool");
     }
 }

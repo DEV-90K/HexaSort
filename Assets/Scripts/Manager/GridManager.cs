@@ -20,7 +20,7 @@ public class GridManager : MonoBehaviour
 
     public void OnInit(GridData gridData)
     {
-        Debug.Log(gridData.ToString());
+        gridData.DebugLogObject();
         _gridData = gridData;
 
         GridHexagon[] gridHexagons = _gridSpawner.Spawn(_gridData);

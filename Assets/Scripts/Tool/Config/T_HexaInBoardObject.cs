@@ -83,7 +83,7 @@ public class T_HexaInBoardObject : MonoBehaviour
         this._data = new T_HexaInBoardData();
         this._data.Id = 0;
         this._data.IsSelected = true;
-        this._data.State = VisualState.EMPTY;
+        this._data.State = VisualState.SHOW;
         //this._data.ColorHexa = this._deactive;
         this._data.ColorHexa = this._active;
         //this._hexaColor = T_Utils.ConvertToColor(this._data.ColorHexa); // 
@@ -176,16 +176,16 @@ public class T_HexaInBoardObject : MonoBehaviour
             string colorF = hexaData.ColorHexa;
             if (string.IsNullOrEmpty(colorF)) return;
             colorFist.Add(colorF);
-            Debug.Log(string.Format("nearHexaObj[{0}]: {1} + colorF: {2} + nearHexaObj.Count: {3}", i, nearHexaObj[i].name, colorF, nearHexaObj.Count));
+            //Debug.Log(string.Format("nearHexaObj[{0}]: {1} + colorF: {2} + nearHexaObj.Count: {3}", i, nearHexaObj[i].name, colorF, nearHexaObj.Count));
         }
         string nearSameColor = colorFist.Where(x => x.Contains(this._data.HexagonDatas[item].ColorHexa)).FirstOrDefault();
-        Debug.LogError(string.Format("ObjName: {0} + nearSameColor: {1} + item: {2} + LengthData: {3}", this.name, nearSameColor, item, this._data.HexagonDatas.Length - 1));
+        //Debug.LogError(string.Format("ObjName: {0} + nearSameColor: {1} + item: {2} + LengthData: {3}", this.name, nearSameColor, item, this._data.HexagonDatas.Length - 1));
         if (string.IsNullOrEmpty(nearSameColor)) // Nếu màu ô phía trên chưa giống với 1 màu xug quanh thì lấy màu giống
         {
             for (int i = 0; i < colorFist.Count; i++)
             {
                 string nearColor = T_GridController.Instance.AddIdColor(this, -1, colorFist[i]);
-                Debug.Log(string.Format("ObjName: {0} + nearColor: {1} + colorFist: {2}", this.name, nearColor, colorFist[i]));
+                //Debug.Log(string.Format("ObjName: {0} + nearColor: {1} + colorFist: {2}", this.name, nearColor, colorFist[i]));
                 if (!string.IsNullOrEmpty(nearColor))
                 {
                     this._data.HexagonDatas[item].ColorHexa = nearColor;

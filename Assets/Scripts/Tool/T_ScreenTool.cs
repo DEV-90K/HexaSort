@@ -222,9 +222,13 @@ public class T_ScreenTool : MonoBehaviour
         StackQueueData queueData = T_GridController.Instance.GetStackQueueData();
         ChallengeData challengeData = new ChallengeData(level.Grid, queueData);
         ChallengePresenterData challengePresenterData = new ChallengePresenterData(1);
-        T_LevelManager.Instance.SetChallengeData(challengeData, challengePresenterData);
-        T_LevelManager.Instance.SetHexaSelected(T_GridController.Instance.GetHexaObjsSelected());
 
+        T_Data.Instance._challengeData = challengeData;
+        T_Data.Instance._presenterData = challengePresenterData;
+        T_Data.Instance._hexasSelected = T_GridController.Instance.GetHexaObjsSelectedData();
+        T_LevelManager.Instance.CacheData();
+        //T_LevelManager.Instance.SetChallengeData(challengeData, challengePresenterData);
+        //T_LevelManager.Instance.SetHexaSelected(T_GridController.Instance.GetHexaObjsSelected());
         SceneManager.LoadScene("Game");
   
         

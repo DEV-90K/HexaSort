@@ -7,7 +7,7 @@ public static class PoolManager
 {
     const int DEFAULT_POOL_SIZE = 3;
 
-    private static Dictionary<PoolType, Pool> dictPools = new Dictionary<PoolType, Pool>();
+    public static Dictionary<PoolType, Pool> dictPools = new Dictionary<PoolType, Pool>();
 
     public static void Preload(Transform parent = null, PoolMember prefab = null, int qty = DEFAULT_POOL_SIZE, bool collect = false, bool clamp = false)
     {

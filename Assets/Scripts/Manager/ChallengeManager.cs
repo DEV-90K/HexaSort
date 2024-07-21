@@ -18,7 +18,7 @@ public class ChallengeManager : MonoSingleton<ChallengeManager>
     {
         _stackManager.OnStackMergeCompleted += SCM_OnStackMergeCompleted;
 
-        this.OnInit(T_LevelManager.Instance.challengeData, T_LevelManager.Instance.challengePresenterData);
+        this.OnInit(T_Data.instance._challengeData, T_Data.instance._presenterData);
     }
 
     private void OnDestroy()

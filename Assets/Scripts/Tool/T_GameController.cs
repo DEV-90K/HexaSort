@@ -10,7 +10,7 @@ public class T_GameController : MonoBehaviour
     {
         Instance = this;
         this.HideGrid();
-        DontDestroyOnLoad(this);
+        //DontDestroyOnLoad(this);
     }
 
     public void ShowGrid()

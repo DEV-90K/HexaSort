@@ -23,10 +23,17 @@ public class ScreenManager : MonoBehaviour
         instance = this;
         ClearScreens();
         hexasSelected = new Dictionary<string, T_HexaInBoardData>();
-        this.hexasSelected = T_LevelManager.Instance.hexasSelected;
-        this.colorNumber = T_LevelManager.Instance.colorNumber;
-        this.hexInEachHexaNumber = T_LevelManager.Instance.hexInEachHexaNumber;
-        DontDestroyOnLoad(this);
+        this.hexasSelected = T_Data.Instance._hexasSelected;
+        this.colorNumber = T_Data.Instance.colorNumber;
+        this.hexInEachHexaNumber = T_Data.Instance.hexInEachHexaNumber;
+        //DontDestroyOnLoad(this);
+    }
+
+    public void CacheData()
+    {
+        //T_Data.Instance.hexasSelected = hexasSelected;
+        T_Data.Instance.colorNumber = colorNumber;
+        T_Data.Instance.hexInEachHexaNumber = hexInEachHexaNumber;
     }
     private void ClearScreens()
     {

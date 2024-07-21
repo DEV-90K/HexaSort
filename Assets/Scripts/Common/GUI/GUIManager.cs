@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Device;
 
-public class GUIManager : PersistentMonoSingleton<GUIManager>
+public class GUIManager : MonoSingleton<GUIManager>
 {
     [SerializeField]
     private PopupManager popupManager;

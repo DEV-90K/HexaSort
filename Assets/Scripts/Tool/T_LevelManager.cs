@@ -7,7 +7,7 @@ public class T_LevelManager : MonoBehaviour
     public static T_LevelManager Instance;
     public ChallengeData challengeData;
     public ChallengePresenterData challengePresenterData;
-    public Dictionary<string, T_HexaInBoardData> hexasSelected;
+    public Dictionary<string, T_HexaInBoardData> hexasSelected = new Dictionary<string, T_HexaInBoardData>();
     private LevelData _currentLevel;
 
     public int colorNumber;
@@ -16,8 +16,22 @@ public class T_LevelManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        this.hexasSelected = new Dictionary<string, T_HexaInBoardData>();
-        DontDestroyOnLoad(this);
+        
+        if(T_Data.Instance != null)
+        {
+            hexasSelected = T_Data.Instance._hexasSelected;
+            colorNumber = T_Data.Instance.colorNumber;
+            hexInEachHexaNumber = T_Data.Instance.hexInEachHexaNumber;
+        }
+
+        //DontDestroyOnLoad(this);
+    }
+
+    public void CacheData()
+    {
+        T_Data.Instance.colorNumber = colorNumber;
+        T_Data.Instance.hexInEachHexaNumber = hexInEachHexaNumber;
+        //T_Data.Instance.hexasSelected = hexasSelected;
     }
 
     public void LoadLevelByData(LevelData levelData)

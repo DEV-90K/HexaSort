@@ -172,6 +172,7 @@ public class T_GridController : MonoBehaviour
         this._colors.Clear();
     }
 
+
     public void SetSelectedHexaObj(T_HexaInBoardObject hexaObj, bool isSlected)
     {
         if (isSlected) this._hexaInBoardSelecteds.Add(hexaObj);
@@ -420,5 +421,19 @@ public class T_GridController : MonoBehaviour
             stackQueueData.StackHexagonDatas[i] = data;
         }
         return stackQueueData;
+    }
+
+    internal Dictionary<string, T_HexaInBoardData> GetHexaObjsSelectedData()
+    {
+        Dictionary<string, T_HexaInBoardData> list = new Dictionary<string, T_HexaInBoardData>();
+
+        foreach(T_HexaInBoardObject obj in _hexaInBoardSelecteds)
+        {
+            string name = obj.gameObject.name;
+            T_HexaInBoardData data = obj.GetDataHexa();
+            list[name] = data;
+        }
+
+        return list.CopyObject();
     }
 }

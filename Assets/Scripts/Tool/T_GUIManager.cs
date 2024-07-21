@@ -19,12 +19,12 @@ public class T_GUIManager : MonoBehaviour
         this.ShowTool();
         if (T_GameController.Instance.Grid != null)
         {
-            if (ScreenManager.instance != null && ScreenManager.instance.hexasSelected.Count > 0)
+            if (T_Data.Instance != null && T_Data.Instance._hexasSelected.Count > 0)
             {
-                T_GridController.Instance.Init(10, ScreenManager.instance.hexasSelected);
-                T_ScreenTool.Instance.InitLevel(ScreenManager.instance.hexInEachHexaNumber, ScreenManager.instance.colorNumber);
-            }
-            T_GameController.Instance.ShowGrid();
+                T_GameController.Instance.ShowGrid();
+                T_GridController.Instance.Init(10, T_Data.Instance._hexasSelected);
+                T_ScreenTool.Instance.InitLevel(T_Data.Instance.hexInEachHexaNumber, T_Data.Instance.colorNumber);
+            }                       
         }
     }
 
