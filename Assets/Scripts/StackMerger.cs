@@ -77,25 +77,69 @@ public class StackMerger : MonoBehaviour
         _HasIEProcessing = false;
         OnStackMergeCompleted?.Invoke();
     }
-
-    private IEnumerator IE_RemovePlayerHexagonsFromStack_v2(StackHexagon stackHexagon)
+    private IEnumerator IE_RemovePlayerHexagonsFromStack(StackHexagon stackHexagon)
     {
         List<Hexagon> listPlayerHexagonSimilarColor = GetPlayerHexagonSimilarColor(stackHexagon);
         int numberOfPlayerHexagon = listPlayerHexagonSimilarColor.Count;
         if (numberOfPlayerHexagon < 10)
             yield break;
 
+        yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM); //Use see number of playerHexagon
+
         float offsetDelayTime = 0;
-        //Remove bottom to top
         while (listPlayerHexagonSimilarColor.Count > 0)
         {
             Hexagon playerHexagon = listPlayerHexagonSimilarColor[0];
             playerHexagon.SetParent(null);
             playerHexagon.TweenVanish(offsetDelayTime);
             offsetDelayTime += 0.01f;
-
             stackHexagon.RemovePlayerHexagon(playerHexagon);
             listPlayerHexagonSimilarColor.RemoveAt(0);
+        }
+        yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM + (numberOfPlayerHexagon - 1) * GameConstants.HexagonConstants.TIME_DELAY);
+    }
+
+    private IEnumerator IE_RemoveRandomStack()
+    {
+        GridHexagon grid = GridManager.Instance.GetRandomGridHexagonContainStack();
+        yield return IE_RemoveStackOnGrid(grid);
+    }
+
+    private IEnumerator IE_RemoveNeighborStack(GridHexagon grid)
+    {
+        List<GridHexagon> grids = GetNeighborGidHexagon(grid);
+
+        for (int i = 0; i < grids.Count; i++)
+        {
+            //yield return IE_RemoveStack(grids[i]);
+            yield return grids[i].IE_RemoveStack();
+        }
+    }
+
+    private IEnumerator IE_RemoveStacksSameTopColor(Color color)
+    {
+        List<GridHexagon> grids = GridManager.Instance.GetGridHexagonByTopColor(color);
+
+        for (int i = 0; i < grids.Count; i++)
+        {
+            yield return grids[i].StackOfCell.IE_RemoveByTopColor();
+        }
+    }
+
+    private IEnumerator IE_RemoveStackOnGrid(GridHexagon grid)
+    {
+        StackHexagon stack = grid.StackOfCell;
+        List<Hexagon> hexagons = stack.Hexagons;
+        int numberOfPlayerHexagon = hexagons.Count;
+        float offsetDelayTime = 0;
+        while (hexagons.Count > 0)
+        {
+            Hexagon playerHexagon = hexagons[0];
+            playerHexagon.SetParent(null);
+            playerHexagon.TweenVanish(offsetDelayTime);
+            offsetDelayTime += 0.01f;
+            stack.RemovePlayerHexagon(playerHexagon);
+            //hexagons.RemoveAt(0);
         }
 
         yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM + (numberOfPlayerHexagon - 1) * GameConstants.HexagonConstants.TIME_DELAY);
@@ -136,16 +180,16 @@ public class StackMerger : MonoBehaviour
         for (int i = 0; i < listPlayerHexagonMerge.Count; i++)
         {
             Hexagon playerHexagon = listPlayerHexagonMerge[i];
-            stackHexagon.AddPlayerHexagon(playerHexagon); //have setparent inside addPlayerHexagon
+            stackHexagon.AddPlayerHexagon(playerHexagon);
 
             float yOffset = yOfCurrentGridHexagon + (i + 1) * GameConstants.HexagonConstants.HEIGHT;
-            Vector3 localPos = Vector3.up * yOffset; //(0, yOffset, 0)
+            Vector3 localPos = Vector3.up * yOffset;
             playerHexagon.Configure(stackHexagon);
             playerHexagon.MoveToGridHexagon(localPos, i * GameConstants.HexagonConstants.TIME_DELAY);
         }
     }
 
-    private static void RemovePlayerHexagonFromOldStack(List<GridHexagon> neighborGridHexagonSameTopColor, List<Hexagon> listPlayerHexagonMerge)
+    private void RemovePlayerHexagonFromOldStack(List<GridHexagon> neighborGridHexagonSameTopColor, List<Hexagon> listPlayerHexagonMerge)
     {
         //Remove Hexagon need merge from Hexagon Stack contain before
         foreach (GridHexagon gridHex in neighborGridHexagonSameTopColor)
@@ -479,7 +523,27 @@ public class StackMerger : MonoBehaviour
         }
         
         yield return IE_MergePlayerHexagonsToStack(stack, gridHexagons);
-        yield return IE_RemovePlayerHexagonsFromStack_v2(stack);
+
+        List<Hexagon> listPlayerHexagonSimilarColor = GetPlayerHexagonSimilarColor(stack);
+        int numberOfPlayerHexagon = listPlayerHexagonSimilarColor.Count;
+        if (numberOfPlayerHexagon >= 10)
+        {
+            yield return IE_RemovePlayerHexagonsFromStack(stack);
+
+            if (numberOfPlayerHexagon <= 12)
+            {
+                yield return IE_RemoveRandomStack();             
+            }
+            else if (numberOfPlayerHexagon <= 15) 
+            {
+                yield return IE_RemoveNeighborStack(grid);
+            }
+            else if(numberOfPlayerHexagon <= 18)
+            {
+                yield return IE_RemoveStacksSameTopColor(color);
+            }
+        }    
+
 
         foreach (GridHexagon gridHexagon in gridHexagons)
         {

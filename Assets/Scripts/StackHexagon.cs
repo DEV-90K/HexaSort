@@ -33,6 +33,29 @@ public class StackHexagon : PoolMember
         ShowCanvas();
     }
 
+    public IEnumerator IE_RemoveByTopColor()
+    {
+        Color topColor = GetTopHexagonColor();
+        int numberOfPlayerHexagon = 0;
+        float offsetDelayTime = 0;
+        while (Hexagons.Count > 0)
+        {
+            Hexagon playerHexagon = Hexagons[Hexagons.Count - 1];
+            if (!ColorUtils.ColorEquals(topColor, playerHexagon.Color))
+            {
+                break;
+            }
+
+            numberOfPlayerHexagon++;            
+            playerHexagon.SetParent(null);
+            playerHexagon.TweenVanish(offsetDelayTime);
+            offsetDelayTime += 0.01f;
+            RemovePlayerHexagon(playerHexagon);
+        }
+
+        yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM + (numberOfPlayerHexagon - 1) * GameConstants.HexagonConstants.TIME_DELAY);
+    }
+
     public int GetNumberSimilarColor()
     {
         if(Hexagons == null && Hexagons.Count == 0)

@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GridHexagon : PoolMember
@@ -63,6 +65,24 @@ public class GridHexagon : PoolMember
     public void OnResert()
     {
         StackOfCell = null;
+    }
+
+    public IEnumerator IE_RemoveStack()
+    {
+        List<Hexagon> hexagons = StackOfCell.Hexagons;
+        int numberOfPlayerHexagon = hexagons.Count;
+        float offsetDelayTime = 0;
+        while (hexagons.Count > 0)
+        {
+            Hexagon playerHexagon = hexagons[0];
+            playerHexagon.SetParent(null);
+            playerHexagon.TweenVanish(offsetDelayTime);
+            offsetDelayTime += 0.01f;
+            StackOfCell.RemovePlayerHexagon(playerHexagon);
+            //hexagons.RemoveAt(0);
+        }
+
+        yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM + (numberOfPlayerHexagon - 1) * GameConstants.HexagonConstants.TIME_DELAY);
     }
 
     public void CollectImmediate()

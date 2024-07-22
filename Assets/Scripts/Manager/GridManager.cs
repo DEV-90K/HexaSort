@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GridManager : MonoBehaviour
+public class GridManager : MonoSingleton<GridManager>
 {
     public static Action<float> OnInitCompleted;
 
@@ -17,8 +17,10 @@ public class GridManager : MonoBehaviour
     private List<GridHexagon> _gridCollects;
     private List<GridHexagon> _gridLocks;
 
-    protected void Awake()
+
+    protected override void Awake()
     {
+        base.Awake();
         _gridSpawner.OnInit(_GridUnit);
     }
 
@@ -168,10 +170,27 @@ public class GridManager : MonoBehaviour
         return gridHexagons.ToArray();
     }
 
-    public GridHexagon GetRandomGridHexagon()
+    private GridHexagon GetRandomGridHexagon()
     {
         int idx = UnityEngine.Random.Range(0, _gridHexagons.Length);
         return _gridHexagons[idx];
+    }
+
+    public GridHexagon GetRandomGridHexagonContainStack()
+    {
+        GridHexagon grid = null;
+        int max = _gridHexagons.Length;
+        while (max > 0)
+        {
+            max--;
+            grid = GetRandomGridHexagon();
+            if(grid.CheckOccupied())
+            {
+                break;
+            }
+        }
+
+        return grid;
     }
 
     public GridHexagon[] GetGridHexagonByRadius(Vector3 centerPoint, float radius)
@@ -191,6 +210,25 @@ public class GridManager : MonoBehaviour
         }
 
         return datas.ToArray();
+    }
+
+    public List<GridHexagon> GetGridHexagonByTopColor(Color color)
+    {
+        List<GridHexagon> list = new List<GridHexagon>();
+
+        foreach (GridHexagon grid in _gridHexagons)
+        {
+            if(grid.CheckOccupied())
+            {
+                StackHexagon stack = grid.StackOfCell;
+                if(ColorUtils.ColorEquals(color, stack.GetTopHexagonColor()))
+                {
+                    list.Add(grid);
+                }
+            }
+        }
+
+        return list;
     }
     #endregion Grid Hexagon Data
 }
