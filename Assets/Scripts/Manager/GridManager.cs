@@ -9,31 +9,91 @@ public class GridManager : MonoBehaviour
     [SerializeField]
     private GridUnit _GridUnit;
     [SerializeField]
-    private GridController _gridControl;
-    [SerializeField]
     private GridSpawner _gridSpawner;
 
     private GridData _gridData;
-    private GridHexagon[] _gridHexagons;    
+    private GridHexagon[] _gridHexagons;
+
+    private List<GridHexagon> _gridCollects;
+    private List<GridHexagon> _gridLocks;
 
     protected void Awake()
     {
         _gridSpawner.OnInit(_GridUnit);
     }
 
+    public void CollectOccupied()
+    {
+        CollectAllOccupied();
+    }
+
+    private void CollectAllOccupied()
+    {
+        _gridCollects = new List<GridHexagon>();
+        foreach (GridHexagon grid in _gridHexagons)
+        {
+            if (grid.CheckOccupied())
+            {
+                _gridCollects.Add(grid);
+                grid.StackOfCell.CollectPlayerHexagon(() => OnCollectCompleted(grid));
+            }
+        }
+
+        if (_gridCollects.Count == 0)
+        {
+            this.Invoke(() => CollectAllImmediate(), 1f);
+        }
+    }
+
+    private void CollectAllImmediate()
+    {
+        foreach (GridHexagon grid in _gridHexagons)
+        {
+            grid.CollectImmediate();
+        }
+    }
+
+    private void OnCollectCompleted(GridHexagon gridHexagon)
+    {
+        _gridCollects.Remove(gridHexagon);
+
+        if (_gridCollects.Count <= 0)
+        {
+            foreach (GridHexagon grid in _gridHexagons)
+            {
+                grid.CollectImmediate();
+            }
+
+            _gridCollects.Clear();
+            _gridHexagons = null;
+        }
+    }
+
+    private GridHexagon[] UnLockByHexagon(int amount)
+    {
+        List<GridHexagon> gridHexagons = new List<GridHexagon>();
+
+        for (int i = _gridLocks.Count - 1; i >= 0; i--)
+        {
+            if (_gridLocks[i].CheckUnLockByHexagon(amount))
+            {
+                _gridLocks[i].OnUnLock();
+                gridHexagons.Add(_gridLocks[i]);
+                _gridLocks.RemoveAt(i);
+            }
+        }
+
+        return gridHexagons.ToArray();
+    }
+
     public void OnInit(GridData gridData)
     {
         _gridData = gridData;
-
-        GridHexagon[] gridHexagons = _gridSpawner.Spawn(_gridData);
-        _gridHexagons = gridHexagons;
-
-        _gridControl.OnInit(gridHexagons);
+        _gridHexagons = _gridSpawner.Spawn(_gridData);
+        _gridLocks = GetGridHexagonLock();
         _GridUnit.OnInit();
 
-        float radius = GetMaxRadius();
-        Debug.Log("Radius: " + radius);
-        OnInitCompleted?.Invoke(radius);
+        OnInitCompleted?.Invoke(GetMaxRadius());
     }
 
     private float GetMaxRadius()
@@ -51,24 +111,18 @@ public class GridManager : MonoBehaviour
         return radius;
     }
 
-    public GridHexagon[] GetGridHexagonContainStack()
+    private List<GridHexagon> GetGridHexagonLock()
     {
-        List<GridHexagon> gridHexagons = new List<GridHexagon> ();
-
+        List<GridHexagon> list = new List<GridHexagon>();
         foreach (GridHexagon grid in _gridHexagons)
         {
-            if(grid.CheckOccupied())
+            if (grid.State == GridHexagonState.LOCK_BY_GOAL || grid.State == GridHexagonState.LOCK_BY_ADS)
             {
-                gridHexagons.Add(grid);
+                list.Add(grid);
             }
         }
 
-        return gridHexagons.ToArray();
-    }
-
-    public void CollectOccupied()
-    {
-        _gridControl.CollectAllOccupied();
+        return list;
     }
 
     public void CollectGridImmediate()
@@ -96,7 +150,33 @@ public class GridManager : MonoBehaviour
 
     public GridHexagon[] GetGridHexagonsUnLockByHexagon(int amount)
     {
-        return _gridControl.UnLockByHexagon(amount);
+        return UnLockByHexagon(amount);
+    }
+
+    public GridHexagon[] GetGridHexagonContainStack()
+    {
+        List<GridHexagon> gridHexagons = new List<GridHexagon>();
+
+        foreach (GridHexagon grid in _gridHexagons)
+        {
+            if (grid.CheckOccupied())
+            {
+                gridHexagons.Add(grid);
+            }
+        }
+
+        return gridHexagons.ToArray();
+    }
+
+    public GridHexagon GetRandomGridHexagon()
+    {
+        int idx = UnityEngine.Random.Range(0, _gridHexagons.Length);
+        return _gridHexagons[idx];
+    }
+
+    public GridHexagon[] GetGridHexagonByRadius(Vector3 centerPoint, float radius)
+    {
+        return null;
     }
 
     #region Grid Hexagon Data
