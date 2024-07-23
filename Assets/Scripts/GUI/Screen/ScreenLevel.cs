@@ -16,6 +16,8 @@ public class ScreenLevel : ScreenBase, IBoostHammer, IBoostSwap
     private ButtonBoostHammer _btnBoostHammer;
     [SerializeField]
     private ButtonBoostSwap _btnBoostSwap;
+    [SerializeField]
+    private ButtonBoostRefresh _btnBoostRefresh;
 
     private LevelPresenterData presenterData;
     private int amount = 0;
@@ -76,9 +78,9 @@ public class ScreenLevel : ScreenBase, IBoostHammer, IBoostSwap
         LevelManager.Instance.EnterBoostSwap();
     }
 
-    public void OnBoostSwap(GridHexagon grid)
+    public void OnBoostSwap(GridHexagon[] grids)
     {
-        LevelManager.Instance.OnBoostSwap(grid);
+        LevelManager.Instance.OnBoostSwap(grids);
     }
 
     public void ExitBoostSwap()
@@ -91,6 +93,7 @@ public class ScreenLevel : ScreenBase, IBoostHammer, IBoostSwap
     {
         _btnBoostHammer.OnInit(this);
         _btnBoostSwap.OnInit(this);
+        _btnBoostRefresh.OnInit();
     }
 
     private void UpdateTxtRatio(int amount)

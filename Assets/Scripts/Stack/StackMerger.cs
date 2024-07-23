@@ -530,15 +530,15 @@ public class StackMerger : MonoBehaviour
         {
             yield return IE_RemovePlayerHexagonsFromStack(stack);
 
-            if (numberOfPlayerHexagon <= 12)
+            if (10 < numberOfPlayerHexagon && numberOfPlayerHexagon <= 12)
             {
                 yield return IE_RemoveRandomStack();             
             }
-            else if (numberOfPlayerHexagon <= 15) 
+            else if (12 < numberOfPlayerHexagon && numberOfPlayerHexagon <= 15) 
             {
                 yield return IE_RemoveNeighborStack(grid);
             }
-            else if(numberOfPlayerHexagon <= 18)
+            else if(15 < numberOfPlayerHexagon && numberOfPlayerHexagon <= 18)
             {
                 yield return IE_RemoveStacksSameTopColor(color);
             }

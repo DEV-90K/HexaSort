@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public interface IBoostSwap
 {
     public void EnterBoostSwap();
-    public void OnBoostSwap(GridHexagon grid);
+    public void OnBoostSwap(GridHexagon[] grid);
     public void ExitBoostSwap();
 }
 
@@ -225,8 +225,9 @@ public class PopupBoostSwap : PopupBase
                 gridSwap.SetStackOfCell(stackContact);
                 gridSwap.StackOfCell.transform.SetParent(gridSwap.transform);
                 gridSwap.StackOfCell.transform.position = gridSwap.transform.position.With(y: GameConstants.HexagonConstants.HEIGHT);
-                _able.OnBoostSwap(gridSwap);
-                _able.OnBoostSwap(gridContact);
+                //_able.OnBoostSwap(gridSwap);
+                //_able.OnBoostSwap(gridContact);
+                _able.OnBoostSwap(new GridHexagon[2] { gridContact, gridSwap });
             }
             else
             {
@@ -235,7 +236,8 @@ public class PopupBoostSwap : PopupBase
                 gridSwap.SetStackOfCell(stackContact);
                 gridSwap.StackOfCell.transform.SetParent(gridSwap.transform);
                 gridSwap.StackOfCell.transform.position = gridSwap.transform.position.With(y: GameConstants.HexagonConstants.HEIGHT);
-                _able.OnBoostSwap(gridSwap);
+                //_able.OnBoostSwap(gridSwap);
+                _able.OnBoostSwap(new GridHexagon[1] { gridSwap });
             }
             
             gridSwap = null;

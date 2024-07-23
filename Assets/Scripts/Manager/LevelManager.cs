@@ -177,6 +177,7 @@ public class LevelManager : MonoSingleton<LevelManager>
 
     public void OnBoostHammer(Hexagon hexagon)
     {
+        MainPlayer.instance.SubHammer(1);
         StartCoroutine(IE_OnBoostHammer(hexagon));
     }
     private IEnumerator IE_OnBoostHammer(Hexagon hexagon)
@@ -204,7 +205,7 @@ public class LevelManager : MonoSingleton<LevelManager>
             }
         }
 
-        _stackManager.EnableByBooster();
+        _stackManager.EnableByBooster();        
     }
     #endregion Boost Hammer
 
@@ -228,9 +229,13 @@ public class LevelManager : MonoSingleton<LevelManager>
         _stackManager.DisableByBooster();
     }
 
-    public void OnBoostSwap(GridHexagon grid)
+    public void OnBoostSwap(GridHexagon[] grids)
     {
-        _stackManager.MergeStackIntoGrid(grid);
+        MainPlayer.instance.SubSwap(1);
+        foreach (GridHexagon grid in grids)
+        {
+            _stackManager.MergeStackIntoGrid(grid);            
+        }
     }
 
     public void ExitBoostSwap()
@@ -247,7 +252,7 @@ public class LevelManager : MonoSingleton<LevelManager>
                 }
             }
         }
-
+        
         _stackManager.EnableByBooster();
     }
     #endregion Boost Swap
@@ -255,6 +260,7 @@ public class LevelManager : MonoSingleton<LevelManager>
     #region Boost Refresh
     public void OnBoostRefresh()
     {
+        MainPlayer.instance.SubRefresh(1);
         _stackManager.ReGenerateStacks();
     }
     #endregion Boost Refresh

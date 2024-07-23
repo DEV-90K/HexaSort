@@ -18,6 +18,8 @@ public class ScreenMain : ScreenBase
     private TMP_Text _txtCoin;
     [SerializeField]
     private TMP_Text _txtMaterial;
+    [SerializeField]
+    private Button _btnChestReward;
 
     private int _coin;
     private int _material;
@@ -42,6 +44,7 @@ public class ScreenMain : ScreenBase
         _BtnGrallery_1.onClick.AddListener(OnClickGrallery_1);
         _BtnGrallery_2.onClick.AddListener(OnClickGrallery_2);
         _BtnGrallery_3.onClick.AddListener(OnClickGrallery_3);
+        _btnChestReward.onClick.AddListener(OnClickChestReward);
     }
 
     private void OnDestroy()
@@ -50,6 +53,12 @@ public class ScreenMain : ScreenBase
         _BtnGrallery_1.onClick.RemoveListener(OnClickGrallery_1);
         _BtnGrallery_2.onClick.RemoveListener(OnClickGrallery_2);
         _BtnGrallery_3.onClick.RemoveListener(OnClickGrallery_3);
+        _btnChestReward.onClick.RemoveListener(OnClickChestReward);
+    }
+
+    private void OnClickChestReward()
+    {
+        GUIManager.Instance.ShowPopup<PopupChestReward>();
     }
 
     private void OnClickBtnPlay()

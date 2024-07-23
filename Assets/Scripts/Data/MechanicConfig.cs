@@ -5,6 +5,7 @@ public class MechanicConfig
 {
     public StackConfig StackConfig = null;
     public LevelConfig LevelConfig = null;
+    public ChestRewardConfig[] ChestRewardConfigs = null;
 }
 
 public class StackConfig
@@ -20,7 +21,6 @@ public class StackConfig
         this.NumberOfColor = NumberOfColor;
     }
 }
-
 public class LevelConfig
 {
     [JsonProperty]
@@ -33,4 +33,10 @@ public class LevelConfig
         PresenterData = presenterData;
         SpaceClampf = spaceClampf;
     }
+}
+public class ChestRewardConfig
+{
+    public RewardType Type = RewardType.NONE;
+    public int[] AmountClampf = new int[2] { 5, 10 };
+    public int Probability = 20; //Total of all chest reward = 100%;
 }
