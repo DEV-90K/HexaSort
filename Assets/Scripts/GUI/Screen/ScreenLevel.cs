@@ -10,7 +10,7 @@ public class ScreenLevel : ScreenBase, IBoostHammer, IBoostSwap
     [SerializeField]
     private TMP_Text _txtCoin;
     [SerializeField]
-    private Image _imgFill;
+    private Slider _imgFill;
 
     [SerializeField]
     private ButtonBoostHammer _btnBoostHammer;
@@ -103,7 +103,7 @@ public class ScreenLevel : ScreenBase, IBoostHammer, IBoostSwap
 
     private void UpdateImgFill(float ratio)
     {
-        _imgFill.fillAmount = Mathf.Min(ratio, 1);
+        _imgFill.value = Mathf.Min(ratio, 1);
     }
 
     private void UpdateTxtPlayerCoin()
