@@ -11,14 +11,26 @@ public class ChestReward : MonoBehaviour
     private Image _item;
     [SerializeField]
     private TMP_Text _txtAmount;
+    [SerializeField]
+    private Animator _animator;
+    [SerializeField]
+    private Collider _collider;
 
     private ChestRewardData _data;
-    public void OnInit(ChestRewardData rewardData)
+    private PopupChestReward _owner;
+    public void OnInit(PopupChestReward popupChestReward, ChestRewardData rewardData)
     {
+        _owner = popupChestReward;  
         _data = rewardData;
-
+        _collider.enabled = true;
+        _animator.SetBool("IsOpening", false);
         UpdateImageItem();
         UpdateTextAmount();
+    }
+
+    public void DisableCollider()
+    {
+        _collider.enabled = false;
     }
 
     private void UpdateImageItem()
@@ -34,5 +46,7 @@ public class ChestReward : MonoBehaviour
     private void OnMouseUpAsButton()
     {
         Debug.Log("On Mouse Up As Button");
+        _animator.SetBool("IsOpening", true);
+        _owner.PreventInteraction();
     }
 }

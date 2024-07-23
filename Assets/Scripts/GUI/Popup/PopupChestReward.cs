@@ -1,15 +1,34 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PopupChestReward : PopupBase
 {
+    [SerializeField]
+    private Button _btnClaim;
     [SerializeField]
     private ChestController _chestControl;
     [SerializeField]
     private ChestReward[] _chestRewards;
 
     private ChestRewardData _rewardData;
+
+    private void Start()
+    {
+        _btnClaim.onClick.AddListener(OnClickClaim);
+    }
+
+    private void OnDestroy()
+    {
+        _btnClaim.onClick.RemoveListener(OnClickClaim);
+    }
+
+    public void OnClickClaim()
+    {
+        Hide();
+    }
 
     public override void OnInit(object[] paras)
     {
@@ -18,7 +37,7 @@ public class PopupChestReward : PopupBase
 
         foreach (ChestReward chestReward in _chestRewards)
         {
-            chestReward.OnInit(_rewardData);
+            chestReward.OnInit(this, _rewardData);
         }
     }
 
@@ -26,5 +45,13 @@ public class PopupChestReward : PopupBase
     {
         base.Show();
         _rewardData.DebugLogObject();
+    }
+
+    public void PreventInteraction()
+    {
+        foreach (ChestReward chest in _chestRewards)
+        {
+            chest.DisableCollider();
+        }
     }
 }
