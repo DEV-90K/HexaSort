@@ -111,6 +111,11 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
         OnChangeRefresh?.Invoke(_PlayerData.Refresh);
     }
 
+    public void UpdateChestLastTime()
+    {
+        _PlayerData.ChestLastTime = DateTime.Now.ToString();
+    }
+
     private void CachePlayerLevelData()
     {
         LevelData levelData = LevelManager.instance.GetLevelData();

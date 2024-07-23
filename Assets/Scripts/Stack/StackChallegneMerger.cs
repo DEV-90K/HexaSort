@@ -95,7 +95,7 @@ public class StackChallegneMerger : MonoBehaviour
         List<Hexagon> listPlayerHexagonMerge = GetPlayerHexagonNeedMerge(topColorOfStackAtGridHexagon, neighborGridHexagonSameTopColor);
         RemovePlayerHexagonFromOldStack(neighborGridHexagonSameTopColor, listPlayerHexagonMerge);
         MergePlayerHexagon(stackHexagon, listPlayerHexagonMerge);
-        yield return new WaitForSeconds(0.2f + listPlayerHexagonMerge.Count * 0.01f); //0.2f time anim + 0.01 time delay.setDelay(transform.GetSiblingIndex() * 0.01f);
+        yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM + listPlayerHexagonMerge.Count * GameConstants.HexagonConstants.TIME_DELAY); //0.2f time anim + 0.01 time delay.setDelay(transform.GetSiblingIndex() * 0.01f);
 
         //Merge solution 2: Merge everyting on the cell that has the lowest amount of that smame hexagon color or the one that has a bigger amount [using the one that has a smaller amount is actually better]
         //neighborGridHexagonSameTopColor = UpdateNeighborGridHexagonSameTopColor_S2(gridHexagon, neighborGridHexagonSameTopColor).ToList();
@@ -132,13 +132,13 @@ public class StackChallegneMerger : MonoBehaviour
             Hexagon playerHexagon = listPlayerHexagonSimilarColor[0];
             playerHexagon.SetParent(null);
             playerHexagon.TweenVanish(offsetDelayTime);
-            offsetDelayTime += 0.01f;
+            offsetDelayTime += GameConstants.HexagonConstants.TIME_DELAY;
 
             stackHexagon.RemovePlayerHexagon(playerHexagon);
             listPlayerHexagonSimilarColor.RemoveAt(0);
         }
 
-        yield return new WaitForSeconds(0.2f + (numberOfPlayerHexagon + 1) * 0.01f);
+        yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM + (numberOfPlayerHexagon + 1) * GameConstants.HexagonConstants.TIME_DELAY);
     }
 
     private IEnumerator IE_RemovePlayerHexagonsFromStack_v2(StackHexagon stackHexagon)
@@ -155,7 +155,7 @@ public class StackChallegneMerger : MonoBehaviour
             Hexagon playerHexagon = listPlayerHexagonSimilarColor[0];
             playerHexagon.SetParent(null);
             playerHexagon.TweenVanish(offsetDelayTime);
-            offsetDelayTime += 0.01f;
+            offsetDelayTime += GameConstants.HexagonConstants.TIME_DELAY;
 
             stackHexagon.RemovePlayerHexagon(playerHexagon);
             listPlayerHexagonSimilarColor.RemoveAt(0);

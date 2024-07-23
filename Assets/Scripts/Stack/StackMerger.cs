@@ -92,7 +92,7 @@ public class StackMerger : MonoBehaviour
             Hexagon playerHexagon = listPlayerHexagonSimilarColor[0];
             playerHexagon.SetParent(null);
             playerHexagon.TweenVanish(offsetDelayTime);
-            offsetDelayTime += 0.01f;
+            offsetDelayTime += GameConstants.HexagonConstants.TIME_DELAY;
             stackHexagon.RemovePlayerHexagon(playerHexagon);
             listPlayerHexagonSimilarColor.RemoveAt(0);
         }
@@ -102,6 +102,13 @@ public class StackMerger : MonoBehaviour
     private IEnumerator IE_RemoveRandomStack()
     {
         GridHexagon grid = GridManager.Instance.GetRandomGridHexagonContainStack();
+
+        if(grid == null)
+        {
+            Debug.Log("Not Have Any Stack On Grid");
+            yield break;
+        }
+
         yield return IE_RemoveStackOnGrid(grid);
     }
 
@@ -137,7 +144,7 @@ public class StackMerger : MonoBehaviour
             Hexagon playerHexagon = hexagons[0];
             playerHexagon.SetParent(null);
             playerHexagon.TweenVanish(offsetDelayTime);
-            offsetDelayTime += 0.01f;
+            offsetDelayTime += GameConstants.HexagonConstants.TIME_DELAY;
             stack.RemovePlayerHexagon(playerHexagon);
             //hexagons.RemoveAt(0);
         }
@@ -208,7 +215,6 @@ public class StackMerger : MonoBehaviour
 
     private List<Hexagon> GetPlayerHexagonNeedMerge(Color topColorOfStackAtGridHexagon, List<GridHexagon> neighborGridHexagonSameTopColor)
     {
-        //Get All Hexagon need merge
         List<Hexagon> listPlayerHexagonMerge = new List<Hexagon>();
         foreach (GridHexagon gridHex in neighborGridHexagonSameTopColor)
         {
@@ -216,11 +222,6 @@ public class StackMerger : MonoBehaviour
             for (int i = hexagonStack.Hexagons.Count - 1; i >= 0; i--)
             {
                 Hexagon playerHexagon = hexagonStack.Hexagons[i];
-                //if (playerHexagon.Color == topColorOfStackAtGridHexagon)
-                //{
-                //    listPlayerHexagonMerge.Add(playerHexagon);
-                //    playerHexagon.SetParent(null);
-                //}
 
                 if (ColorUtils.ColorEquals(playerHexagon.Color, topColorOfStackAtGridHexagon))
                 {
@@ -530,17 +531,20 @@ public class StackMerger : MonoBehaviour
         {
             yield return IE_RemovePlayerHexagonsFromStack(stack);
 
-            if (10 < numberOfPlayerHexagon && numberOfPlayerHexagon <= 12)
+            if(GameManager.Instance.IsState(GameState.LEVEL_PLAYING))
             {
-                yield return IE_RemoveRandomStack();             
-            }
-            else if (12 < numberOfPlayerHexagon && numberOfPlayerHexagon <= 15) 
-            {
-                yield return IE_RemoveNeighborStack(grid);
-            }
-            else if(15 < numberOfPlayerHexagon && numberOfPlayerHexagon <= 18)
-            {
-                yield return IE_RemoveStacksSameTopColor(color);
+                if (10 < numberOfPlayerHexagon && numberOfPlayerHexagon <= 12)
+                {
+                    yield return IE_RemoveRandomStack();
+                }
+                else if (12 < numberOfPlayerHexagon && numberOfPlayerHexagon <= 15)
+                {
+                    yield return IE_RemoveNeighborStack(grid);
+                }
+                else if (15 < numberOfPlayerHexagon && numberOfPlayerHexagon <= 18)
+                {
+                    yield return IE_RemoveStacksSameTopColor(color);
+                }
             }
         }    
 
@@ -551,11 +555,19 @@ public class StackMerger : MonoBehaviour
             {
                 listGridHexagonNeedUpdate.Add(gridHexagon);
             }
+            else if(listGridHexagonNeedUpdate.Contains(gridHexagon))
+            {
+                listGridHexagonNeedUpdate.Remove(gridHexagon);
+            }
         }
 
         if (grid.CheckOccupied())
         {
             listGridHexagonNeedUpdate.Add(grid);
+        }
+        else if (listGridHexagonNeedUpdate.Contains(grid))
+        {
+            listGridHexagonNeedUpdate.Remove(grid);
         }
     }
 }

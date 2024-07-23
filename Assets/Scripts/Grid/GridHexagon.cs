@@ -77,7 +77,7 @@ public class GridHexagon : PoolMember
             Hexagon playerHexagon = hexagons[0];
             playerHexagon.SetParent(null);
             playerHexagon.TweenVanish(offsetDelayTime);
-            offsetDelayTime += 0.01f;
+            offsetDelayTime += GameConstants.HexagonConstants.TIME_DELAY;
             StackOfCell.RemovePlayerHexagon(playerHexagon);
             //hexagons.RemoveAt(0);
         }
@@ -110,6 +110,12 @@ public class GridHexagon : PoolMember
         if(StackOfCell.Hexagons == null)
         {
             StackOfCell.CollectImmediate();
+            StackOfCell = null;
+            return false;
+        }
+
+        if(StackOfCell.Hexagons.Count == 0)
+        {
             StackOfCell = null;
             return false;
         }

@@ -18,7 +18,6 @@ public class StackChallengeManager : MonoBehaviour, IStackOnPlaced, IStackSphere
     private List<StackHexagonData> stackHexagonDatas;
     private List<StackHexagon> stackHexagons;
     private List<StackHexagon> stackHexagonsShowed;
-    private List<StackHexagon> stackCollects;
 
     private int _idx = 0;
 
@@ -30,6 +29,7 @@ public class StackChallengeManager : MonoBehaviour, IStackOnPlaced, IStackSphere
 
     private void Start()
     {
+        GameManager.OnChangeState += GameManager_OnChangeState;
         stackController.OnStackPlacedOnGridHexagon += StackController_OnStackPlacedOnGridHexagon;
         stackMerger.OnStackMergeCompleted += StackMerger_OnStackMergeCompleted;
         stackController.OnInit(this, this);
@@ -38,6 +38,7 @@ public class StackChallengeManager : MonoBehaviour, IStackOnPlaced, IStackSphere
 
     private void OnDestroy()
     {
+        GameManager.OnChangeState -= GameManager_OnChangeState;
         stackMerger.OnStackMergeCompleted -= StackMerger_OnStackMergeCompleted;
         stackController.OnStackPlacedOnGridHexagon -= StackController_OnStackPlacedOnGridHexagon;
     }
@@ -50,6 +51,20 @@ public class StackChallengeManager : MonoBehaviour, IStackOnPlaced, IStackSphere
     private void StackMerger_OnStackMergeCompleted()
     {
         OnStackMergeCompleted?.Invoke();
+    }
+
+    private void GameManager_OnChangeState(GameState state)
+    {
+        if (state == GameState.PAUSE)
+        {
+            stackMerger.OnPauseGame();
+            stackController.OnPauseGame();
+        }
+        else if (state == GameState.LEVEL_PLAYING || state == GameState.CHALLENGE_PLAYING)
+        {
+            stackMerger.OnPlayGame();
+            stackController.OnPlayGame();
+        }
     }
 
     public void OnInit(StackQueueData stackData)
@@ -156,12 +171,10 @@ public class StackChallengeManager : MonoBehaviour, IStackOnPlaced, IStackSphere
         }
 
         GenerateStacks();
-        Debug.Log("IDX: " + _idx);
     }
 
     internal bool CanShowLeft()
     {
-        Debug.Log("IDX: " + _idx);
         return _idx > 0;
     }
 
@@ -177,7 +190,6 @@ public class StackChallengeManager : MonoBehaviour, IStackOnPlaced, IStackSphere
         }
 
         GenerateStacks();
-        Debug.Log("IDX: " + _idx);
     }
 
     internal bool CanShowRight()

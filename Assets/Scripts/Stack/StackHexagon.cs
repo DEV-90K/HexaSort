@@ -49,7 +49,7 @@ public class StackHexagon : PoolMember
             numberOfPlayerHexagon++;            
             playerHexagon.SetParent(null);
             playerHexagon.TweenVanish(offsetDelayTime);
-            offsetDelayTime += 0.01f;
+            offsetDelayTime += GameConstants.HexagonConstants.TIME_DELAY;
             RemovePlayerHexagon(playerHexagon);
         }
 
@@ -111,12 +111,9 @@ public class StackHexagon : PoolMember
     public void RemovePlayerHexagon(Hexagon playerHexagon)
     {
         Hexagons.Remove(playerHexagon);
-
-        //TEST
         if (Hexagons.Count <= 0)
         {
-            //DestroyImmediate(gameObject);
-            Debug.Log("Despawn: " + GetInstanceID());
+            Hexagons = null;
             PoolManager.Despawn(this);
         }
 

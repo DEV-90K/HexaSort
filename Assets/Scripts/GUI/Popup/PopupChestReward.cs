@@ -27,6 +27,7 @@ public class PopupChestReward : PopupBase
 
     public void OnClickClaim()
     {
+        MainPlayer.Instance.UpdateChestLastTime();
         Hide();
     }
 
