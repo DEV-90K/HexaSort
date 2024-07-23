@@ -1,13 +1,12 @@
-using Newtonsoft.Json;
-using System.Collections.Generic;
-
 public class PlayerData
 {
     public int Coin { get; set; }
     public int Material { get; set; }
-
+    public int Hammer = 23;
+    public int Swap = 24;
+    public int Refresh = 54;
+    public string ChestLastTime;
     public PlayerLevelData PlayerLevel { get; private set; }
-
     public PlayerData(int coin, int material, PlayerLevelData playerLevel)
     {
         Coin = coin;

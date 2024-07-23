@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class ResourceManager : PersistentMonoSingleton<ResourceManager>
@@ -8,23 +9,24 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
     private const int TEST_IDLEVEL = 1;
 
     private MechanicConfig _mechanicConfig;
-    
+
     private Dictionary<int, LevelData> _levelDataDict = new Dictionary<int, LevelData>();
 
     private LevelPresenterData[] _levelPresenterDatas;
     private Dictionary<int, LevelPresenterData> _levelPresenterDatasDict = new Dictionary<int, LevelPresenterData>();
 
     private Dictionary<int, ChallengeData> _challengeDataDict = new Dictionary<int, ChallengeData>();
-    
+
     private ChallengePresenterData[] _challengePresenterDatas;
     private Dictionary<int, ChallengePresenterData> _challengePresenterDataDict = new Dictionary<int, ChallengePresenterData>();
 
     private HexagonData[] _hexagonDatas;
     private Dictionary<int, HexagonData> _cacheHexagonData = new Dictionary<int, HexagonData>();
-    private Dictionary<string, HexagonData> _cacheHexagonDataByColor = new Dictionary<string, HexagonData>();
 
     private Dictionary<string, Sprite> _cacheRelicSprite = new Dictionary<string, Sprite>();
     private RelicData[] _relicDatas;
+
+    private Dictionary<RewardType, Sprite> _cacheRewardSprite = new Dictionary<RewardType, Sprite>();
 
     private GalleryData[] _galleryDatas;
 
@@ -43,6 +45,75 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
     }
 
     #region Mechanic Config
+    public ChestRewardConfig[] GetChestRewardConfig()
+    {
+        if (_mechanicConfig.ChestRewardConfigs == null)
+        {
+            _mechanicConfig.ChestRewardConfigs = CreateChestRewardConfig();
+        }
+
+        return _mechanicConfig.ChestRewardConfigs;
+    }
+
+    public Sprite GetRewardSpriteByType(RewardType type)
+    {
+        if (_cacheRewardSprite.ContainsKey(type))
+        {
+            return _cacheRewardSprite[type];
+        }
+
+        string typeString = EnumUtils.ParseString(type);
+        string key = typeString.Substring(0, 1).ToUpper() + typeString.Substring(1).ToLower();
+
+        Debug.Log("Key: " + key);
+        string path = "Rewards/Reward_" + key;
+        Sprite spr = Resources.Load<Sprite>(path);
+
+        _cacheRewardSprite[type] = spr;
+        return _cacheRewardSprite[type];
+    }
+
+    private ChestRewardConfig[] CreateChestRewardConfig()
+    {
+        List<ChestRewardConfig> configs = new List<ChestRewardConfig>();
+        ChestRewardConfig config1 = new ChestRewardConfig();
+        config1.AmountClampf = new int[2] { 2, 3 };
+        config1.Type = RewardType.NONE;
+        config1.Probability = 0;
+        configs.Add(config1);
+
+        ChestRewardConfig config6 = new ChestRewardConfig();
+        config6.AmountClampf = new int[2] { 1, 4 };
+        config6.Type = RewardType.COIN;
+        config6.Probability = 30;
+        configs.Add(config6);
+
+        ChestRewardConfig config2 = new ChestRewardConfig();
+        config2.AmountClampf = new int[2] { 4, 7 };
+        config2.Type = RewardType.SWAP;
+        config2.Probability = 10;
+        configs.Add(config2);
+
+        ChestRewardConfig config3 = new ChestRewardConfig();
+        config3.AmountClampf = new int[2] { 7, 10 };
+        config3.Type = RewardType.MATERIAL;
+        config3.Probability = 13;
+        configs.Add(config3);
+
+        ChestRewardConfig config4 = new ChestRewardConfig();
+        config4.AmountClampf = new int[2] { 4, 6 };
+        config4.Type = RewardType.REFRESH;
+        config4.Probability = 27;
+        configs.Add(config4);
+
+        ChestRewardConfig config5 = new ChestRewardConfig();
+        config5.AmountClampf = new int[2] { 2, 3 };
+        config5.Type = RewardType.HAMMER;
+        config5.Probability = 20;
+        configs.Add(config5);
+
+        return configs.ToArray();
+    }
 
     public StackConfig GetStackConfig()
     {

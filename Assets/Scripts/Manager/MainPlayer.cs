@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class MainPlayer : PersistentMonoSingleton<MainPlayer> 
 {
+    public static Action<int> OnChangeHammer;
+    public static Action<int> OnChangeRefresh;
+    public static Action<int> OnChangeSwap;
+
     private const string KEY_PLAYER = "PLAYER_DATA";
     private PlayerData _PlayerData;
 
@@ -69,6 +73,43 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
     public int GetMaterial() => _PlayerData.Material;
     public void AddMaterial(int amount) => _PlayerData.Material += amount;
     public void SubMaterial(int amount) => _PlayerData.Material -= amount;
+
+    public int GetHammer() => _PlayerData.Hammer;
+    public void AddHammer(int amount)
+    {
+        _PlayerData.Hammer += amount;
+        OnChangeHammer?.Invoke(_PlayerData.Hammer);
+    }
+    public void SubHammer(int amount)
+    {
+        _PlayerData.Hammer -= amount;
+        OnChangeHammer?.Invoke(_PlayerData.Hammer);
+    }
+
+    public int GetSwap() => _PlayerData.Swap;
+    public void AddSwap(int amount)
+    {
+        _PlayerData.Swap += amount;
+        OnChangeSwap?.Invoke(_PlayerData.Swap);
+    }
+
+    public void SubSwap(int amount)
+    {
+        _PlayerData.Swap -= amount;
+        OnChangeSwap?.Invoke(_PlayerData.Swap);
+    }
+
+    public int GetRefresh() => _PlayerData.Refresh;
+    public void AddRefresh(int amount)
+    {
+        _PlayerData.Refresh += amount;
+        OnChangeRefresh?.Invoke(_PlayerData.Refresh);
+    }
+    public void SubRefresh(int amount)
+    {
+        _PlayerData.Refresh -= amount;
+        OnChangeRefresh?.Invoke(_PlayerData.Refresh);
+    }
 
     private void CachePlayerLevelData()
     {
@@ -191,10 +232,10 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
         _PlayerData.DebugLogObject();
     }
 
-    //[RuntimeInitializeOnLoadMethod]
-    //private static void OnApplicationLoad()
-    //{
-    //    Debug.Log("On Application Load");
-    //    Instance.DeletePlayerDataFromPlayerPrefab();
-    //}
+    [RuntimeInitializeOnLoadMethod]
+    private static void OnApplicationLoad()
+    {
+        Debug.Log("On Application Load");
+        Instance.DeletePlayerDataFromPlayerPrefab();
+    }
 }
