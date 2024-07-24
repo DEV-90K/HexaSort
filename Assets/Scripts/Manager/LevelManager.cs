@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class LevelManager : MonoSingleton<LevelManager>
 {
-    public Action OnStackMergeCompleted;
-
     [SerializeField]
     private GridManager _gridManager;
     [SerializeField]
@@ -21,9 +19,9 @@ public class LevelManager : MonoSingleton<LevelManager>
 
     private void Start()
     {
-        _stackManager.OnStackMergeCompleted += StackManager_OnStackMergeCompleted;
+        LevelController.OnTurnCompleted += LevelController_OnTurnCompleted;
+
         _hammer.gameObject.SetActive(false);
-        //TEST
         PlayerLevelData playerLevelData = MainPlayer.instance.GetPlayerLevelData().CopyObject();
 
         if(playerLevelData != null)
@@ -40,7 +38,7 @@ public class LevelManager : MonoSingleton<LevelManager>
 
     private void OnDestroy()
     {
-        _stackManager.OnStackMergeCompleted -= StackManager_OnStackMergeCompleted;
+        LevelController.OnTurnCompleted -= LevelController_OnTurnCompleted;
     }
 
     public int GetAmountHexagon()
@@ -265,7 +263,7 @@ public class LevelManager : MonoSingleton<LevelManager>
     }
     #endregion Boost Refresh
 
-    private void StackManager_OnStackMergeCompleted()
+    private void LevelController_OnTurnCompleted()
     {
 
         if (amountHexagon >= _presenterData.Goal)

@@ -14,12 +14,10 @@ public interface IStackSphereRadius
     public Vector3 GetRadiusByGrid();
 }
 
-public class StackManager : MonoBehaviour, IStackOnPlaced, IStackSphereRadius
+public class StackManager : MonoSingleton<StackManager>, IStackOnPlaced, IStackSphereRadius
 {
-    public Action OnStackMergeCompleted;
-
     [SerializeField]
-    private Transform[] pointSpawns;
+    protected Transform[] pointSpawns;
     [SerializeField]
     private StackController stackController;
     [SerializeField]
@@ -34,60 +32,22 @@ public class StackManager : MonoBehaviour, IStackOnPlaced, IStackSphereRadius
     private List<StackHexagon> stackHexagons;
     private List<StackHexagon> stackCollects;
     
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         stackHexagons = new List<StackHexagon>();
         stackController.OnInit(this, this);
-        stackMerger.OnInit(this);
-    }
-
-    private void Start()
-    {
-        GameManager.OnChangeState += GameManager_OnChangeState;
-        stackMerger.OnStackMergeCompleted += StackMerger_OnStackMergeCompleted;
-        stackController.OnStackPlacedOnGridHexagon += StackController_OnStackPlacedOnGridHexagon;
-    }
-
-    private void OnDestroy()
-    {
-        GameManager.OnChangeState -= GameManager_OnChangeState;
-        stackMerger.OnStackMergeCompleted -= StackMerger_OnStackMergeCompleted;
-        stackController.OnStackPlacedOnGridHexagon -= StackController_OnStackPlacedOnGridHexagon;
-    }
-
-    private void StackMerger_OnStackMergeCompleted()
-    {
-        OnStackMergeCompleted?.Invoke();
-    }
-
-    private void StackController_OnStackPlacedOnGridHexagon(GridHexagon grid)
-    {
-        stackMerger.EventOnStackPlacedOnGridHexagon(grid);
-    }
-
-    private void GameManager_OnChangeState(GameState state)
-    {
-        if(state == GameState.PAUSE)
-        {
-            stackMerger.OnPauseGame();
-            stackController.OnPauseGame();
-        }
-        else if(state == GameState.LEVEL_PLAYING || state == GameState.CHALLENGE_PLAYING)
-        {
-            stackMerger.OnPlayGame();
-            stackController.OnPlayGame();
-        }
     }
 
     private void OnInit()
     {
         stackSpawner = randomSpawner;
-        stackMerger.OnResert();
         stackController.OnResert();
+        stackController.OnInit(this, this);
         GenerateStacks();
     }
 
-    public void OnInit(StackQueueData stackData)
+    public virtual void OnInit(StackQueueData stackData)
     {
         if (stackData == null)
         {
@@ -98,7 +58,8 @@ public class StackManager : MonoBehaviour, IStackOnPlaced, IStackSphereRadius
 
         stackSpawner = dataSpawner;
         dataSpawner.OnInit(stackData);
-        stackMerger.OnResert();
+        stackController.OnResert();
+        stackController.OnInit(this, this);
         GenerateStacks();
     }
 
@@ -107,12 +68,12 @@ public class StackManager : MonoBehaviour, IStackOnPlaced, IStackSphereRadius
         randomSpawner.Configure(amount, probabilities);
     }
 
-    public void OnResert()
+    public virtual void OnResert()
     {
         stackHexagons.Clear();
     }
 
-    public void OnStackPlaced(StackHexagon stack)
+    public virtual void OnStackPlaced(StackHexagon stack)
     {
         stackHexagons.Remove(stack);
         if (stackHexagons.Count == 0)
@@ -144,7 +105,7 @@ public class StackManager : MonoBehaviour, IStackOnPlaced, IStackSphereRadius
         }
     }
 
-    public void CollectRandomed()
+    public virtual void CollectRandomed()
     {
         stackCollects = new List<StackHexagon>();
         foreach (StackHexagon stack in stackHexagons)
@@ -178,7 +139,7 @@ public class StackManager : MonoBehaviour, IStackOnPlaced, IStackSphereRadius
 
     public void MergeStackIntoGrid(GridHexagon grid)
     {
-        stackMerger.OnStackPlacedOnGridHexagon(grid);
+        Debug.Log("Merge Stack Into Grid");
     }
 
     public Vector3 GetRadiusByGrid()
@@ -186,4 +147,62 @@ public class StackManager : MonoBehaviour, IStackOnPlaced, IStackSphereRadius
         //Grid scale = Point Spawn stack Scale
         return pointSpawns[0].localScale;
     }
+
+    #region Legancy
+    public void MergePlayerHexagon(StackHexagon stackHexagon, List<Hexagon> listPlayerHexagonMerge)
+    {
+        float yOfCurrentGridHexagon = (stackHexagon.Hexagons.Count - 1) * GameConstants.HexagonConstants.HEIGHT;
+        for (int i = 0; i < listPlayerHexagonMerge.Count; i++)
+        {
+            Hexagon playerHexagon = listPlayerHexagonMerge[i];
+            stackHexagon.AddPlayerHexagon(playerHexagon);
+
+            float yOffset = yOfCurrentGridHexagon + (i + 1) * GameConstants.HexagonConstants.HEIGHT;
+            Vector3 localPos = Vector3.up * yOffset;
+            playerHexagon.Configure(stackHexagon);
+            playerHexagon.MoveToGridHexagon(localPos, i * GameConstants.HexagonConstants.TIME_DELAY);
+        }
+    }
+
+    public List<Hexagon> GetPlayerHexagonSimilarColor(StackHexagon stackHexagon)
+    {
+        Color color = stackHexagon.GetTopHexagonColor();
+        List<Hexagon> playerHexagons = new List<Hexagon>();
+        for (int i = stackHexagon.Hexagons.Count - 1; i >= 0; i--)
+        {
+            if (ColorUtils.ColorEquals(stackHexagon.Hexagons[i].Color, color))
+            {
+                playerHexagons.Add(stackHexagon.Hexagons[i]);
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return playerHexagons;
+    }
+
+    public IEnumerator IE_RemovePlayerHexagonsFromStack(StackHexagon stackHexagon)
+    {
+        List<Hexagon> listPlayerHexagonSimilarColor = GetPlayerHexagonSimilarColor(stackHexagon);
+        int numberOfPlayerHexagon = listPlayerHexagonSimilarColor.Count;
+        if (numberOfPlayerHexagon < 10)
+            yield break;
+
+        yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM); //Use see number of playerHexagon
+
+        float offsetDelayTime = 0;
+        while (listPlayerHexagonSimilarColor.Count > 0)
+        {
+            Hexagon playerHexagon = listPlayerHexagonSimilarColor[0];
+            playerHexagon.SetParent(null);
+            playerHexagon.TweenVanish(offsetDelayTime);
+            offsetDelayTime += GameConstants.HexagonConstants.TIME_DELAY;
+            stackHexagon.RemovePlayerHexagon(playerHexagon);
+            listPlayerHexagonSimilarColor.RemoveAt(0);
+        }
+        yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM + (numberOfPlayerHexagon - 1) * GameConstants.HexagonConstants.TIME_DELAY);
+    }
+    #endregion Legancy
 }

@@ -15,20 +15,29 @@ public class ChallengeManager : MonoSingleton<ChallengeManager>
 
     private void Start()
     {
-        _stackManager.OnStackMergeCompleted += SCM_OnStackMergeCompleted;
+        ChallengeController.OnTurnCompleted += ChallengeController_OnTurnCompleted;
     }
 
     private void OnDestroy()
     {
-        _stackManager.OnStackMergeCompleted -= SCM_OnStackMergeCompleted;
+        ChallengeController.OnTurnCompleted -= ChallengeController_OnTurnCompleted;
     }
 
-    private void SCM_OnStackMergeCompleted()
+    private void ChallengeController_OnTurnCompleted()
     {
         GridHexagon[] gridHexagons = _gridManager.GetGridHexagonContainStack();
         if(gridHexagons.Length == 0)
         {
             OnFinishWoned();
+            
+        }
+        else
+        {
+            StackHexagon[] stackHexagons = _stackManager.GetStackHexagonsCanPlace();
+            if(stackHexagons.Length == 0)
+            {
+                OnFinishLosed();
+            }
         }
     }
 

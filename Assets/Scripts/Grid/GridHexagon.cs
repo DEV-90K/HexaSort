@@ -101,7 +101,7 @@ public class GridHexagon : PoolMember
         if (StackOfCell == null)
             return false;
 
-        if(StackOfCell.gameObject.activeInHierarchy == false)
+        if(StackOfCell.gameObject.activeSelf == false)
         {
             StackOfCell = null;
             return false;

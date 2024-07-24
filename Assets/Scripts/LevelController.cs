@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChallengeController : MonoBehaviour
+public class LevelController : MonoBehaviour
 {
     public static Action OnTurnCompleted;
 
@@ -24,7 +24,7 @@ public class ChallengeController : MonoBehaviour
 
     private void StackController_OnStackPlaced(GridHexagon grid)
     {
-        Debug.Log("Challenge Controller StackController_OnStackPlaced");
+        Debug.Log("Level Controller StackController_OnStackPlaced");
         OnStackPlacedOnGridHexagon(grid);
     }
     private void OnStackPlacedOnGridHexagon(GridHexagon gridHexagon)
@@ -139,6 +139,7 @@ public class ChallengeController : MonoBehaviour
     {
         GridHexagon grid = rootNode.GetGridHexagon();
         StackHexagon stack = grid.StackOfCell;
+        Color color = grid.StackOfCell.GetTopHexagonColor();
 
         GridHexagonNode[] childNodes = rootNode.GetChildNodes();
 
@@ -161,6 +162,22 @@ public class ChallengeController : MonoBehaviour
         if (numberOfPlayerHexagon >= 10)
         {
             yield return StackManager.Instance.IE_RemovePlayerHexagonsFromStack(stack);
+
+            if (GameManager.Instance.IsState(GameState.LEVEL_PLAYING))
+            {
+                if (10 < numberOfPlayerHexagon && numberOfPlayerHexagon <= 12)
+                {
+                    yield return IE_RemoveRandomStack();
+                }
+                else if (12 < numberOfPlayerHexagon && numberOfPlayerHexagon <= 15)
+                {
+                    yield return IE_RemoveNeighborStack(grid);
+                }
+                else if (15 < numberOfPlayerHexagon && numberOfPlayerHexagon <= 18)
+                {
+                    yield return IE_RemoveStacksSameTopColor(color);
+                }
+            }
         }
 
 

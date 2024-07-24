@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class StackController : MonoBehaviour
 {
-    public Action<GridHexagon> OnStackPlacedOnGridHexagon;
+    public static Action<GridHexagon> OnStackPlaced;
+    //public Action<GridHexagon> OnStackPlacedOnGridHexagon;
     public static Action<bool> OnStackMoving;
 
 
@@ -21,42 +22,14 @@ public class StackController : MonoBehaviour
     private StackHexagon stackContact;
     private GridHexagon gridHexagonContact;
 
-    private bool _CanControl = false;
-
     public void OnInit(IStackOnPlaced stackPlaceable, IStackSphereRadius stackSphereRadius)
     {
         _stackPlaceable = stackPlaceable;
         _IStackSphereRadius = stackSphereRadius;
     }
 
-    public void OnPauseGame()
-    {
-        _CanControl = false;
-    }
-
-    public void OnPlayGame()
-    {
-        _CanControl = true;
-    }
-
     private void Update()
     {
-        if (_CanControl == false)
-        {
-            if(stackContact != null)
-            {
-                stackContact.transform.position = originPosStackContact;
-                stackContact = null;
-            }
-
-            if(gridHexagonContact != null)
-            {
-                gridHexagonContact.ShowColor();
-                gridHexagonContact = null;
-            }
-            return;
-        }
-
         Controlling();
     }
 
@@ -199,8 +172,7 @@ public class StackController : MonoBehaviour
             gridHexagonContact.SetStackOfCell(stackContact);
 
             _stackPlaceable.OnStackPlaced(stackContact);
-            OnStackPlacedOnGridHexagon?.Invoke(gridHexagonContact);
-
+            OnStackPlaced?.Invoke(gridHexagonContact);
             gridHexagonContact = null;
         }
         else

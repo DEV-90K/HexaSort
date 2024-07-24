@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class StackChallengeManager : MonoBehaviour, IStackOnPlaced, IStackSphereRadius
+public class StackChallengeManager : MonoSingleton<StackChallengeManager>, IStackOnPlaced, IStackSphereRadius
 {
-    public Action OnStackMergeCompleted;
     public static Action OnAllStackPlaced;
 
     [SerializeField]
@@ -21,54 +20,17 @@ public class StackChallengeManager : MonoBehaviour, IStackOnPlaced, IStackSphere
 
     private int _idx = 0;
 
-    private void Awake()
-    {        
+    protected override void Awake()
+    {     
+        base.Awake();
         stackHexagons = new List<StackHexagon>();
         stackHexagonsShowed = new List<StackHexagon>();
     }
 
-    private void Start()
-    {
-        GameManager.OnChangeState += GameManager_OnChangeState;
-        stackController.OnStackPlacedOnGridHexagon += StackController_OnStackPlacedOnGridHexagon;
-        stackMerger.OnStackMergeCompleted += StackMerger_OnStackMergeCompleted;
-        stackController.OnInit(this, this);
-        stackMerger.OnInit(this);
-    }
-
-    private void OnDestroy()
-    {
-        GameManager.OnChangeState -= GameManager_OnChangeState;
-        stackMerger.OnStackMergeCompleted -= StackMerger_OnStackMergeCompleted;
-        stackController.OnStackPlacedOnGridHexagon -= StackController_OnStackPlacedOnGridHexagon;
-    }
-
-    private void StackController_OnStackPlacedOnGridHexagon(GridHexagon grid)
-    {        
-        stackMerger.EventOnStackPlacedOnGridHexagon(grid);
-    }
-
-    private void StackMerger_OnStackMergeCompleted()
-    {
-        OnStackMergeCompleted?.Invoke();
-    }
-
-    private void GameManager_OnChangeState(GameState state)
-    {
-        if (state == GameState.PAUSE)
-        {
-            stackMerger.OnPauseGame();
-            stackController.OnPauseGame();
-        }
-        else if (state == GameState.LEVEL_PLAYING || state == GameState.CHALLENGE_PLAYING)
-        {
-            stackMerger.OnPlayGame();
-            stackController.OnPlayGame();
-        }
-    }
-
     public void OnInit(StackQueueData stackData)
     {
+        stackController.OnInit(this, this);
+
         if (stackData == null)
         {
             Debug.Log("Stack Data is null");
@@ -86,7 +48,7 @@ public class StackChallengeManager : MonoBehaviour, IStackOnPlaced, IStackSphere
 
         Debug.Log("Stack Hexagons Lengt: " + stackHexagons.Count);
 
-        stackMerger.OnResert();
+        //stackMerger.OnResert();
         GenerateStacks();
     }
 
@@ -104,7 +66,7 @@ public class StackChallengeManager : MonoBehaviour, IStackOnPlaced, IStackSphere
 
         if (stackHexagons.Count == 0)
         {
-            ChallengeManager.Instance.OnFinishLosed();
+            //ChallengeManager.Instance.OnFinishLosed();
             return;
         }
 
@@ -112,6 +74,11 @@ public class StackChallengeManager : MonoBehaviour, IStackOnPlaced, IStackSphere
         {            
             OnAllStackPlaced?.Invoke();
         }
+    }
+
+    public StackHexagon[] GetStackHexagonsCanPlace()
+    {
+        return stackHexagons.ToArray();
     }
 
     private void GenerateStacks()
