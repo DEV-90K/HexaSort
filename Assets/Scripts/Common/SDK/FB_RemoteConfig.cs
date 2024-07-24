@@ -129,14 +129,26 @@ public class FB_RemoteConfig
 
     public string GetRemoteConfigValue(string key)
     {
+        string configValue = "";
         try
         {
-            return remoteConfig.GetValue(key).StringValue;
+            configValue = remoteConfig.GetValue(key).StringValue;
+
         }
         catch (Exception ex)
         {
             Debug.LogError(ex.ToString());
-            return null;
+            configValue = null;
+        }
+
+        if (string.IsNullOrEmpty(configValue)) return null;
+        try
+        {
+            return CompressText.Decompress(configValue);
+        }
+        catch
+        {
+            return configValue;
         }
     }
 }
