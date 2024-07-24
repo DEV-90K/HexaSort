@@ -37,7 +37,8 @@ public class PopupGallery : PopupBase
         _galleryRelicDatas = MainPlayer.Instance.GetGalleryRelicByID(_data.ID);
 
         _amountCoin = 0;
-        _BtnWaiting.gameObject.SetActive(true);
+        bool stateOfBtnWait = _galleryRelicDatas.Length > 0 ? true : false;
+        _BtnWaiting.gameObject.SetActive(stateOfBtnWait);
         _BtnCollectCoin.gameObject.SetActive(false);
 
         _rels = InitGalleryRelics();
@@ -74,7 +75,6 @@ public class PopupGallery : PopupBase
             if(_Contain.GetChild(i).TryGetComponent<GalleryRelic>(out GalleryRelic relic))
             {
                 relic.gameObject.SetActive(true);
-                //relic.OnInit(_data.GalleryRelics[i], _data.ID, _data.IDRelics);
                 relic.OnInit(null, _data.ID, _data.IDRelics);
                 list.Add(relic);
             }

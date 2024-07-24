@@ -566,6 +566,7 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         relic_1.Name = "Relic 1";
         relic_1.Timer = 20;
         relic_1.Coin = 5;
+        relic_1.Material = 5;
         relic_1.ArtPath = "Relics/1";
         data.Add(relic_1);
 
@@ -575,6 +576,7 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         relic_2.Name = "Relic 2";
         relic_2.Timer = 22;
         relic_2.Coin = 6;
+        relic_2.Material = 6;
         relic_2.ArtPath = "Relics/2";
         data.Add(relic_2);
 
@@ -584,6 +586,7 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         relic_3.Name = "Relic 3";
         relic_3.Timer = 23;
         relic_3.Coin = 7;
+        relic_3.Material = 7;
         relic_3.ArtPath = "Relics/3";
         data.Add(relic_3);
 
@@ -593,6 +596,7 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         relic_4.Name = "Relic 4";
         relic_4.Timer = 24;
         relic_4.Coin = 14;
+        relic_4.Material = 14;
         relic_4.ArtPath = "Relics/4";
         data.Add(relic_4);
 
@@ -602,6 +606,7 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         relic_5.Name = "Relic 5";
         relic_5.Timer = 23;
         relic_5.Coin = 7;
+        relic_5.Material = 7;
         relic_5.ArtPath = "Relics/3";
         data.Add(relic_5);
 
@@ -611,6 +616,7 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         relic_6.Name = "Relic 6";
         relic_6.Timer = 23;
         relic_6.Coin = 7;
+        relic_6.Material = 7;
         relic_6.ArtPath = "Relics/6";
         data.Add(relic_6);
 
@@ -620,6 +626,7 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         relic_7.Name = "Relic 7";
         relic_7.Timer = 23;
         relic_7.Coin = 7;
+        relic_7.Material = 7;
         relic_7.ArtPath = "Relics/3";
         data.Add(relic_7);
 
@@ -629,6 +636,7 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         relic_8.Name = "Relic 8";
         relic_8.Timer = 23;
         relic_8.Coin = 7;
+        relic_8.Material = 7;
         relic_8.ArtPath = "Relics/3";
         data.Add(relic_8);
 
@@ -674,6 +682,7 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         relic_13.Name = "Relic 13";
         relic_13.Timer = 23;
         relic_13.Coin = 7;
+        relic_13.Material = 7;
         relic_13.ArtPath = "Relics/3";
         data.Add(relic_13);
 

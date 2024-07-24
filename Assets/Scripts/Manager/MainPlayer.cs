@@ -8,6 +8,8 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
     public static Action<int> OnChangeHammer;
     public static Action<int> OnChangeRefresh;
     public static Action<int> OnChangeSwap;
+    public static Action<int> OnChangeCoin;
+    public static Action<int> OnChangeMaterial;
 
     private const string KEY_PLAYER = "PLAYER_DATA";
     private PlayerData _PlayerData;
@@ -67,12 +69,29 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
     }
 
     public int GetCoin() => _PlayerData.Coin;
-    public void AddCoin(int amount) => _PlayerData.Coin += amount;
-    public void SubCoin(int amount) => _PlayerData.Coin -= amount;
+    public void AddCoin(int amount)
+    {
+        _PlayerData.Coin += amount;
+        OnChangeCoin?.Invoke(_PlayerData.Coin);
+    } 
+    
+    public void SubCoin(int amount)
+    {
+        _PlayerData.Coin -= amount;
+        OnChangeCoin?.Invoke(_PlayerData.Coin);
+    }
 
     public int GetMaterial() => _PlayerData.Material;
-    public void AddMaterial(int amount) => _PlayerData.Material += amount;
-    public void SubMaterial(int amount) => _PlayerData.Material -= amount;
+    public void AddMaterial(int amount)
+    {
+        _PlayerData.Material += amount;
+        OnChangeMaterial?.Invoke(_PlayerData.Material);
+    }
+    public void SubMaterial(int amount)
+    {
+        _PlayerData.Material -= amount;
+        OnChangeMaterial?.Invoke(_PlayerData.Material);
+    }
 
     public int GetHammer() => _PlayerData.Hammer;
     public void AddHammer(int amount)

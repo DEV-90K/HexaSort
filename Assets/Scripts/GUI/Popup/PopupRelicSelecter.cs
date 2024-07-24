@@ -13,6 +13,8 @@ public class PopupRelicSelecter : PopupBase
     private Button _BtnClose;
     [SerializeField]
     private Button _BtnSelection;
+    [SerializeField]
+    private TMP_Text _TxtMaterial;
 
     [SerializeField]
     private SelectionRelic _RelicItem;
@@ -100,11 +102,21 @@ public class PopupRelicSelecter : PopupBase
         GUIManager.Instance.HideScreen<ScreenMain>();
         GUIManager.Instance.HideAllPopup();
 
+        MainPlayer.Instance.SubMaterial(_selectData.Material);
         ChallengeManager.Instance.OnInit(new GalleryRelicData(_idGallery, _selectData.ID, _idxGalleryRelic, DateTime.Now.ToString(), GalleryRelicState.LOCK));
     }
 
     public void ShowSelection(RelicData data, Sprite relicArt)
     {
+        if(data.Material > MainPlayer.Instance.GetMaterial())
+        {
+            _BtnSelection.interactable = false;
+        }
+        else
+        {
+            _BtnSelection.interactable = true;
+        }
+
         UpdateRelicSelection(data, relicArt);
     }
 
@@ -123,5 +135,12 @@ public class PopupRelicSelecter : PopupBase
         _RelicDescription.text = "+ Description: " + data.Description;
         _RelicValue.text = "+ Display value: " + data.Coin + "Coin" + "/" + data.Timer + "Minute";
         _RelicArt.sprite = relicArt;
+
+        UpdateTxtMaterial();
+    }
+
+    private void UpdateTxtMaterial()
+    {
+        _TxtMaterial.text = _selectData.Material + " Material\nPlay Collect";
     }
 }

@@ -28,6 +28,28 @@ public class PopupChestReward : PopupBase
     public void OnClickClaim()
     {
         MainPlayer.Instance.UpdateChestLastTime();
+
+        if(_rewardData.Type == RewardType.COIN)
+        {
+            MainPlayer.Instance.AddCoin(_rewardData.Amount);
+        }
+        else if(_rewardData.Type == RewardType.MATERIAL)
+        {
+            MainPlayer.Instance.AddMaterial(_rewardData.Amount);
+        }
+        else if (_rewardData.Type == RewardType.SWAP)
+        {
+            MainPlayer.Instance.AddSwap(_rewardData.Amount);
+        }
+        else if (_rewardData.Type == RewardType.REFRESH)
+        {
+            MainPlayer.Instance.AddRefresh(_rewardData.Amount);
+        }
+        else if (_rewardData.Type == RewardType.HAMMER)
+        {
+            MainPlayer.Instance.AddHammer(_rewardData.Amount);
+        }
+
         Hide();
     }
 

@@ -171,7 +171,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 0
+  m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -1715,6 +1715,7 @@ MonoBehaviour:
   canReused: 1
   _BtnClose: {fileID: 632219559960403401}
   _BtnSelection: {fileID: 6106132835771176854}
+  _TxtMaterial: {fileID: 7759892978963870849}
   _RelicItem: {fileID: 6754747913728326270}
   _RelicContain: {fileID: 2120931496828352318}
   _RelicName: {fileID: 1620831507773305797}

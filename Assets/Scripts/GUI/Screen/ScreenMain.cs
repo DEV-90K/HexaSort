@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class ScreenMain : ScreenBase
-{
+{    
     [SerializeField]
     private Button _BtnPlay;
     [SerializeField]
@@ -38,8 +38,32 @@ public class ScreenMain : ScreenBase
         UpdateTxtMaterial();
     }
 
-    private void Start()
+    private void OnEnable()
     {
+        MainPlayer.OnChangeCoin += MainPlayer_OnChangeCoin;
+        MainPlayer.OnChangeMaterial += MainPlayer_OnChangeMaterial;
+    }
+
+    private void OnDisable()
+    {
+        MainPlayer.OnChangeCoin -= MainPlayer_OnChangeCoin;
+        MainPlayer.OnChangeMaterial -= MainPlayer_OnChangeMaterial;
+    }
+
+    private void MainPlayer_OnChangeCoin(int amount)
+    {
+        _coin = amount;
+        UpdateTxtCoin();
+    }    
+
+    private void MainPlayer_OnChangeMaterial(int amount)
+    {
+        _material = amount;
+        UpdateTxtMaterial();
+    }    
+
+    private void Start()
+    {        
         _BtnPlay.onClick.AddListener(OnClickBtnPlay);
         _BtnGrallery_1.onClick.AddListener(OnClickGrallery_1);
         _BtnGrallery_2.onClick.AddListener(OnClickGrallery_2);
