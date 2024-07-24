@@ -120,6 +120,12 @@ public class GridHexagon : PoolMember
             return false;
         }
 
+        if (!gameObject.CompareObject(StackOfCell.transform.parent.gameObject))
+        {
+            StackOfCell = null;
+            return false;
+        }
+
         return true;
     }
 

@@ -187,19 +187,11 @@ public class LevelController : MonoBehaviour
             {
                 listGridHexagonNeedUpdate.Add(gridHexagon);
             }
-            else if (listGridHexagonNeedUpdate.Contains(gridHexagon))
-            {
-                listGridHexagonNeedUpdate.Remove(gridHexagon);
-            }
         }
 
         if (grid.CheckOccupied())
         {
             listGridHexagonNeedUpdate.Add(grid);
-        }
-        else if (listGridHexagonNeedUpdate.Contains(grid))
-        {
-            listGridHexagonNeedUpdate.Remove(grid);
         }
     }
 

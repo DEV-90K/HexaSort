@@ -113,7 +113,7 @@ public class StackHexagon : PoolMember
         Hexagons.Remove(playerHexagon);
         if (Hexagons.Count <= 0)
         {
-            Hexagons = null;
+            Hexagons = new List<Hexagon>();
             PoolManager.Despawn(this);
         }
 
