@@ -28,6 +28,7 @@ public class T_ConfigValue
 public class T_ScreenTool : MonoBehaviour
 {
     public static T_ScreenTool Instance;
+    public GameObject ChallengeBtn;
 
     public GameObject RemoveBtn;
     public GameObject ShowBtn;
@@ -60,11 +61,14 @@ public class T_ScreenTool : MonoBehaviour
         this._isChallenge = false;
     }
 
-    public void InitLevel(int hexInEachHexaNumber, int colorNumber)
+    public void InitLevel(int hexInEachHexaNumber, int colorNumber, bool isSetupChallenge = false)
     {
         this._hexInEachHexaNumber = hexInEachHexaNumber;
         this._colorNumber = colorNumber;
+        this._isChallenge = isSetupChallenge;
+       // this.ChallengeBtn.SetActive(this._isChallenge);
     }
+
     public void OnRemoveBtnClick()
     {
         this._hexaObj = T_GridController.Instance.GetHexaObjSelected();
@@ -243,11 +247,7 @@ public class T_ScreenTool : MonoBehaviour
 
     public void OnChallengeBtnClick()
     {
-        this._isChallenge = !this._isChallenge;
-        /*if (this._isChallenge)
-        {
-            T_GridController.Instance.SetUpChallenge();
-        }*/
+        if (!this._isChallenge) return;
         T_GridController.Instance.SetUpChallenge();
 
     }
