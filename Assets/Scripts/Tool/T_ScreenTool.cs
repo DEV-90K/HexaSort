@@ -38,6 +38,7 @@ public class T_ScreenTool : MonoBehaviour
     public T_PanelSetup PanelSetup;
     public T_PanelColorGroup PanelColorGroup;
     public T_PanelExport PanelExport;
+    public T_PanelCompress PanelCompress;
     public T_ColumnHexa ColumnHexa;
 
     private T_HexaInBoardObject _hexaObj;
@@ -54,6 +55,7 @@ public class T_ScreenTool : MonoBehaviour
         this.HideOnClickHexaDisable();
         this.PanelSetup.Hide();
         this.PanelExport.Hide();
+        this.PanelCompress.Hide();
 
         this._isChallenge = false;
     }
@@ -107,6 +109,11 @@ public class T_ScreenTool : MonoBehaviour
     {
         this.PanelExport.Show();
         T_GridController.Instance.CanContact = false;
+    }
+
+    public void OnCompressBtnClick()
+    {
+        this.PanelCompress.Show();
     }
 
     public void ShowOnClickHexa(T_HexaInBoardObject hexaObj, bool isEnable)
