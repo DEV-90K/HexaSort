@@ -7,7 +7,8 @@ public class GridHexagon : PoolMember
 {
     [SerializeField]
     private new Renderer renderer;
-
+    [SerializeField]
+    private GameObject model;
     [SerializeField]
     private CanvasGridHexagon _Canvas;
 
@@ -67,6 +68,17 @@ public class GridHexagon : PoolMember
         StackOfCell = null;
     }
 
+    public void TweenShowTutorial()
+    {
+        LeanTween.cancel(model);
+        LeanTween.color(model, contactColor, 1f).setLoopPingPong();
+    }
+
+    public void TweenHideTutorial()
+    {
+        LeanTween.cancel(model);
+        Color = normalColor;
+    }
     public IEnumerator IE_RemoveStack()
     {
         List<Hexagon> hexagons = StackOfCell.Hexagons;

@@ -45,6 +45,12 @@ public class GUIManager : PersistentMonoSingleton<GUIManager>
         return screen as T;
     }
 
+    public T GetScreen<T>() where T : ScreenBase
+    {
+        ScreenBase screen = screenManager.GetScreen<T>();
+        return screen as T;
+    }
+
     public void HideScreen<T>(float delay = 0) where T : ScreenBase
     {
         if(screenManager.CheckScreenShowed<T>())

@@ -148,6 +148,11 @@ public class StackManager : MonoSingleton<StackManager>, IStackOnPlaced, IStackS
         return pointSpawns[0].localScale;
     }
 
+    public StackHexagon[] GetStackHexagonShowing()
+    {
+        return stackHexagons.ToArray();
+    }
+
     #region Legancy
     public void MergePlayerHexagon(StackHexagon stackHexagon, List<Hexagon> listPlayerHexagonMerge)
     {

@@ -13,19 +13,153 @@ public class LevelController : MonoBehaviour
     private bool _hasProcessing = false;
     private int[] SpaceSpecialEffects;
 
+    private TimerUtils.CountdownTimer _tutorialCoutdown = new TimerUtils.CountdownTimer(10);
+    private bool _hasShowedGameTutorial = false;
+    private StackHexagon stackShowed = null;
+    private GridHexagon gridShowed = null;
+
+    private bool _hasShowedHintTutorial = false;
+
     private void OnEnable()
     {
+        GameManager.OnChangeState += GameManager_OnChangeState;
         StackController.OnStackPlaced += StackController_OnStackPlaced;
+        _tutorialCoutdown.OnTimerStop += OnShowTutorial;
     }
 
     private void OnDisable()
     {
+        GameManager.OnChangeState -= GameManager_OnChangeState;
         StackController.OnStackPlaced -= StackController_OnStackPlaced;
+        _tutorialCoutdown.OnTimerStop -= OnShowTutorial;
     }
 
-    public void OnSetup(int[] config)
+    private void GameManager_OnChangeState(GameState state)
+    {
+        if(state == GameState.LEVEL_PLAYING)
+        {
+            _tutorialCoutdown.Start();
+        }
+        else
+        {
+            _tutorialCoutdown.Pause();
+            _tutorialCoutdown.Reset();
+        }
+    }
+
+    private void OnShowTutorial()
+    {
+        Debug.Log("OnShowTutorial");
+
+        _hasShowedGameTutorial = ShowGameTutorial();
+
+        if(!_hasShowedGameTutorial)
+        {
+            ScreenLevel screenLevel = GUIManager.Instance.GetScreen<ScreenLevel>();
+            screenLevel.ShowHintTutorial();
+            _hasShowedHintTutorial = true;
+        }        
+    }
+
+    private void OnHideTutorial()
+    {
+        Debug.Log("OnHideTutorial");
+        if(_hasShowedGameTutorial)
+        {
+            _hasShowedGameTutorial = false;
+            stackShowed.TweenHideTutorial();
+            gridShowed.TweenHideTutorial();
+        }
+        
+        if(_hasShowedHintTutorial)
+        {
+            _hasShowedHintTutorial = false;
+            GUIManager.Instance.GetScreen<ScreenLevel>().HideHintTurorial();
+        }
+    }
+
+    private bool ShowGameTutorial()
+    {
+        GridHexagon[] gridsNotOccupied = GridManager.Instance.GetGridHexagonNotContainStack();
+        int lengGrids = gridsNotOccupied.Length;
+        if(lengGrids == 0)
+        {
+            return false;
+        }
+
+        StackHexagon[] stacksCanPlay = StackManager.Instance.GetStackHexagonShowing();
+        int lengStacks = stacksCanPlay.Length;
+        if (lengStacks == 0)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < lengGrids; i++)
+        {
+            for(int j = 0; j < lengStacks; j++)
+            {
+                bool canPlace = GridManager.Instance.CheckCanPlaceStack(gridsNotOccupied[i], stacksCanPlay[j]);
+
+                if(canPlace)
+                {
+                    stackShowed = stacksCanPlay[j];
+                    stackShowed.TweenShowTutorial();
+                    gridShowed = gridsNotOccupied[i];
+                    gridShowed.TweenShowTutorial();
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public void Update()
+    {
+        bool hasContact = false;
+        if(Input.GetMouseButtonDown(0))
+        {
+            hasContact = true;
+        }
+        else if(Input.GetMouseButton(0))
+        {
+            hasContact = true;
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            hasContact = false;
+        }
+
+        if(hasContact)
+        {
+            if(_hasShowedHintTutorial || _hasShowedGameTutorial)
+            {
+                OnHideTutorial();
+                _tutorialCoutdown.Start();
+            }
+            else
+            {
+                _tutorialCoutdown.Reset();
+                _tutorialCoutdown.Pause();
+            }    
+        }
+        else if(!hasContact && !_tutorialCoutdown.IsFinished)
+        {
+            //If it's paused then recountdown
+            if (!_tutorialCoutdown.IsRunning)
+            {
+                _tutorialCoutdown.Reset();
+                _tutorialCoutdown.Resume();
+            }
+
+            _tutorialCoutdown.Tick(Time.deltaTime);
+        }
+    }
+
+    public void OnSetup(int[] config, float timer = 10f)
     {
         SpaceSpecialEffects = config;
+        _tutorialCoutdown.Reset(timer);
     }
 
     private void StackController_OnStackPlaced(GridHexagon grid)
@@ -220,16 +354,6 @@ public class LevelController : MonoBehaviour
         for (int i = 0; i < grids.Count; i++)
         {
             yield return grids[i].IE_RemoveStack();
-        }
-    }
-
-    private IEnumerator IE_RemoveStacksSameTopColor(Color color)
-    {
-        List<GridHexagon> grids = GridManager.Instance.GetGridHexagonByTopColor(color);
-
-        for (int i = 0; i < grids.Count; i++)
-        {
-            yield return grids[i].StackOfCell.IE_RemoveByTopColor();
         }
     }
 

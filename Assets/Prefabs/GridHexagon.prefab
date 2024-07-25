@@ -305,8 +305,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolType: 2
   renderer: {fileID: 8294922368738064418}
+  model: {fileID: 7502301547133229559}
   _Canvas: {fileID: 2586857339763482194}
-  normalColor: {r: 0, g: 0, b: 0, a: 0}
+  normalColor: {r: 0.5754717, g: 0.54018337, b: 0.54018337, a: 0}
 --- !u!1 &9210045726594149332
 GameObject:
   m_ObjectHideFlags: 0

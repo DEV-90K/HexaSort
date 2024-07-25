@@ -5,12 +5,14 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Button))]
-public class ButtonBoostHammer : MonoBehaviour
+public class ButtonBoostHammer : MonoBehaviour, IBoostTutorial
 {
     [SerializeField]
     private GameObject _ObjNoti;
     [SerializeField]
     private TMP_Text _txtAmount;
+    [SerializeField]
+    private CanvasGroup _group;
 
     private Button mButton;
     private IBoostHammer _able;
@@ -69,5 +71,18 @@ public class ButtonBoostHammer : MonoBehaviour
 
         GUIManager.Instance.HideScreen<ScreenLevel>();
         GUIManager.Instance.ShowPopup<PopupBoostHammer>(_able);
+    }
+
+    public void ShowBoostTutorial()
+    {
+        LeanTween.alphaCanvas(_group, 0.6f, 1f)
+            .setFrom(1f)
+            .setLoopPingPong();
+    }
+
+    public void HideBoostTutorial()
+    {
+        LeanTween.cancel(gameObject);
+        _group.alpha = 1f;
     }
 }

@@ -71,6 +71,7 @@ MonoBehaviour:
   poolType: 1
   renderer: {fileID: 2588829635925838130}
   collider: {fileID: 7134767596597297414}
+  model: {fileID: 5889420442748632010}
 --- !u!1 &5889420442748632010
 GameObject:
   m_ObjectHideFlags: 0

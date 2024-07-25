@@ -434,6 +434,7 @@ GameObject:
   - component: {fileID: 7163864557296290975}
   - component: {fileID: 9177777755819714364}
   - component: {fileID: 8699319767078661215}
+  - component: {fileID: 2390514032875822148}
   m_Layer: 11
   m_Name: RefreshBooster
   m_TagString: Untagged
@@ -558,6 +559,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _ObjNoti: {fileID: 1741993884418306116}
   _txtAmount: {fileID: 7751031114475639827}
+  _group: {fileID: 2390514032875822148}
+--- !u!225 &2390514032875822148
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2135701634296121842}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2290061047386427823
 GameObject:
   m_ObjectHideFlags: 0
@@ -1134,6 +1148,7 @@ GameObject:
   - component: {fileID: 1320045082702820565}
   - component: {fileID: 3083021301500130856}
   - component: {fileID: 3266463904100901850}
+  - component: {fileID: 7664361632467601266}
   - component: {fileID: 6897072991697662497}
   m_Layer: 11
   m_Name: HammerBooster
@@ -1245,6 +1260,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!225 &7664361632467601266
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4194504877541044539}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!114 &6897072991697662497
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1259,6 +1286,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _ObjNoti: {fileID: 8925595188476471734}
   _txtAmount: {fileID: 7542615831717311432}
+  _group: {fileID: 7664361632467601266}
 --- !u!1 &4341307678537924848
 GameObject:
   m_ObjectHideFlags: 0
@@ -1789,7 +1817,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 3117910243797688430}
   m_FillRect: {fileID: 5598224015109092700}
   m_HandleRect: {fileID: 0}
   m_Direction: 0
@@ -2729,6 +2757,7 @@ GameObject:
   - component: {fileID: 5517700881280374533}
   - component: {fileID: 5616217641870755099}
   - component: {fileID: 7744013926426609100}
+  - component: {fileID: 2291773300145398342}
   m_Layer: 11
   m_Name: SwapBooster
   m_TagString: Untagged
@@ -2853,6 +2882,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _ObjNoti: {fileID: 5196879146585436751}
   _txtAmount: {fileID: 3833869135544959478}
+  _group: {fileID: 2291773300145398342}
+--- !u!225 &2291773300145398342
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7743507502527807412}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &7865680496711964864
 GameObject:
   m_ObjectHideFlags: 0

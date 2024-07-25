@@ -33,6 +33,22 @@ public class StackHexagon : PoolMember
         ShowCanvas();
     }
 
+    public void TweenShowTutorial()
+    {
+        foreach (Hexagon hex  in Hexagons)
+        {
+            hex.TweenShowTutorial();
+        }
+    }
+
+    public void TweenHideTutorial()
+    {
+        foreach (Hexagon hex in Hexagons)
+        {
+            hex.TweenHideTutorial();
+        }
+    }
+
     public IEnumerator IE_RemoveByTopColor()
     {
         Color topColor = GetTopHexagonColor();

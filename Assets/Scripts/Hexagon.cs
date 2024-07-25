@@ -9,6 +9,8 @@ public class Hexagon : PoolMember
     private new Renderer renderer;
     [SerializeField]
     private new Collider collider;
+    [SerializeField]
+    private GameObject model;
     public StackHexagon HexagonStack { get; private set; }
     public Color Color
     {
@@ -24,11 +26,9 @@ public class Hexagon : PoolMember
             }
         }
     }
-    //{
-    //    get => renderer.material.color;
-    //    set => renderer.material.color = value;
-    //}
 
+    private Color normalColor;
+    private Color tutorialColor;
 
     private HexagonData _data;
 
@@ -46,6 +46,8 @@ public class Hexagon : PoolMember
         if (ColorUtility.TryParseHtmlString(data.HexColor, out Color color))
         {
             Color = color;
+            normalColor = color;
+            ColorUtility.TryParseHtmlString("#525252", out tutorialColor);
         }
     }
 
@@ -67,6 +69,18 @@ public class Hexagon : PoolMember
     public void EnableCollider()
     {
         collider.enabled = true;
+    }
+
+    public void TweenShowTutorial()
+    {
+        LeanTween.cancel(model);
+        LeanTween.color(model, tutorialColor, 1f).setLoopPingPong();
+    }
+
+    public void TweenHideTutorial()
+    {
+        LeanTween.cancel(model);
+        Color = normalColor;
     }
 
     public void MoveToGridHexagon(Vector3 localPos, float delayTime)

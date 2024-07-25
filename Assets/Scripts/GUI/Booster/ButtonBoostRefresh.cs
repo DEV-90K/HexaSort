@@ -4,12 +4,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ButtonBoostRefresh : MonoBehaviour
+public class ButtonBoostRefresh : MonoBehaviour, IBoostTutorial
 {
     [SerializeField]
     private GameObject _ObjNoti;
     [SerializeField]
     private TMP_Text _txtAmount;
+    [SerializeField]
+    private CanvasGroup _group;
 
     private Button mButton;
 
@@ -64,5 +66,18 @@ public class ButtonBoostRefresh : MonoBehaviour
         }
 
         LevelManager.Instance.OnBoostRefresh();
+    }
+
+    public void ShowBoostTutorial()
+    {
+        LeanTween.alphaCanvas(_group, 0.6f, 1f)
+            .setFrom(1f)
+            .setLoopPingPong();
+    }
+
+    public void HideBoostTutorial()
+    {
+        LeanTween.cancel(gameObject);
+        _group.alpha = 1f;
     }
 }

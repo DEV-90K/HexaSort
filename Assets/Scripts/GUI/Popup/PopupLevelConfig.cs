@@ -24,6 +24,18 @@ public class PopupLevelConfig : PopupBase
         UpdateContentLevelInput();
     }
 
+    public override void Show()
+    {
+        base.Show();
+        GameManager.Instance.ChangeState(GameState.PAUSE);
+    }
+
+    public override void Hide()
+    {
+        base.Hide();
+        GameManager.Instance.ChangeState(GameState.LEVEL_PLAYING);
+    }
+
     private void Start()
     {
         _BtnSave.onClick.AddListener(OnClickButtonSave);

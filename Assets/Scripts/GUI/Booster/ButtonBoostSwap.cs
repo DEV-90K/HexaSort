@@ -5,12 +5,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ButtonBoostSwap : MonoBehaviour
+public class ButtonBoostSwap : MonoBehaviour, IBoostTutorial
 {
     [SerializeField]
     private GameObject _ObjNoti;
     [SerializeField]
     private TMP_Text _txtAmount;
+    [SerializeField]
+    private CanvasGroup _group;
 
     private Button mButton;
 
@@ -69,5 +71,18 @@ public class ButtonBoostSwap : MonoBehaviour
 
         GUIManager.Instance.HideScreen<ScreenLevel>();
         GUIManager.Instance.ShowPopup<PopupBoostSwap>(_able);
+    }
+
+    public void ShowBoostTutorial()
+    {
+        LeanTween.alphaCanvas(_group, 0.6f, 1f)
+            .setFrom(1f)
+            .setLoopPingPong();
+    }
+
+    public void HideBoostTutorial()
+    {
+        LeanTween.cancel(gameObject);
+        _group.alpha = 1f;
     }
 }

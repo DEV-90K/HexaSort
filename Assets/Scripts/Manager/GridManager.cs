@@ -173,6 +173,21 @@ public class GridManager : MonoSingleton<GridManager>
         return gridHexagons.ToArray();
     }
 
+    public GridHexagon[] GetGridHexagonNotContainStack()
+    {
+        List<GridHexagon> gridHexagons = new List<GridHexagon>();
+
+        foreach (GridHexagon grid in _gridHexagons)
+        {
+            if (!grid.CheckOccupied())
+            {
+                gridHexagons.Add(grid);
+            }
+        }
+
+        return gridHexagons.ToArray();
+    }
+
     private GridHexagon GetRandomGridHexagon()
     {
         int idx = UnityEngine.Random.Range(0, _gridHexagons.Length);
@@ -210,6 +225,18 @@ public class GridManager : MonoSingleton<GridManager>
         return grids.ToArray();
     }
 
+    public bool CheckCanPlaceStack(GridHexagon gridHexagon, StackHexagon stackHexagon)
+    {
+        Color topColor = stackHexagon.GetTopHexagonColor();
+        List<GridHexagon> neighbors = GetNeighborGidHexagon(gridHexagon);
+        if(neighbors.Count == 0)
+        {
+            return false;
+        }
+
+        List<GridHexagon> neighborsSameTop = GetHexagonStackOfNeighborSameTopColor(neighbors, topColor);
+        return neighborsSameTop.Count > 0 ? true : false;
+    }
 
     #region Legancy
     public List<GridHexagon> GetHexagonStackOfNeighborSameTopColor(List<GridHexagon> listNeighborGridHexagons, Color topColorOfStackAtGridHexagon)

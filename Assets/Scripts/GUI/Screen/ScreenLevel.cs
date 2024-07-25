@@ -3,6 +3,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+public interface IBoostTutorial
+{
+    public void ShowBoostTutorial();
+    public void HideBoostTutorial();
+}
+
 public class ScreenLevel : ScreenBase, IBoostHammer, IBoostSwap
 {
     [SerializeField]
@@ -21,6 +27,8 @@ public class ScreenLevel : ScreenBase, IBoostHammer, IBoostSwap
 
     private LevelPresenterData presenterData;
     private int amount = 0;
+
+    private IBoostTutorial boostTutorial;
 
     public override void OnInit(params object[] paras)
     {
@@ -43,6 +51,32 @@ public class ScreenLevel : ScreenBase, IBoostHammer, IBoostSwap
     {
         base.Hide();
         GameManager.Instance.ChangeState(GameState.FINISH);
+    }
+
+    public void ShowHintTutorial()
+    {
+        int idx = UnityEngine.Random.Range(0, 3);
+
+        if(idx == 0)
+        {
+            boostTutorial = _btnBoostHammer as IBoostTutorial;
+        }
+        else if(idx == 1)
+        {
+            boostTutorial = _btnBoostSwap as IBoostTutorial;
+        }
+        else if(idx == 2)
+        {
+            boostTutorial = _btnBoostRefresh as IBoostTutorial;
+        }
+
+        boostTutorial.ShowBoostTutorial();
+    }
+
+    public void HideHintTurorial()
+    {
+        Debug.Log("Screen Level Hide Hint Tutorial");
+        boostTutorial?.HideBoostTutorial();
     }
 
     private void OnEnable()
