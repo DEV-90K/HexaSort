@@ -39,21 +39,28 @@ public class GalleryRelic : MonoBehaviour
     private GalleryRelicData _data;
     private RelicData _relicData;
 
-    private int _idx;
-    public int[] _idRelics;
-    private int _idGallery;
+    //private int _idx;
+    //public int[] _idRelics;
+    //private int _idGallery;
 
     private TimerUtils.CountdownTimer _timer = null;
     public void OnInit(GalleryRelicData galleryRelicData, int idGallery, int[] idRelics)
     {
-        _idx = transform.GetSiblingIndex();
-        _idGallery = idGallery;
-        _idRelics = idRelics;
+        //_idx = transform.GetSiblingIndex();
+        //_idGallery = idGallery;
+        //_idRelics = idRelics;
 
         _data = galleryRelicData;
 
         if (_data == null)
         {
+            _data = new GalleryRelicData();
+            _data.State = GalleryRelicState.NONE;
+            _data.IDGallery = idGallery;
+            _data.Position = transform.GetSiblingIndex();
+            _data.IDRelic = -1; //Not Contain
+            _data.LastTimer = "";
+
             SetUpModelSelecter();
         }
         else
@@ -161,7 +168,7 @@ public class GalleryRelic : MonoBehaviour
 
     private void OnClickSelecter()
     {
-        GUIManager.Instance.ShowPopup<PopupRelicSelecter>(_idGallery, _idRelics, _idx, this);
+        GUIManager.Instance.ShowPopup<PopupGalleryRelicSelecter>(_data);
     }
 
     private void OnClickClaim()

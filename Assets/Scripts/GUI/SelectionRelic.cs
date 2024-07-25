@@ -12,14 +12,25 @@ public class SelectionRelic : MonoBehaviour
 
     private Sprite _relicArt;
     private RelicData _data;
-    private PopupRelicSelecter _popupSlection;
-    public void OnInit(PopupRelicSelecter popupSlection, int Id)
+    private GalleryRelicData _galleryRelicData;
+    private PopupGalleryRelicSelecter _popupSlection;
+
+    //public void OnInit(PopupGalleryRelicSelecter popupSlection, int Id)
+    //{
+    //    _data = ResourceManager.Instance.GetRelicDataByID(Id);
+    //    _relicArt = ResourceManager.Instance.GetRelicSpriteByID(Id);
+    //    _ImageRelic.sprite = _relicArt;
+    //    _popupSlection = popupSlection;
+    //}
+
+    public void OnInit(PopupGalleryRelicSelecter popupSlection, GalleryRelicData galleryRelicData)
     {
-        _data = ResourceManager.Instance.GetRelicDataByID(Id);
-        _relicArt = ResourceManager.Instance.GetRelicSpriteByID(Id);
+        _galleryRelicData = galleryRelicData;
+        _data = ResourceManager.Instance.GetRelicDataByID(_galleryRelicData.IDRelic);
+        _relicArt = ResourceManager.Instance.GetRelicSpriteByID(_data.ID);
         _ImageRelic.sprite = _relicArt;
         _popupSlection = popupSlection;
-    }
+    }    
 
     private void Start()
     {
@@ -33,6 +44,6 @@ public class SelectionRelic : MonoBehaviour
 
     private void OnClickSelection()
     {
-        _popupSlection.ShowSelection(_data, _relicArt);
+        _popupSlection.ShowSelection(_galleryRelicData, _relicArt);
     }
 }

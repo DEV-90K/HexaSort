@@ -37,10 +37,11 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
 
         _hexagonDatas = LoadHexagonData();
         _mechanicConfig = LoadMechanicConfig();
+        
+        _relicDatas = LoadRelicDatas();
+        _relicDatas.DebugLogObject();
 
-        //TEST
-        _relicDatas = createRelicData();
-        _galleryDatas = CreateGalleryDatas();
+        _galleryDatas = LoadGalleryDatas();
         _galleryDatas.DebugLogObject();
     }
 
@@ -120,7 +121,7 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         return _mechanicConfig.StackConfig;
     }
 
-    private LevelConfig GetLevelConfig()
+    public LevelConfig GetLevelConfig()
     {
         return _mechanicConfig.LevelConfig;
     }
@@ -514,6 +515,40 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         return null;
     }
 
+    private RelicData[] LoadRelicDatas()
+    {
+        Debug.Log("Load RelicDatas");
+        Debug.Log("Remote");
+        RelicData[] relicDatas = FirebaseManager.instance.GetRemoteRelicDatas();
+
+        if(relicDatas == null)
+        {
+            Debug.Log("Local");
+            relicDatas = LoadLocalRelicDatas();
+        }
+
+        if(relicDatas == null)
+        {
+            Debug.Log("Create");
+            relicDatas = CreateRelicData();
+        }
+
+        return relicDatas;
+    }
+
+    private RelicData[] LoadLocalRelicDatas()
+    {
+        string key = "Relics";
+        TextAsset textAsset = Resources.Load<TextAsset>(string.Format("Config/Data/{0}", key));
+
+        if (textAsset != null)
+        {
+            return JsonConvert.DeserializeObject<RelicData[]>(textAsset.text.Trim());
+        }
+
+        return null;
+    }
+
     #endregion Relic
 
     #region Gallery
@@ -557,7 +592,39 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         return galleryDatas.ToArray();
     }
 
-    private RelicData[] createRelicData()
+    private GalleryData[] LoadGalleryDatas()
+    {
+        Debug.Log("LoadGalleryDatas");
+        Debug.Log("Remote");
+        GalleryData[] galleries = FirebaseManager.instance.LoadRemoteGalleryDatas();
+        if(galleries == null)
+        {
+            Debug.Log("Local");
+            galleries = LoadLocalGalleryDatas();
+        }
+
+        if(galleries == null)
+        {
+            Debug.Log("Create");
+            galleries = CreateGalleryDatas();
+        }
+
+        return galleries;
+    }
+
+    private GalleryData[] LoadLocalGalleryDatas()
+    {
+        string key = "Galleries";
+        TextAsset textAsset = Resources.Load<TextAsset>(string.Format("Config/Data/{0}", key));
+
+        if (textAsset != null)
+        {
+            return JsonConvert.DeserializeObject<GalleryData[]>(textAsset.text.Trim());
+        }
+
+        return null;
+    }
+    private RelicData[] CreateRelicData()
     {
         List<RelicData> data = new List<RelicData>();
         RelicData relic_1 = new RelicData();

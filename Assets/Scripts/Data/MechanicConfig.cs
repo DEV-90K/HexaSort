@@ -27,7 +27,7 @@ public class LevelConfig
     public LevelPresenterData PresenterData { get; private set; }
     [JsonProperty]
     public int[] SpaceClampf { get; private set; } = new int[2] { 20, 10 }; //Space Clampf Random Of Level EX: CurrentLevel 60 => Randomfrom [60 - SpaceClampf[0], 60 - SpaceClampf[1]];
-
+    public int[] SpaceSpecialEffects = new int[3] { 13, 17, 20 }; //[12,15) Random, [15, 20) Around, [20, infinity) Any contain color
     public LevelConfig(LevelPresenterData presenterData, int[] spaceClampf)
     {
         PresenterData = presenterData;

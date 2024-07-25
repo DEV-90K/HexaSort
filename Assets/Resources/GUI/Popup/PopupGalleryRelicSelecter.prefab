@@ -1671,9 +1671,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8807875855132244776}
-  - component: {fileID: 2597599278265356642}
+  - component: {fileID: 6078442500108767650}
   m_Layer: 11
-  m_Name: PopupRelicSelecter
+  m_Name: PopupGalleryRelicSelecter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1700,7 +1700,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2597599278265356642
+--- !u!114 &6078442500108767650
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

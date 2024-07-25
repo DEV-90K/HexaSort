@@ -11,6 +11,7 @@ public class LevelController : MonoBehaviour
     private List<GridHexagon> listGridHexagonNeedUpdate = new List<GridHexagon>();
     private int idxRootVisited = 0;
     private bool _hasProcessing = false;
+    private int[] SpaceSpecialEffects;
 
     private void OnEnable()
     {
@@ -22,12 +23,17 @@ public class LevelController : MonoBehaviour
         StackController.OnStackPlaced -= StackController_OnStackPlaced;
     }
 
+    public void OnSetup(int[] config)
+    {
+        SpaceSpecialEffects = config;
+    }
+
     private void StackController_OnStackPlaced(GridHexagon grid)
     {
         Debug.Log("Level Controller StackController_OnStackPlaced");
         OnStackPlacedOnGridHexagon(grid);
     }
-    private void OnStackPlacedOnGridHexagon(GridHexagon gridHexagon)
+    public void OnStackPlacedOnGridHexagon(GridHexagon gridHexagon)
     {
         listGridHexagonNeedUpdate.Insert(idxRootVisited, gridHexagon);
 
@@ -165,17 +171,17 @@ public class LevelController : MonoBehaviour
 
             if (GameManager.Instance.IsState(GameState.LEVEL_PLAYING))
             {
-                if (10 < numberOfPlayerHexagon && numberOfPlayerHexagon <= 12)
+                if (SpaceSpecialEffects[0] <= numberOfPlayerHexagon && numberOfPlayerHexagon < SpaceSpecialEffects[1])
                 {
                     yield return IE_RemoveRandomStack();
                 }
-                else if (12 < numberOfPlayerHexagon && numberOfPlayerHexagon <= 15)
+                else if (SpaceSpecialEffects[1] <= numberOfPlayerHexagon && numberOfPlayerHexagon < SpaceSpecialEffects[2])
                 {
                     yield return IE_RemoveNeighborStack(grid);
                 }
-                else if (15 < numberOfPlayerHexagon && numberOfPlayerHexagon <= 18)
+                else if (SpaceSpecialEffects[2] <= numberOfPlayerHexagon)
                 {
-                    yield return IE_RemoveStacksSameTopColor(color);
+                    yield return IE_RemoveStacksContainColor(color);
                 }
             }
         }
@@ -224,6 +230,16 @@ public class LevelController : MonoBehaviour
         for (int i = 0; i < grids.Count; i++)
         {
             yield return grids[i].StackOfCell.IE_RemoveByTopColor();
+        }
+    }
+
+    private IEnumerator IE_RemoveStacksContainColor(Color color)
+    {
+        GridHexagon[] grids = GridManager.Instance.GetGridHexagonsContainColor(color);
+
+        for(int i = 0; i < grids.Length; i++)
+        {
+            yield return grids[i].StackOfCell.IE_Remove();
         }
     }
 

@@ -54,23 +54,23 @@ public class PopupGallery : PopupBase
     {
         int numberOfChild = _Contain.childCount;
 
-        if(numberOfChild > _data.Capacity)
+        if(numberOfChild > _data.IDRelics.Length)
         {
-            for(int i = _data.Capacity; i < numberOfChild; i++)
+            for(int i = _data.IDRelics.Length; i < numberOfChild; i++)
             {
                 _Contain.GetChild(i).gameObject.SetActive(false);
             }
         }
-        else if(numberOfChild < _data.Capacity)
+        else if(numberOfChild < _data.IDRelics.Length)
         {
-            for (int i = numberOfChild; i < _data.Capacity; i++)
+            for (int i = numberOfChild; i < _data.IDRelics.Length; i++)
             {
                 Instantiate(_PrefRelic, _Contain);
             }
         }
 
         List<GalleryRelic> list = new List<GalleryRelic>();
-        for(int i = 0; i < _data.Capacity; i++)
+        for(int i = 0; i < _data.IDRelics.Length; i++)
         {
             if(_Contain.GetChild(i).TryGetComponent<GalleryRelic>(out GalleryRelic relic))
             {

@@ -195,10 +195,19 @@ public class GridManager : MonoSingleton<GridManager>
 
         return grid;
     }
-
-    public GridHexagon[] GetGridHexagonByRadius(Vector3 centerPoint, float radius)
+    
+    public GridHexagon[] GetGridHexagonsContainColor(Color color)
     {
-        return null;
+        List<GridHexagon> grids = new List<GridHexagon>();
+        foreach (GridHexagon grid in _gridHexagons)
+        {
+            if(grid.CheckOccupied() && grid.StackOfCell.CheckContainColor(color))
+            {
+                grids.Add(grid);
+            }
+        }
+
+        return grids.ToArray();
     }
 
 

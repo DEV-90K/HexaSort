@@ -147,4 +147,36 @@ public class FirebaseManager : PersistentMonoSingleton<FirebaseManager>
             return null;
         }
     }
+
+    public RelicData[] GetRemoteRelicDatas()
+    {
+        string key = "Relics";
+
+        try
+        {
+            string value = _remoteConfig.GetRemoteConfigValue(key);
+            RelicData[] data = JsonConvert.DeserializeObject<RelicData[]>(value);
+            return data;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public GalleryData[] LoadRemoteGalleryDatas()
+    {
+        string key = "Galleries";
+
+        try
+        {
+            string value = _remoteConfig.GetRemoteConfigValue(key);
+            GalleryData[] data = JsonConvert.DeserializeObject<GalleryData[]>(value);
+            return data;
+        }
+        catch
+        {
+            return null;
+        }
+    }
 }

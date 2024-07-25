@@ -108,6 +108,18 @@ public class StackHexagon : PoolMember
     }
 
     public bool CheckContainPlayerHexagon(Hexagon playerHexagon) => Hexagons.Contains(playerHexagon);
+    public bool CheckContainColor(Color color)
+    {
+        for(int i = 0; i < Hexagons.Count;i++)
+        {
+            if (Hexagons[i].CheckColor(color))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
     public void RemovePlayerHexagon(Hexagon playerHexagon)
     {
         Hexagons.Remove(playerHexagon);
@@ -163,6 +175,23 @@ public class StackHexagon : PoolMember
         callback?.Invoke();
         OnResert();
         PoolManager.Despawn(this);
+    }
+
+    internal IEnumerator IE_Remove()
+    {
+        int numberOfPlayerHexagon = 0;
+        float offsetDelayTime = 0;
+        while (Hexagons.Count > 0)
+        {
+            Hexagon playerHexagon = Hexagons[Hexagons.Count - 1];
+            numberOfPlayerHexagon++;
+            playerHexagon.SetParent(null);
+            playerHexagon.TweenVanish(offsetDelayTime);
+            offsetDelayTime += GameConstants.HexagonConstants.TIME_DELAY;
+            RemovePlayerHexagon(playerHexagon);
+        }
+
+        yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM + (numberOfPlayerHexagon - 1) * GameConstants.HexagonConstants.TIME_DELAY);
     }
 
     #region Canvas  
@@ -240,6 +269,6 @@ public class StackHexagon : PoolMember
     internal void SetData(StackHexagonData stackData)
     {
         _data = stackData;        
-    }
+    }    
     #endregion Stack Hexagon Data
 }

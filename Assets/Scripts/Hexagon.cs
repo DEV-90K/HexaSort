@@ -124,6 +124,11 @@ public class Hexagon : PoolMember
         PoolManager.Despawn(this);
     }
 
+    public bool CheckColor(Color color)
+    {
+        return ColorUtils.ColorEquals(color, Color);
+    }
+
     #region Hexagon Data
     internal HexagonData GetCurrentHexagonPlayingData()
     {      

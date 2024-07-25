@@ -8,12 +8,14 @@ public class LevelManager : MonoSingleton<LevelManager>
     private GridManager _gridManager;
     [SerializeField]
     private StackManager _stackManager;
-
+    [SerializeField]
+    private LevelController _levelControl;
     [SerializeField]
     private Hammer _hammer;
 
     private LevelData _levelData;
     private LevelPresenterData _presenterData;
+    private LevelConfig _config;
 
     private int amountHexagon = 0;
 
@@ -21,9 +23,9 @@ public class LevelManager : MonoSingleton<LevelManager>
     {
         LevelController.OnTurnCompleted += LevelController_OnTurnCompleted;
 
-        _hammer.gameObject.SetActive(false);
-        PlayerLevelData playerLevelData = MainPlayer.instance.GetPlayerLevelData().CopyObject();
+        _config = ResourceManager.instance.GetLevelConfig();
 
+        PlayerLevelData playerLevelData = MainPlayer.instance.GetPlayerLevelData().CopyObject();
         if(playerLevelData != null)
         {
             _levelData = playerLevelData.Level;
@@ -34,6 +36,9 @@ public class LevelManager : MonoSingleton<LevelManager>
             _levelData = ResourceManager.instance.GetLevelByID(playerLevelData.IDLevel);
             _presenterData = ResourceManager.instance.GetLevelPresenterDataByID(playerLevelData.IDLevel);
         }
+
+        _hammer.gameObject.SetActive(false);
+        _levelControl.OnSetup(_config.SpaceSpecialEffects);
     }
 
     private void OnDestroy()
@@ -232,7 +237,7 @@ public class LevelManager : MonoSingleton<LevelManager>
         MainPlayer.instance.SubSwap(1);
         foreach (GridHexagon grid in grids)
         {
-            _stackManager.MergeStackIntoGrid(grid);            
+            _levelControl.OnStackPlacedOnGridHexagon(grid);
         }
     }
 
