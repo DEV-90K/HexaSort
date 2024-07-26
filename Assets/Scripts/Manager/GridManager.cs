@@ -210,7 +210,35 @@ public class GridManager : MonoSingleton<GridManager>
 
         return grid;
     }
-    
+
+    public GridHexagon GetRandomGridHexagonContainStackAndNotLock()
+    {
+
+        GridHexagon grid = null;
+        int max = _gridHexagons.Length;
+        while (max > 0)
+        {
+            max--;
+            grid = GetRandomGridHexagon();
+            if (grid.CheckOccupied())
+            {
+                if (grid.State == GridHexagonState.LOCK_BY_GOAL || grid.State == GridHexagonState.LOCK_BY_ADS)
+                {
+                    grid = null;
+                    continue;
+                }                
+
+                break;
+            }
+            else
+            {
+                grid = null;
+            }
+        }
+
+        return grid;
+    }
+
     public GridHexagon[] GetGridHexagonsContainColor(Color color)
     {
         List<GridHexagon> grids = new List<GridHexagon>();

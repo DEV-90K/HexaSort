@@ -115,6 +115,7 @@ public class LoadSystem : MonoBehaviour
         }
 
         SceneManager.UnloadSceneAsync(currentSceneName);
-        GameManager.Instance.ChangeState(GameState.START);
+        ScreenMain screenMain = GUIManager.Instance.ShowScreen<ScreenMain>();
+        screenMain.OnInitWithScene();
     }
 }

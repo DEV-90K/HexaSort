@@ -72,6 +72,7 @@ public class GalleryRelic : MonoBehaviour
 
     private void SetUpModelSelecter()
     {
+        _timer = null;
         _ObjCollect.SetActive(false);
         _ObjSelecter.SetActive(true);
     }

@@ -180,6 +180,11 @@ public class LevelController : MonoBehaviour
         _hasProcessing = true;
         while (listGridHexagonNeedUpdate.Count > 0)
         {
+            if(GameManager.Instance.IsState(GameState.FINISH))
+            {                
+                yield break;
+            }
+
             idxRootVisited = listGridHexagonNeedUpdate.Count - 1;
             GridHexagon merge = listGridHexagonNeedUpdate[idxRootVisited];
             listGridHexagonNeedUpdate.Remove(merge);
@@ -335,7 +340,7 @@ public class LevelController : MonoBehaviour
 
     private IEnumerator IE_RemoveRandomStack()
     {
-        GridHexagon grid = GridManager.Instance.GetRandomGridHexagonContainStack();
+        GridHexagon grid = GridManager.Instance.GetRandomGridHexagonContainStackAndNotLock();
 
         if (grid == null)
         {
@@ -351,7 +356,12 @@ public class LevelController : MonoBehaviour
         List<GridHexagon> grids = GridManager.Instance.GetNeighborGidHexagon(grid);
         for (int i = 0; i < grids.Count; i++)
         {
-            yield return grids[i].IE_RemoveStack();
+            if (grid.State == GridHexagonState.LOCK_BY_GOAL || grid.State == GridHexagonState.LOCK_BY_ADS)
+            {
+                continue;
+            }
+            else
+                yield return grids[i].IE_RemoveStack();
         }
     }
 
@@ -360,8 +370,13 @@ public class LevelController : MonoBehaviour
         GridHexagon[] grids = GridManager.Instance.GetGridHexagonsContainColor(color);
 
         for(int i = 0; i < grids.Length; i++)
-        {
-            yield return grids[i].StackOfCell.IE_Remove();
+        {            
+            if (grids[i].State == GridHexagonState.LOCK_BY_GOAL || grids[i].State == GridHexagonState.LOCK_BY_ADS)
+            {
+                continue;
+            }
+            else
+                yield return grids[i].StackOfCell.IE_Remove();
         }
     }
 

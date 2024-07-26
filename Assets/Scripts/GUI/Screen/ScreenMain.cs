@@ -54,6 +54,7 @@ public class ScreenMain : ScreenBase
     public override void Show()
     {
         base.Show();
+        GameManager.Instance.ChangeState(GameState.START);
         UpdateTxtCoin();
         UpdateTxtMaterial();
     }

@@ -25,9 +25,6 @@ public class GameManager : PersistentMonoSingleton<GameManager>
         {
             LevelManager.instance.gameObject.SetActive(false);
             ChallengeManager.instance.gameObject.SetActive(false);
-
-            ScreenMain screenMain = GUIManager.instance.ShowScreen<ScreenMain>();
-            screenMain.OnInitWithScene();
         }
         else if(state == GameState.LEVEL_PLAYING)
         {

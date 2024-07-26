@@ -148,7 +148,6 @@ public class LevelManager : MonoSingleton<LevelManager>
     private void OnFinishLosed()
     {
         OnFinish();
-        GameManager.Instance.ChangeState(GameState.PAUSE);
         StartCoroutine(IE_FinishLosed(1f));
     }
 
@@ -161,7 +160,6 @@ public class LevelManager : MonoSingleton<LevelManager>
     private void OnFinishWoned()
     {
         OnFinish();
-        GameManager.Instance.ChangeState(GameState.PAUSE);
         StartCoroutine(IE_FinishWoned(1f));
     }
 
@@ -304,7 +302,7 @@ public class LevelManager : MonoSingleton<LevelManager>
         {
             foreach (GridHexagon grid in gridHexagons)
             {
-                _stackManager.MergeStackIntoGrid(grid);
+                _levelControl.OnStackPlacedOnGridHexagon(grid);
             }
         }
     }
