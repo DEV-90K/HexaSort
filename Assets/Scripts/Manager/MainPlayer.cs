@@ -16,7 +16,7 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
 
     private Dictionary<int, List<GalleryRelicData>> _DictGalleryRelic = new Dictionary<int, List<GalleryRelicData>>(); //int is ID of gallery    
 
-    public PlayerData GetPlayerData()
+    private PlayerData GetPlayerData()
     {
         if (_PlayerData != null)
         {
@@ -30,6 +30,29 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
     public void SavePlayerData(PlayerData playerData)
     {
         SavePlayerDataFromPlayerPrefab(playerData);
+    }
+
+    public bool CheckWelcomePlayer()
+    {
+        //TEST
+        if(_PlayerData.PlayerLevel.IDLevel <= 1 && _PlayerData.PlayerLevel.Level == null)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool CheckTimeToChestReward()
+    {
+        return false;
+        TimeSpan span = GetTimeFromLastClick(_PlayerData.ChestLastTime, 10);
+        if(span.TotalMilliseconds <= 0)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     public void LoadData()
@@ -203,9 +226,11 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
 
     private PlayerData CreatePlayerData()
     {
-        LevelData level = ResourceManager.instance.GetLevelByID(1);
+        //LevelData level = ResourceManager.instance.GetLevelByID(1);
+        //TEST
+        LevelData level = null;
         LevelPresenterData levelPresenterData = ResourceManager.instance.GetLevelPresenterDataByID(1);
-        int IDLevel = 2;
+        int IDLevel = 1;
 
         PlayerLevelData levelData = new PlayerLevelData(IDLevel, level, levelPresenterData);
 
@@ -256,10 +281,24 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
         _PlayerData.DebugLogObject();
     }
 
-    [RuntimeInitializeOnLoadMethod]
-    private static void OnApplicationLoad()
+    //[RuntimeInitializeOnLoadMethod]
+    //private static void OnApplicationLoad()
+    //{
+    //    Debug.Log("On Application Load");
+    //    Instance.DeletePlayerDataFromPlayerPrefab();
+    //}
+
+    private TimeSpan GetTimeFromLastClick(string lastTime, int space)
     {
-        Debug.Log("On Application Load");
-        Instance.DeletePlayerDataFromPlayerPrefab();
+        if (string.IsNullOrEmpty(lastTime))
+        {
+            lastTime = DateTime.Now.ToString();
+        }
+
+        DateTime targetTime = DateTime.Parse(lastTime).AddMinutes(space).AddSeconds(60);
+        DateTime currTime = DateTime.Now;
+        TimeSpan subTime = targetTime.Subtract(currTime);
+
+        return subTime;
     }
 }

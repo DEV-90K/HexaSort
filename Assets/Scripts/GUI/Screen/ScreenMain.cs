@@ -27,8 +27,28 @@ public class ScreenMain : ScreenBase
     public override void OnInit(params object[] paras)
     {
         base.OnInit(paras);
+
         _coin = MainPlayer.Instance.GetCoin();
         _material = MainPlayer.Instance.GetMaterial();
+    }
+
+    public void OnInitWithScene()
+    {
+        if (MainPlayer.Instance.CheckWelcomePlayer())
+        {
+            DialogueData data = ResourceManager.Instance.GetDialogueDataByType(DialogueType.WELCOME);
+            DialogueManager.Instance.ShowDialougeBox(data);
+        }
+        else if (MainPlayer.Instance.CheckTimeToChestReward())
+        {
+            DialogueData data = ResourceManager.Instance.GetDialogueDataByType(DialogueType.CHEST_REWARD);
+            DialogueManager.Instance.ShowDialougeBox(data);
+        }
+        else
+        {
+            LevelManager.Instance.OnInitCurrentLevel();
+            Hide();
+        }
     }
 
     public override void Show()

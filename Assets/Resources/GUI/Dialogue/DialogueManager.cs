@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DialougeManager : MonoSingleton<DialougeManager>
+public class DialogueManager : MonoSingleton<DialogueManager>
 {
     [SerializeField]
     private Transform _DialougeRoot;

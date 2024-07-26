@@ -179,4 +179,19 @@ public class FirebaseManager : PersistentMonoSingleton<FirebaseManager>
             return null;
         }
     }
+
+    public DialogueData[] GetRemoteDialogueDatas()
+    {
+        string key = "Dialogues";
+        try
+        {
+            string value = _remoteConfig.GetRemoteConfigValue(key);
+            DialogueData[] data = JsonConvert.DeserializeObject<DialogueData[]>(value);
+            return data;
+        }
+        catch
+        {
+            return null;
+        }
+    }
 }

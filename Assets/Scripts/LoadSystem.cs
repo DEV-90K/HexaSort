@@ -62,7 +62,6 @@ public class LoadSystem : MonoBehaviour
     private void ExitLoading()
     {
         StartCoroutine(IE_SceneLoading("Game"));
-        Debug.Log("IE_SceneLoading Completed");
     }
 
     private async Task FirebaseConnecting()

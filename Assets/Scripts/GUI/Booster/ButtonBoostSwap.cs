@@ -51,7 +51,6 @@ public class ButtonBoostSwap : MonoBehaviour, IBoostTrick
 
     public void OnInit(IBoostSwap able)
     {
-        Debug.Log("On Init Boost Swap");
         _able = able;
         int amount = MainPlayer.Instance.GetSwap();
         MainPlayer_OnChangeSwap(amount);

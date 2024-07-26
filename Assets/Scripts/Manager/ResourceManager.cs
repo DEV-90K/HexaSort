@@ -6,8 +6,6 @@ using UnityEngine;
 
 public class ResourceManager : PersistentMonoSingleton<ResourceManager>
 {
-    private const int TEST_IDLEVEL = 1;
-
     private MechanicConfig _mechanicConfig;
 
     private Dictionary<int, LevelData> _levelDataDict = new Dictionary<int, LevelData>();
@@ -30,6 +28,8 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
 
     private GalleryData[] _galleryDatas;
 
+    private DialogueData[] _dialogueDatas;
+
     public void LoadResource()
     {
         _levelPresenterDatas = LoadLevelPresenterDatas();
@@ -38,11 +38,12 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         _hexagonDatas = LoadHexagonData();
         _mechanicConfig = LoadMechanicConfig();
         
-        _relicDatas = LoadRelicDatas();
-        _relicDatas.DebugLogObject();
+        _relicDatas = LoadRelicDatas();        
 
         _galleryDatas = LoadGalleryDatas();
-        _galleryDatas.DebugLogObject();
+
+        _dialogueDatas = LoadDialogueDatas();
+        _dialogueDatas.DebugLogObject();
     }
 
     #region Mechanic Config
@@ -169,7 +170,7 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
     #endregion Mechanic Config
 
     #region Level Data
-    public LevelData GetLevelByID(int IDLevel = TEST_IDLEVEL)
+    public LevelData GetLevelByID(int IDLevel)
     {
         if(_levelDataDict.ContainsKey(IDLevel))
         {
@@ -293,7 +294,7 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
 
     #region Challenge Data
 
-    public ChallengeData GetChallengeByID(int IDChallenge = TEST_IDLEVEL)
+    public ChallengeData GetChallengeByID(int IDChallenge)
     {
         if(_challengeDataDict.ContainsKey(IDChallenge))
         {
@@ -549,6 +550,38 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         return null;
     }
 
+    public int[] GetRelicDatasPlayerNotOwner(int IDGallery)
+    {
+        GalleryData galleryData = GetGalleryDataByID(IDGallery);
+
+        List<int> result = new List<int>();
+        int[] owners = GetRelicDatasPlayerOwner(IDGallery);
+        for(int i = 0; i < galleryData.IDRelics.Length; i++)
+        {
+            for (int j = 0; j < owners.Length; j++)
+            {                
+                if (galleryData.IDRelics[i] == owners[j])
+                {
+                    result.Add(galleryData.IDRelics[i]);
+                    break;
+                }
+            }
+        }
+
+        return result.ToArray();
+    }
+
+    private int[] GetRelicDatasPlayerOwner(int IDGallery)
+    {        
+        GalleryRelicData[] galleryRelicDatas = MainPlayer.instance.GetGalleryRelicByID(IDGallery);
+        int[] relicDatas = new int[galleryRelicDatas.Length];
+        for (int i = 0; i < galleryRelicDatas.Length; i++)
+        {
+            relicDatas[i] = galleryRelicDatas[i].IDRelic;
+        }
+
+        return relicDatas;
+    }
     #endregion Relic
 
     #region Gallery
@@ -890,6 +923,79 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
 
 
         return data.ToArray();
-    }
+    }    
     #endregion Gallery
+    
+    #region Dialogue Data
+    public DialogueData GetDialogueDataByType(DialogueType type)
+    {
+        for(int i = 0; i < _dialogueDatas.Length; i++)
+        {
+            if (_dialogueDatas[i].Type == type)
+            {
+                return _dialogueDatas[i];
+            }
+        }
+
+        return null;
+    }
+    private DialogueData[] LoadDialogueDatas()
+    {
+        Debug.Log("LoadDialogueDatas");
+        DialogueData[] datas = FirebaseManager.instance.GetRemoteDialogueDatas();
+        Debug.Log("Load Remote");
+        if(datas == null)
+        {
+            Debug.Log("Load Local");
+            datas = LoadLocalDialogueDatas();
+        }
+        
+        if(datas == null){
+            Debug.Log("Load Create");
+            datas = CreateDialogueDatas();
+        }
+
+        return datas;
+    }
+
+    private DialogueData[] LoadLocalDialogueDatas()
+    {
+        string key = "Dialogues";
+        TextAsset textAsset = Resources.Load<TextAsset>(string.Format("Config/Data/{0}", key));
+
+        if (textAsset != null)
+        {
+            return JsonConvert.DeserializeObject<DialogueData[]>(textAsset.text.Trim());
+        }
+
+        return null;
+    }
+
+    private DialogueData[] CreateDialogueDatas()
+    {
+        List<DialogueData> datas = new List<DialogueData>();
+        DialogueData data1 = new DialogueData();
+        data1.Type = DialogueType.WELCOME;
+        data1.Name = "Linda";
+        data1.Sentences = new string[] {
+            "Hey bro ! My name is Linda...",
+            "I'm here Linda to guide you through your dangerous adventures...",
+            "Linda talk It is said that ancient civilizations left behind artifacts beneath layers of ancient soil ..." };
+        datas.Add(data1);
+
+        DialogueData data2 = new DialogueData();
+        data2.Type = DialogueType.RELIC_COLLECT;
+        data2.Name = "Linda";
+        data2.Sentences = new string[] { "Oh wow !, You have enough materials to collect antiques, let's explore ..." };
+        datas.Add(data2);
+
+        DialogueData data3 = new DialogueData();
+        data3.Type = DialogueType.CHEST_REWARD;
+        data3.Name = "Linda";
+        data3.Sentences = new string[] { "Time coming, You have new chest, Come open it..." };
+        datas.Add(data3);
+
+        return datas.ToArray();
+    }
+    #endregion Dialogue Data
 }

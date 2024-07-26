@@ -28,8 +28,19 @@ public class LevelManager : MonoSingleton<LevelManager>
         PlayerLevelData playerLevelData = MainPlayer.instance.GetPlayerLevelData().CopyObject();
         if(playerLevelData != null)
         {
-            _levelData = playerLevelData.Level;
-            _presenterData = playerLevelData.LevelPresenter;
+            if(playerLevelData.Level == null)
+            {
+                _levelData = ResourceManager.instance.GetLevelByID(playerLevelData.IDLevel);
+            }
+            else
+                _levelData = playerLevelData.Level;
+
+            if(playerLevelData.LevelPresenter == null)
+            {
+                ResourceManager.instance.GetLevelPresenterDataByID(playerLevelData.IDLevel);
+            }
+            else
+                _presenterData = playerLevelData.LevelPresenter;
         }
         else
         {
@@ -122,8 +133,8 @@ public class LevelManager : MonoSingleton<LevelManager>
 
         _gridManager.CollectGridImmediate();
         _stackManager.CollectRandomImmediate();
-               
-        GUIManager.instance.HideScreen<ScreenLevel>();
+
+        Debug.Log("Run Here");
         GUIManager.instance.ShowScreen<ScreenMain>();
     }
 

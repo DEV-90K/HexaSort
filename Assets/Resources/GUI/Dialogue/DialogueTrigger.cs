@@ -34,8 +34,8 @@ public class DialogueTrigger : MonoBehaviour
         _IsTrigger = !_IsTrigger;
 
         if(_IsTrigger)
-            DialougeManager.Instance.ShowDialougeBox(_DialogueData);
+            DialogueManager.Instance.ShowDialougeBox(_DialogueData);
         else
-            DialougeManager.Instance.HideDialougeBox();
+            DialogueManager.Instance.HideDialougeBox();
     }
 }

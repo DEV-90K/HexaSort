@@ -48,7 +48,6 @@ public class ButtonBoostRefresh : MonoBehaviour, IBoostTrick
 
     public void OnInit()
     {
-        Debug.Log("On Init Boost Refresh");
         int amount = MainPlayer.Instance.GetRefresh();
         MainPlayer_OnChangeRefresh(amount);
     }

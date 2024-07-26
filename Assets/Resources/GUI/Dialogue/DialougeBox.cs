@@ -15,12 +15,22 @@ public class DialougeBox : MonoBehaviour
     private TMP_Text _Navigation;
     [SerializeField]
     private Button _BtnNavigation;
+    [SerializeField]
+    private Button _BtnSkip;
+    [SerializeField]
+    private Button _BtnBG;
+    [SerializeField]
+    private Animator _animator;
 
     private DialogueData _data;
     public Queue<string> _sequences = new Queue<string>();
-
     public void OnInit(DialogueData data)
     {
+        _animator.SetBool("IsOpen", true);
+        GameManager.Instance.ChangeState(GameState.PAUSE);
+
+        _BtnSkip.gameObject.SetActive(true);
+
         _data = data;
 
         _sequences.Clear();
@@ -30,7 +40,22 @@ public class DialougeBox : MonoBehaviour
         }
 
         UpdateName();
-        UpdateConversation();
+    }
+
+    public void OnExit()
+    {
+        if(_data.Type == DialogueType.CHEST_REWARD)
+        {
+            GUIManager.Instance.ShowPopup<PopupChestReward>();
+        }
+        else if(_data.Type == DialogueType.RELIC_COLLECT)
+        {
+            GUIManager.Instance.HideScreen<ScreenLevel>();
+            GUIManager.Instance.HidePopup<PopupLevelWoned>();
+            GUIManager.Instance.ShowPopup<PopupGallery>(1);
+        }
+        
+        Destroy(gameObject);
     }
 
     private void UpdateName()
@@ -38,10 +63,21 @@ public class DialougeBox : MonoBehaviour
         _Name.text = _data.Name;
     }
 
-    private void UpdateConversation()
+    public void UpdateConversation()
     {
         string sequence = _sequences.Dequeue();
-        _Conversation.text = sequence;
+        StartCoroutine(IE_TypeSentence(sequence));
+    }
+
+    private IEnumerator IE_TypeSentence(string sentence)
+    {
+        _Conversation.text = "";
+        _Navigation.text = "";
+        foreach (char letter in sentence.ToCharArray())
+        {
+            _Conversation.text += letter;
+            yield return null;
+        }
 
         UpdateNavigation();
     }
@@ -50,7 +86,7 @@ public class DialougeBox : MonoBehaviour
     {
         if (_sequences.Count == 0)
         {
-            _Navigation.text = "Skip >>";
+            _Navigation.text = "Let's go >>";
         }
         else
         {
@@ -62,7 +98,7 @@ public class DialougeBox : MonoBehaviour
     {
         if(_sequences.Count == 0)
         {
-            DestroyImmediate(gameObject);
+            _animator.SetBool("IsOpen", false);
         }
         else
         {
@@ -70,13 +106,23 @@ public class DialougeBox : MonoBehaviour
         }
     }
 
+    private void OnClickSkip()
+    {
+        _BtnSkip.gameObject.SetActive(false);
+        _animator.SetBool("IsOpen", false);
+    }
+
     private void Start()
     {
         _BtnNavigation.onClick.AddListener(OnClickNavigation);
+        _BtnBG.onClick.AddListener(OnClickNavigation);
+        _BtnSkip.onClick.AddListener(OnClickSkip);
     }
 
     private void OnDestroy()
     {
         _BtnNavigation.onClick.RemoveListener(OnClickNavigation);
+        _BtnBG.onClick.RemoveListener(OnClickNavigation);
+        _BtnSkip.onClick.RemoveListener(OnClickSkip);
     }
 }

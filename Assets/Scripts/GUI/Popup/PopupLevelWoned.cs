@@ -24,6 +24,7 @@ public class PopupLevelWoned : PopupBase
     public override void Show()
     {
         base.Show();
+        GameManager.Instance.ChangeState(GameState.FINISH);
         UpdateTxtCoin(_presenterData.Coin);
         UpdateTxtMaterial(_presenterData.Material);
     }
@@ -43,6 +44,24 @@ public class PopupLevelWoned : PopupBase
         MainPlayer.Instance.AddCoin(_presenterData.Coin);
         MainPlayer.Instance.AddMaterial(_presenterData.Material);
         LevelManager.Instance.OnInitLevelByID(_presenterData.Level + 1);
+        int[] relicNotOwner = ResourceManager.Instance.GetRelicDatasPlayerNotOwner(1);
+
+        Debug.Log("OnClickBtnReward");
+        Debug.Log(relicNotOwner.ToString());
+        if (relicNotOwner.Length > 0)
+        {
+            for (int i = 0; i < relicNotOwner.Length; i++)
+            {
+                RelicData data = ResourceManager.Instance.GetRelicDataByID(relicNotOwner[i]);
+                if(data.Material <= MainPlayer.Instance.GetMaterial())
+                {
+                    DialogueData dialogueData = ResourceManager.Instance.GetDialogueDataByType(DialogueType.RELIC_COLLECT);
+                    DialogueManager.Instance.ShowDialougeBox(dialogueData);
+                    return;
+                }
+            }
+        }
+
         Hide();
     }
 

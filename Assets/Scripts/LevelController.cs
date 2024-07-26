@@ -49,8 +49,6 @@ public class LevelController : MonoBehaviour
 
     private void OnShowTrick()
     {
-        Debug.Log("OnShowTrick");
-
         _hasShowedGameTrick = ShowGameTrick();
 
         if(!_hasShowedGameTrick)
