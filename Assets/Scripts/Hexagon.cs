@@ -28,7 +28,7 @@ public class Hexagon : PoolMember
     }
 
     private Color normalColor;
-    private Color tutorialColor;
+    private Color trickColor;
 
     private HexagonData _data;
 
@@ -47,7 +47,7 @@ public class Hexagon : PoolMember
         {
             Color = color;
             normalColor = color;
-            ColorUtility.TryParseHtmlString("#525252", out tutorialColor);
+            ColorUtility.TryParseHtmlString("#525252", out trickColor);
         }
     }
 
@@ -71,13 +71,13 @@ public class Hexagon : PoolMember
         collider.enabled = true;
     }
 
-    public void TweenShowTutorial()
+    public void TweenShowTrick()
     {
         LeanTween.cancel(model);
-        LeanTween.color(model, tutorialColor, 1f).setLoopPingPong();
+        LeanTween.color(model, trickColor, 1f).setLoopPingPong();
     }
 
-    public void TweenHideTutorial()
+    public void TweenHideTrick()
     {
         LeanTween.cancel(model);
         Color = normalColor;

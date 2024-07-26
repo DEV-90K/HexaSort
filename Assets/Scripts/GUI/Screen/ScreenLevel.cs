@@ -3,10 +3,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public interface IBoostTutorial
+public interface IBoostTrick
 {
-    public void ShowBoostTutorial();
-    public void HideBoostTutorial();
+    public void ShowBoostTrick();
+    public void HideBoostTrick();
 }
 
 public class ScreenLevel : ScreenBase, IBoostHammer, IBoostSwap
@@ -28,7 +28,7 @@ public class ScreenLevel : ScreenBase, IBoostHammer, IBoostSwap
     private LevelPresenterData presenterData;
     private int amount = 0;
 
-    private IBoostTutorial boostTutorial;
+    private IBoostTrick _IBoostTrick;
 
     public override void OnInit(params object[] paras)
     {
@@ -53,30 +53,30 @@ public class ScreenLevel : ScreenBase, IBoostHammer, IBoostSwap
         GameManager.Instance.ChangeState(GameState.FINISH);
     }
 
-    public void ShowHintTutorial()
+    public void ShowBoostTrick()
     {
         int idx = UnityEngine.Random.Range(0, 3);
 
         if(idx == 0)
         {
-            boostTutorial = _btnBoostHammer as IBoostTutorial;
+            _IBoostTrick = _btnBoostHammer as IBoostTrick;
         }
         else if(idx == 1)
         {
-            boostTutorial = _btnBoostSwap as IBoostTutorial;
+            _IBoostTrick = _btnBoostSwap as IBoostTrick;
         }
         else if(idx == 2)
         {
-            boostTutorial = _btnBoostRefresh as IBoostTutorial;
+            _IBoostTrick = _btnBoostRefresh as IBoostTrick;
         }
 
-        boostTutorial.ShowBoostTutorial();
+        _IBoostTrick.ShowBoostTrick();
     }
 
-    public void HideHintTurorial()
+    public void HideBoostTrick()
     {
-        Debug.Log("Screen Level Hide Hint Tutorial");
-        boostTutorial?.HideBoostTutorial();
+        Debug.Log("Screen Level Hide Boost Trick");
+        _IBoostTrick?.HideBoostTrick();
     }
 
     private void OnEnable()

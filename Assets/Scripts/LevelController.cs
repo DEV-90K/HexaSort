@@ -13,72 +13,72 @@ public class LevelController : MonoBehaviour
     private bool _hasProcessing = false;
     private int[] SpaceSpecialEffects;
 
-    private TimerUtils.CountdownTimer _tutorialCoutdown = new TimerUtils.CountdownTimer(10);
-    private bool _hasShowedGameTutorial = false;
+    private TimerUtils.CountdownTimer _trickCountdown = new TimerUtils.CountdownTimer(10);
+    private bool _hasShowedGameTrick = false;
     private StackHexagon stackShowed = null;
     private GridHexagon gridShowed = null;
 
-    private bool _hasShowedHintTutorial = false;
+    private bool _hasShowedBoostTrick = false;
 
     private void OnEnable()
     {
         GameManager.OnChangeState += GameManager_OnChangeState;
         StackController.OnStackPlaced += StackController_OnStackPlaced;
-        _tutorialCoutdown.OnTimerStop += OnShowTutorial;
+        _trickCountdown.OnTimerStop += OnShowTrick;
     }
 
     private void OnDisable()
     {
         GameManager.OnChangeState -= GameManager_OnChangeState;
         StackController.OnStackPlaced -= StackController_OnStackPlaced;
-        _tutorialCoutdown.OnTimerStop -= OnShowTutorial;
+        _trickCountdown.OnTimerStop -= OnShowTrick;
     }
 
     private void GameManager_OnChangeState(GameState state)
     {
         if(state == GameState.LEVEL_PLAYING)
         {
-            _tutorialCoutdown.Start();
+            _trickCountdown.Start();
         }
         else
         {
-            _tutorialCoutdown.Pause();
-            _tutorialCoutdown.Reset();
+            _trickCountdown.Pause();
+            _trickCountdown.Reset();
         }
     }
 
-    private void OnShowTutorial()
+    private void OnShowTrick()
     {
-        Debug.Log("OnShowTutorial");
+        Debug.Log("OnShowTrick");
 
-        _hasShowedGameTutorial = ShowGameTutorial();
+        _hasShowedGameTrick = ShowGameTrick();
 
-        if(!_hasShowedGameTutorial)
+        if(!_hasShowedGameTrick)
         {
             ScreenLevel screenLevel = GUIManager.Instance.GetScreen<ScreenLevel>();
-            screenLevel.ShowHintTutorial();
-            _hasShowedHintTutorial = true;
+            screenLevel.ShowBoostTrick();
+            _hasShowedBoostTrick = true;
         }        
     }
 
-    private void OnHideTutorial()
+    private void OnHideTrick()
     {
-        Debug.Log("OnHideTutorial");
-        if(_hasShowedGameTutorial)
+        Debug.Log("OnHideTrick");
+        if(_hasShowedGameTrick)
         {
-            _hasShowedGameTutorial = false;
-            stackShowed.TweenHideTutorial();
-            gridShowed.TweenHideTutorial();
+            _hasShowedGameTrick = false;
+            stackShowed.TweenHideTrick();
+            gridShowed.TweenHideTrick();
         }
         
-        if(_hasShowedHintTutorial)
+        if(_hasShowedBoostTrick)
         {
-            _hasShowedHintTutorial = false;
-            GUIManager.Instance.GetScreen<ScreenLevel>().HideHintTurorial();
+            _hasShowedBoostTrick = false;
+            GUIManager.Instance.GetScreen<ScreenLevel>().HideBoostTrick();
         }
     }
 
-    private bool ShowGameTutorial()
+    private bool ShowGameTrick()
     {
         GridHexagon[] gridsNotOccupied = GridManager.Instance.GetGridHexagonNotContainStack();
         int lengGrids = gridsNotOccupied.Length;
@@ -103,9 +103,9 @@ public class LevelController : MonoBehaviour
                 if(canPlace)
                 {
                     stackShowed = stacksCanPlay[j];
-                    stackShowed.TweenShowTutorial();
+                    stackShowed.TweenShowTrick();
                     gridShowed = gridsNotOccupied[i];
-                    gridShowed.TweenShowTutorial();
+                    gridShowed.TweenShowTrick();
                     return true;
                 }
             }
@@ -132,34 +132,34 @@ public class LevelController : MonoBehaviour
 
         if(hasContact)
         {
-            if(_hasShowedHintTutorial || _hasShowedGameTutorial)
+            if(_hasShowedBoostTrick || _hasShowedGameTrick)
             {
-                OnHideTutorial();
-                _tutorialCoutdown.Start();
+                OnHideTrick();
+                _trickCountdown.Start();
             }
             else
             {
-                _tutorialCoutdown.Reset();
-                _tutorialCoutdown.Pause();
+                _trickCountdown.Reset();
+                _trickCountdown.Pause();
             }    
         }
-        else if(!hasContact && !_tutorialCoutdown.IsFinished)
+        else if(!hasContact && !_trickCountdown.IsFinished)
         {
             //If it's paused then recountdown
-            if (!_tutorialCoutdown.IsRunning)
+            if (!_trickCountdown.IsRunning)
             {
-                _tutorialCoutdown.Reset();
-                _tutorialCoutdown.Resume();
+                _trickCountdown.Reset();
+                _trickCountdown.Resume();
             }
 
-            _tutorialCoutdown.Tick(Time.deltaTime);
+            _trickCountdown.Tick(Time.deltaTime);
         }
     }
 
     public void OnSetup(int[] config, float timer = 10f)
     {
         SpaceSpecialEffects = config;
-        _tutorialCoutdown.Reset(timer);
+        _trickCountdown.Reset(timer);
     }
 
     private void StackController_OnStackPlaced(GridHexagon grid)

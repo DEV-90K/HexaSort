@@ -33,19 +33,19 @@ public class StackHexagon : PoolMember
         ShowCanvas();
     }
 
-    public void TweenShowTutorial()
+    public void TweenShowTrick()
     {
         foreach (Hexagon hex  in Hexagons)
         {
-            hex.TweenShowTutorial();
+            hex.TweenShowTrick();
         }
     }
 
-    public void TweenHideTutorial()
+    public void TweenHideTrick()
     {
         foreach (Hexagon hex in Hexagons)
         {
-            hex.TweenHideTutorial();
+            hex.TweenHideTrick();
         }
     }
 

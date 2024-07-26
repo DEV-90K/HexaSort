@@ -68,13 +68,13 @@ public class GridHexagon : PoolMember
         StackOfCell = null;
     }
 
-    public void TweenShowTutorial()
+    public void TweenShowTrick()
     {
         LeanTween.cancel(model);
         LeanTween.color(model, contactColor, 1f).setLoopPingPong();
     }
 
-    public void TweenHideTutorial()
+    public void TweenHideTrick()
     {
         LeanTween.cancel(model);
         Color = normalColor;
