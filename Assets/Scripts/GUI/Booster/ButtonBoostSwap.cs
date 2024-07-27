@@ -68,8 +68,8 @@ public class ButtonBoostSwap : MonoBehaviour, IBoostTrick
             return;
         }
 
-        GUIManager.Instance.HideScreen<ScreenLevel>();
         GUIManager.Instance.ShowPopup<PopupBoostSwap>(_able);
+        GUIManager.Instance.HideScreen<ScreenLevel>();
     }
 
     public void ShowBoostTrick()

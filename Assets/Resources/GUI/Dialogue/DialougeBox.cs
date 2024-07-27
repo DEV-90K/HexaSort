@@ -23,16 +23,15 @@ public class DialougeBox : MonoBehaviour
     private Animator _animator;
 
     private DialogueData _data;
+    private Action _actionSkip;
     public Queue<string> _sequences = new Queue<string>();
-    public void OnInit(DialogueData data)
+
+    public void OnInit(DialogueData data, Action actionSkip = null)
     {
         _animator.SetBool("IsOpen", true);
-        GameManager.Instance.ChangeState(GameState.PAUSE);
-
+        _actionSkip = actionSkip;
         _BtnSkip.gameObject.SetActive(true);
-
         _data = data;
-
         _sequences.Clear();
         foreach (string sequence in _data.Sentences)
         {
@@ -109,7 +108,19 @@ public class DialougeBox : MonoBehaviour
     private void OnClickSkip()
     {
         _BtnSkip.gameObject.SetActive(false);
-        _animator.SetBool("IsOpen", false);
+
+        if(_actionSkip != null)
+        {
+            _actionSkip.Invoke();
+        }
+        else
+        {
+            GUIManager.Instance.HideScreen<ScreenLevel>();
+            GUIManager.Instance.HidePopup<PopupLevelWoned>();
+            GUIManager.Instance.ShowPopup<PopupGallery>(1);
+        }
+
+        Destroy(gameObject);
     }
 
     private void Start()

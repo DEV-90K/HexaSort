@@ -19,6 +19,32 @@ public class LevelManager : MonoSingleton<LevelManager>
 
     private int amountHexagon = 0;
 
+    private void OnEnable()
+    {
+        GameManager.OnChangeState += GameManager_OnChangeState;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.OnChangeState -= GameManager_OnChangeState;
+    }
+
+    private void GameManager_OnChangeState(GameState state)
+    {
+        if(state == GameState.LEVEL_PLAYING)
+        {
+            _levelControl.OnPlaying();
+        }
+        else if(state == GameState.PAUSE)
+        {
+            _levelControl.OnPause();
+        }
+        else
+        {
+            _levelControl.OnIdle();
+        }
+    }
+
     private void Start()
     {
         LevelController.OnTurnCompleted += LevelController_OnTurnCompleted;
@@ -110,13 +136,14 @@ public class LevelManager : MonoSingleton<LevelManager>
         _levelData = levelData;
         _presenterData = presenterData;
         amountHexagon = 0;
-        _gridManager.OnInit(_levelData.Grid);
 
+        _gridManager.OnInit(_levelData.Grid);
         _stackManager.Configure(_presenterData.Amount, _presenterData.Probabilities);
         _stackManager.OnInit(_levelData.StackQueueData);
+        _levelControl.OnInit();
 
+        GUIManager.Instance.ShowScreen<ScreenLevel>(_presenterData);               
         MainPlayer.instance.CacheIDLevel(presenterData.Level);
-        GUIManager.Instance.ShowScreen<ScreenLevel>(_presenterData);       
     }
 
     public void OnReplay()
@@ -128,21 +155,19 @@ public class LevelManager : MonoSingleton<LevelManager>
 
     public void OnExit()
     {
-        //TODO: Save Level Data To Player 
         CacheCurrentLevelPlayingData();
 
         _gridManager.CollectGridImmediate();
         _stackManager.CollectRandomImmediate();
 
-        Debug.Log("Run Here");
         GUIManager.instance.ShowScreen<ScreenMain>();
     }
 
     private void OnFinish()
     {
-        GameManager.instance.ChangeState(GameState.FINISH);
         _gridManager.CollectOccupied();
         _stackManager.CollectRandomed();
+        
     }
 
     private void OnFinishLosed()

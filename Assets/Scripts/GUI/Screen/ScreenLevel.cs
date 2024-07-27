@@ -40,17 +40,22 @@ public class ScreenLevel : ScreenBase, IBoostHammer, IBoostSwap
     public override void Show()
     {
         base.Show();
+        GameManager.Instance.ChangeState(GameState.LEVEL_PLAYING);
+
         amount = LevelManager.Instance.GetAmountHexagon();
         UpdateTxtRatio(amount);
         UpdateImgFill(amount / (float)presenterData.Goal);
-        UpdateTxtPlayerCoin();
-        GameManager.Instance.ChangeState(GameState.LEVEL_PLAYING);
+        UpdateTxtPlayerCoin();        
     }
 
     public override void Hide()
     {
         base.Hide();
-        GameManager.Instance.ChangeState(GameState.FINISH);
+        
+        if(GameManager.Instance.IsState(GameState.LEVEL_PLAYING))
+        {
+            GameManager.Instance.ChangeState(GameState.FINISH);
+        }
     }
 
     public void ShowBoostTrick()

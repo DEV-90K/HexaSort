@@ -21,6 +21,12 @@ public class PopupChallengeWoned : PopupBase
         UpdateArtRelic();
     }
 
+    public override void Show()
+    {
+        base.Show();
+        GameManager.Instance.ChangeState(GameState.PAUSE);
+    }
+
     private void UpdateArtRelic()
     {
         Sprite art = ResourceManager.Instance.GetRelicSpriteByID(_GalleryRelicData.IDRelic);
@@ -41,12 +47,16 @@ public class PopupChallengeWoned : PopupBase
 
     private void OnClickBtnHome()
     {
+        GameManager.Instance.ChangeState(GameState.FINISH);
+        GUIManager.Instance.HideScreen<ScreenChallenge>();
         GUIManager.Instance.ShowScreen<ScreenMain>();
         Hide();
     }
 
     private void OnClickBtnGallery()
     {
+        GameManager.Instance.ChangeState(GameState.FINISH);
+        GUIManager.Instance.HideScreen<ScreenChallenge>();
         GUIManager.Instance.ShowPopup<PopupGallery>(_GalleryRelicData.IDGallery);
         Hide();
     }

@@ -135,11 +135,7 @@ public class Hexagon : PoolMember
     {
         OnResert();
         PoolManager.Despawn(this);
-
-        if(!GameManager.Instance.IsState(GameState.FINISH))
-        {
-            OnVanish?.Invoke();
-        }
+        OnVanish?.Invoke();
     }
 
     public bool CheckColor(Color color)

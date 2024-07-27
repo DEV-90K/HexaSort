@@ -33,6 +33,12 @@ public class PopupChallengeLosed : PopupBase
         _BtnReplay.onClick.AddListener(OnClickBtnReplay);
     }
 
+    public override void Show()
+    {
+        base.Show();
+        GameManager.Instance.ChangeState(GameState.PAUSE);
+    }
+
     private void OnDestroy()
     {
         _BtnHome.onClick.RemoveListener(OnClickBtnHome);
@@ -41,12 +47,15 @@ public class PopupChallengeLosed : PopupBase
 
     private void OnClickBtnHome()
     {
+        GameManager.Instance.ChangeState(GameState.FINISH);
+        GUIManager.Instance.HideScreen<ScreenChallenge>();
         GUIManager.Instance.ShowScreen<ScreenMain>();
         Hide();
     }
 
     private void OnClickBtnReplay()
     {
+        GameManager.Instance.ChangeState(GameState.FINISH);
         ChallengeManager.Instance.OnInit(_GalleryRelicData);
         Hide();
     }

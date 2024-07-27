@@ -69,8 +69,8 @@ public class ButtonBoostHammer : MonoBehaviour, IBoostTrick
             return;
         }
 
-        GUIManager.Instance.HideScreen<ScreenLevel>();
         GUIManager.Instance.ShowPopup<PopupBoostHammer>(_able);
+        GUIManager.Instance.HideScreen<ScreenLevel>();
     }
 
     public void ShowBoostTrick()

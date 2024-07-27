@@ -41,6 +41,7 @@ public class PopupBoostSwap : PopupBase
     public override void Show()
     {
         base.Show();
+        GameManager.Instance.ChangeState(GameState.PAUSE);
         OnStackMoving?.Invoke(false);
         _able.EnterBoostSwap();
     }

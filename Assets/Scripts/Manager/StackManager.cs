@@ -96,6 +96,14 @@ public class StackManager : MonoSingleton<StackManager>, IStackOnPlaced, IStackS
     private void GenerateStacks()
     {
         Debug.Log("Geerate Stacks");
+        if(stackHexagons.Count > 0)
+        {
+            foreach (StackHexagon stack in stackHexagons)
+            {
+                stack.CollectImmediate();
+            }
+        }
+
         stackHexagons.Clear();
         stackSpawner.OnEnterSpawn();
         for (int i = 0; i < pointSpawns.Length; i++)
@@ -135,11 +143,6 @@ public class StackManager : MonoSingleton<StackManager>, IStackOnPlaced, IStackS
     public void EnableByBooster()
     {
         stackController.enabled = true;
-    }
-
-    public void MergeStackIntoGrid(GridHexagon grid)
-    {
-        Debug.Log("Merge Stack Into Grid");
     }
 
     public Vector3 GetRadiusByGrid()

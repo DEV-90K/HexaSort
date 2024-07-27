@@ -30,12 +30,6 @@ public class PopupLevelConfig : PopupBase
         GameManager.Instance.ChangeState(GameState.PAUSE);
     }
 
-    public override void Hide()
-    {
-        base.Hide();
-        GameManager.Instance.ChangeState(GameState.LEVEL_PLAYING);
-    }
-
     private void Start()
     {
         _BtnSave.onClick.AddListener(OnClickButtonSave);
@@ -86,6 +80,7 @@ public class PopupLevelConfig : PopupBase
 
     private void OnClickButtonSave()
     {
+        GameManager.Instance.ChangeState(GameState.FINISH);
         LevelPresenterData presenterData = _presenterData.CopyObject();
         presenterData.UpdateLevel(GetContentLevelInput());
         presenterData.UpdateGoal(GetContentHexagonInput());
@@ -96,6 +91,7 @@ public class PopupLevelConfig : PopupBase
 
     private void OnClickButtonClose()
     {
+        GameManager.Instance.ChangeState(GameState.LEVEL_PLAYING);
         Hide();
     }
 }

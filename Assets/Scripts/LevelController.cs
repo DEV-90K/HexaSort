@@ -13,7 +13,9 @@ public class LevelController : MonoBehaviour
     private bool _hasProcessing = false;
     private int[] SpaceSpecialEffects;
 
-    private TimerUtils.CountdownTimer _trickCountdown = new TimerUtils.CountdownTimer(10);
+    private TimerUtils.CountdownTimer _trickCountdown = null;
+    private float _timer;
+
     private bool _hasShowedGameTrick = false;
     private StackHexagon stackShowed = null;
     private GridHexagon gridShowed = null;
@@ -22,29 +24,38 @@ public class LevelController : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.OnChangeState += GameManager_OnChangeState;
         StackController.OnStackPlaced += StackController_OnStackPlaced;
-        _trickCountdown.OnTimerStop += OnShowTrick;
     }
 
     private void OnDisable()
     {
-        GameManager.OnChangeState -= GameManager_OnChangeState;
         StackController.OnStackPlaced -= StackController_OnStackPlaced;
-        _trickCountdown.OnTimerStop -= OnShowTrick;
     }
 
-    private void GameManager_OnChangeState(GameState state)
+    public void OnPause()
     {
-        if(state == GameState.LEVEL_PLAYING)
-        {
-            _trickCountdown.Start();
-        }
-        else
-        {
-            _trickCountdown.Pause();
-            _trickCountdown.Reset();
-        }
+        _trickCountdown.Pause();
+        _trickCountdown.Reset();
+    }
+
+    public void OnPlaying()
+    {
+        _trickCountdown.Start();
+    }
+
+    public void OnIdle()
+    {
+        _trickCountdown.Pause();
+        _hasShowedBoostTrick = false;
+        _hasShowedGameTrick = false;
+
+        _trickCountdown = null;
+    }
+
+    public void OnInit()
+    {
+        _trickCountdown = new TimerUtils.CountdownTimer(_timer);
+        _trickCountdown.OnTimerStop += OnShowTrick;
     }
 
     private void OnShowTrick()
@@ -114,12 +125,26 @@ public class LevelController : MonoBehaviour
 
     public void Update()
     {
+        if(_trickCountdown != null)
+        {
+            TimeCountdownControl();
+        }
+    }
+
+    public void OnSetup(int[] config, float timer = 10f)
+    {
+        SpaceSpecialEffects = config;
+        _timer = timer;
+    }
+
+    private void TimeCountdownControl()
+    {
         bool hasContact = false;
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             hasContact = true;
         }
-        else if(Input.GetMouseButton(0))
+        else if (Input.GetMouseButton(0))
         {
             hasContact = true;
         }
@@ -128,9 +153,9 @@ public class LevelController : MonoBehaviour
             hasContact = false;
         }
 
-        if(hasContact)
+        if (hasContact)
         {
-            if(_hasShowedBoostTrick || _hasShowedGameTrick)
+            if (_hasShowedBoostTrick || _hasShowedGameTrick)
             {
                 OnHideTrick();
                 _trickCountdown.Start();
@@ -139,9 +164,9 @@ public class LevelController : MonoBehaviour
             {
                 _trickCountdown.Reset();
                 _trickCountdown.Pause();
-            }    
+            }
         }
-        else if(!hasContact && !_trickCountdown.IsFinished)
+        else if (!hasContact && !_trickCountdown.IsFinished)
         {
             //If it's paused then recountdown
             if (!_trickCountdown.IsRunning)
@@ -152,12 +177,6 @@ public class LevelController : MonoBehaviour
 
             _trickCountdown.Tick(Time.deltaTime);
         }
-    }
-
-    public void OnSetup(int[] config, float timer = 10f)
-    {
-        SpaceSpecialEffects = config;
-        _trickCountdown.Reset(timer);
     }
 
     private void StackController_OnStackPlaced(GridHexagon grid)

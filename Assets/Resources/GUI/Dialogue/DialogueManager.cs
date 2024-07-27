@@ -9,10 +9,10 @@ public class DialogueManager : MonoSingleton<DialogueManager>
     [SerializeField]
     private DialougeBox _DialougeBox;
 
-    public void ShowDialougeBox(DialogueData data)
+    public void ShowDialougeBox(DialogueData data, System.Action callback = null)
     {
         DialougeBox box = Instantiate(_DialougeBox, _DialougeRoot);
-        box.OnInit(data);
+        box.OnInit(data, callback);
     }
 
     public void HideDialougeBox()
