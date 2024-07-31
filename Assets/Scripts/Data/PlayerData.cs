@@ -6,7 +6,7 @@ public class PlayerData
     public int Swap = 24;
     public int Refresh = 1054;
     public string ChestLastTime;
-    public PlayerLevelData PlayerLevel { get; private set; }
+    public PlayerLevelData PlayerLevel;
     public PlayerData(int coin, int material, PlayerLevelData playerLevel)
     {
         Coin = coin;

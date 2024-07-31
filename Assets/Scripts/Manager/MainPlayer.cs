@@ -61,11 +61,10 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
         Debug.Log("PlayerData Load");
         _PlayerData.DebugLogObject();
 
-        List<GalleryRelicData> listData = new List<GalleryRelicData>();
-        listData.Add(new GalleryRelicData(1, 2, 4, DateTime.Now.ToString(), GalleryRelicState.COLLECT));
-        listData.Add(new GalleryRelicData(1, 1, 6, DateTime.Now.AddMinutes(-20).ToString(), GalleryRelicState.COLLECT));
-
-        _DictGalleryRelic[1] = listData;
+        //List<GalleryRelicData> listData = new List<GalleryRelicData>();
+        //listData.Add(new GalleryRelicData(1, 2, 4, DateTime.Now.ToString(), GalleryRelicState.COLLECT));
+        //listData.Add(new GalleryRelicData(1, 1, 6, DateTime.Now.AddMinutes(-20).ToString(), GalleryRelicState.COLLECT));
+        //_DictGalleryRelic[1] = listData;
     }
 
     public GalleryRelicData[] GetGalleryRelicByID(int IDGallery)
@@ -180,6 +179,18 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
         return _PlayerData.PlayerLevel;
     }
 
+    public void PlayingWonedLevel(int level)
+    {
+        PlayerLevelData data = new PlayerLevelData(level + 1, null, null);
+        _PlayerData.PlayerLevel = data;
+    }
+
+    public void PlayingLosedLevel(int level)
+    {
+        PlayerLevelData data = new PlayerLevelData(level, null, null);
+        _PlayerData.PlayerLevel = data;
+    }
+
     #region Player Data
     private PlayerData LoadPlayerData()
     {
@@ -281,12 +292,12 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
         _PlayerData.DebugLogObject();
     }
 
-    //[RuntimeInitializeOnLoadMethod]
-    //private static void OnApplicationLoad()
-    //{
-    //    Debug.Log("On Application Load");
-    //    Instance.DeletePlayerDataFromPlayerPrefab();
-    //}
+    [RuntimeInitializeOnLoadMethod]
+    private static void OnApplicationLoad()
+    {
+        Debug.Log("On Application Load");
+        Instance.DeletePlayerDataFromPlayerPrefab();
+    }
 
     private TimeSpan GetTimeFromLastClick(string lastTime, int space)
     {

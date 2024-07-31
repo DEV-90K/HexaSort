@@ -113,11 +113,15 @@ public class DialougeBox : MonoBehaviour
         {
             _actionSkip.Invoke();
         }
-        else
+        else if(_data.Type == DialogueType.RELIC_COLLECT)
         {
             GUIManager.Instance.HideScreen<ScreenLevel>();
             GUIManager.Instance.HidePopup<PopupLevelWoned>();
             GUIManager.Instance.ShowPopup<PopupGallery>(1);
+        }
+        else if (_data.Type == DialogueType.CHEST_REWARD)
+        {
+            GUIManager.Instance.ShowPopup<PopupChestReward>();
         }
 
         Destroy(gameObject);

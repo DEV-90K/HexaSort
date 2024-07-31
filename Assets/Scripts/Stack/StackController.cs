@@ -4,9 +4,7 @@ using UnityEngine;
 public class StackController : MonoBehaviour
 {
     public static Action<GridHexagon> OnStackPlaced;
-    //public Action<GridHexagon> OnStackPlacedOnGridHexagon;
     public static Action<bool> OnStackMoving;
-
 
     [SerializeField]
     private LayerMask playerHexagonLayerMask;
@@ -14,6 +12,8 @@ public class StackController : MonoBehaviour
     private LayerMask gridHexagonLayerMask;
     [SerializeField]
     private LayerMask groundLayerMask;
+    [SerializeField]
+    private Transform tf_Ray;
 
     private IStackOnPlaced _stackPlaceable;
     private IStackSphereRadius _IStackSphereRadius;
@@ -37,13 +37,11 @@ public class StackController : MonoBehaviour
     {
         if(Input.GetMouseButtonDown(0))
         {
-            //Input All Collider diffirent Hexagon Close
             OnStackMoving?.Invoke(true);
             ControlMouseDown();
         }
         else if(Input.GetMouseButton(0) && stackContact != null)
         {
-            //Input All Collider Hexagon Close
             OnStackMoving?.Invoke(false);
             ControlMouseDrag();
         }
@@ -71,11 +69,14 @@ public class StackController : MonoBehaviour
 
     private void ControlMouseDrag()
     {
+        Ray ray = GetRayFromMouseClicked();
         RaycastHit hit;
-        Physics.Raycast(GetRayFromMouseClicked(), out hit, 500, gridHexagonLayerMask);
+        Physics.Raycast(ray, out hit, 500, gridHexagonLayerMask);
 
         if (gridHexagonContact != null)
+        {
             gridHexagonContact.ShowColor();
+        }
 
         if (hit.collider == null)
         {
@@ -103,10 +104,10 @@ public class StackController : MonoBehaviour
 
         float radius = _IStackSphereRadius.GetRadiusByGrid().x * 1.25f;
         Collider[] neighborGridCellColliders = Physics.OverlapSphere(hitGround.point, radius, gridHexagonLayerMask);
-        if(neighborGridCellColliders.Length > 0)
+        if (neighborGridCellColliders.Length > 0)
         {
             DraggingAboveGridHexagon(neighborGridCellColliders[0].GetComponent<GridHexagon>());
-        }                    
+        }
     }
 
     private void DraggingAboveGridHexagon(RaycastHit hit)
@@ -151,12 +152,11 @@ public class StackController : MonoBehaviour
             return;
         }
 
-        Vector3 stackTargetPos = hit.point.With(y: GameConstants.StackHexagonConstants.CONTACT_HEIGHT);        
+        Vector3 stackTargetPos = hit.point.With(y: GameConstants.StackHexagonConstants.CONTACT_HEIGHT);
         stackContact.transform.position = Vector3.MoveTowards(stackContact.transform.position, stackTargetPos, Time.deltaTime * 30);
 
         gridHexagon.ShowColorContact();
         gridHexagonContact = gridHexagon;
-
     }
 
     private void ControlMouseUp()

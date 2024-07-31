@@ -13,8 +13,8 @@ public class LevelManager : MonoSingleton<LevelManager>
     [SerializeField]
     private Hammer _hammer;
 
-    private LevelData _levelData;
-    private LevelPresenterData _presenterData;
+    private LevelData _levelData = null;
+    private LevelPresenterData _presenterData = null;
     private LevelConfig _config;
 
     private int amountHexagon = 0;
@@ -48,32 +48,7 @@ public class LevelManager : MonoSingleton<LevelManager>
     private void Start()
     {
         LevelController.OnTurnCompleted += LevelController_OnTurnCompleted;
-
         _config = ResourceManager.instance.GetLevelConfig();
-
-        PlayerLevelData playerLevelData = MainPlayer.instance.GetPlayerLevelData().CopyObject();
-        if(playerLevelData != null)
-        {
-            if(playerLevelData.Level == null)
-            {
-                _levelData = ResourceManager.instance.GetLevelByID(playerLevelData.IDLevel);
-            }
-            else
-                _levelData = playerLevelData.Level;
-
-            if(playerLevelData.LevelPresenter == null)
-            {
-                ResourceManager.instance.GetLevelPresenterDataByID(playerLevelData.IDLevel);
-            }
-            else
-                _presenterData = playerLevelData.LevelPresenter;
-        }
-        else
-        {
-            _levelData = ResourceManager.instance.GetLevelByID(playerLevelData.IDLevel);
-            _presenterData = ResourceManager.instance.GetLevelPresenterDataByID(playerLevelData.IDLevel);
-        }
-
         _hammer.gameObject.SetActive(false);
         _levelControl.OnSetup(_config.SpaceSpecialEffects);
     }
@@ -101,23 +76,13 @@ public class LevelManager : MonoSingleton<LevelManager>
         OnInit(levelData, presenterData);
     }
 
-    public void OnInitNextLevel()
-    {
-        int IDLevel = _presenterData.Level;
-        LevelData levelData = ResourceManager.instance.GetLevelByID(IDLevel + 1);
-        LevelPresenterData presenterData = ResourceManager.instance.GetLevelPresenterDataByID(IDLevel + 1);
-
-        if(levelData == null || presenterData == null)
-        {
-            levelData = _levelData;
-            presenterData = _presenterData;
-        }
-
-        OnInit(levelData, presenterData);
-    }
-
     public void OnInitCurrentLevel()
     {
+        if(_levelData == null || _presenterData == null)
+        {
+            LoadLevelFromPlayer();
+        }
+
         OnInit(_levelData, _presenterData);
     }
 
@@ -129,6 +94,31 @@ public class LevelManager : MonoSingleton<LevelManager>
 
         OnFinish();
         this.Invoke(() => OnInit(levelData, presenterData), 1f);
+    }
+
+    private void LoadLevelFromPlayer()
+    {
+        PlayerLevelData playerLevelData = MainPlayer.instance.GetPlayerLevelData().CopyObject();
+
+        if(playerLevelData == null)
+        {
+            Debug.Log("Something wrong");
+            return;
+        }
+
+        if (playerLevelData.Level == null)
+        {
+            _levelData = ResourceManager.instance.GetLevelByID(playerLevelData.IDLevel);
+        }
+        else
+            _levelData = playerLevelData.Level;
+
+        if (playerLevelData.LevelPresenter == null)
+        {
+            _presenterData = ResourceManager.instance.GetLevelPresenterDataByID(playerLevelData.IDLevel);
+        }
+        else
+            _presenterData = playerLevelData.LevelPresenter;
     }
 
     private void OnInit(LevelData levelData, LevelPresenterData presenterData)
@@ -173,18 +163,22 @@ public class LevelManager : MonoSingleton<LevelManager>
     private void OnFinishLosed()
     {
         OnFinish();
+        MainPlayer.instance.PlayingLosedLevel(_presenterData.Level);
         StartCoroutine(IE_FinishLosed(1f));
     }
 
     private IEnumerator IE_FinishLosed(float delay)
     {
-        yield return new WaitForSeconds(delay);
+        yield return new WaitForSeconds(delay);        
         GUIManager.instance.ShowPopup<PopupLevelLosed>(_presenterData);
+        _levelData = null;
+        _presenterData = null;
     }
 
     private void OnFinishWoned()
     {
         OnFinish();
+        MainPlayer.instance.PlayingWonedLevel(_presenterData.Level);        
         StartCoroutine(IE_FinishWoned(1f));
     }
 
@@ -192,6 +186,8 @@ public class LevelManager : MonoSingleton<LevelManager>
     {
         yield return new WaitForSeconds(delay);
         GUIManager.instance.ShowPopup<PopupLevelWoned>(_presenterData);
+        _levelData = null;
+        _presenterData = null;
     }
 
     #region Boost Hammer

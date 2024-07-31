@@ -497,9 +497,10 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
 
     public Sprite GetRelicSpriteByID(int IDRelic)
     {
-        string key = string.Format("Relic_{0}", IDRelic);
+        //string key = string.Format("Relic_{0}", IDRelic);
+        //string path = string.Format("Relics/{0}", key);
+        string key = IDRelic.ToString();
         string path = string.Format("Relics/{0}", key);
-
         return GetRelicArt(path);
     }
 
@@ -558,13 +559,19 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         int[] owners = GetRelicDatasPlayerOwner(IDGallery);
         for(int i = 0; i < galleryData.IDRelics.Length; i++)
         {
+            bool hasOwned = false;
             for (int j = 0; j < owners.Length; j++)
             {                
                 if (galleryData.IDRelics[i] == owners[j])
                 {
-                    result.Add(galleryData.IDRelics[i]);
+                    hasOwned = true;
                     break;
                 }
+            }
+
+            if(hasOwned == false)
+            {
+                result.Add(galleryData.IDRelics[i]);
             }
         }
 

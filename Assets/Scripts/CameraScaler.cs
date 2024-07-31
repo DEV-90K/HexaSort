@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraScaler : MonoBehaviour
 {
     private const float MIN_RADIUS = 4f;
-    private const float MIN_SIZE = 9f;
+    private const float MIN_SIZE = 10f;
     [SerializeField]
     private Camera _camera;
 
