@@ -181,7 +181,6 @@ public class LevelController : MonoBehaviour
 
     private void StackController_OnStackPlaced(GridHexagon grid)
     {
-        Debug.Log("Level Controller StackController_OnStackPlaced");
         OnStackPlacedOnGridHexagon(grid);
     }
     public void OnStackPlacedOnGridHexagon(GridHexagon gridHexagon)
@@ -199,11 +198,6 @@ public class LevelController : MonoBehaviour
         _hasProcessing = true;
         while (listGridHexagonNeedUpdate.Count > 0)
         {
-            if(GameManager.Instance.IsState(GameState.FINISH))
-            {                
-                yield break;
-            }
-
             idxRootVisited = listGridHexagonNeedUpdate.Count - 1;
             GridHexagon merge = listGridHexagonNeedUpdate[idxRootVisited];
             listGridHexagonNeedUpdate.Remove(merge);
@@ -215,7 +209,11 @@ public class LevelController : MonoBehaviour
             }
         }
         _hasProcessing = false;
-        OnTurnCompleted?.Invoke();
+
+        if (!GameManager.Instance.IsState(GameState.FINISH))
+        {
+            OnTurnCompleted?.Invoke();
+        }
     }
 
     private IEnumerator IE_MergeTree(Stack<GridHexagonNode> nodeVisited)
@@ -321,21 +319,42 @@ public class LevelController : MonoBehaviour
 
         List<Hexagon> listPlayerHexagonSimilarColor = StackManager.Instance.GetPlayerHexagonSimilarColor(stack);
         int numberOfPlayerHexagon = listPlayerHexagonSimilarColor.Count;
+        
         if (numberOfPlayerHexagon >= 10)
         {
+            StackVanishData vanishData = ResourceManager.Instance.GetStackVanishData(VanishType.NONE);
+            if (SpaceSpecialEffects[0] <= numberOfPlayerHexagon && numberOfPlayerHexagon < SpaceSpecialEffects[1])
+            {
+                vanishData = ResourceManager.Instance.GetStackVanishData(VanishType.RANDOM);
+            }
+            else if (SpaceSpecialEffects[1] <= numberOfPlayerHexagon && numberOfPlayerHexagon < SpaceSpecialEffects[2])
+            {
+                vanishData = ResourceManager.Instance.GetStackVanishData(VanishType.AROUND);
+            }
+            else if (SpaceSpecialEffects[2] <= numberOfPlayerHexagon)
+            {
+                vanishData = ResourceManager.Instance.GetStackVanishData(VanishType.CONTAIN_COLOR);
+            }
+
+
             yield return StackManager.Instance.IE_RemovePlayerHexagonsFromStack(stack);
+
+            if(vanishData.Type != VanishType.NONE)
+            {
+               yield return NoticeManager.Instance.IE_ShowNoticeVanish(vanishData);
+            }
 
             if (GameManager.Instance.IsState(GameState.LEVEL_PLAYING))
             {
-                if (SpaceSpecialEffects[0] <= numberOfPlayerHexagon && numberOfPlayerHexagon < SpaceSpecialEffects[1])
+                if (vanishData.Type == VanishType.RANDOM)
                 {
                     yield return IE_RemoveRandomStack();
                 }
-                else if (SpaceSpecialEffects[1] <= numberOfPlayerHexagon && numberOfPlayerHexagon < SpaceSpecialEffects[2])
+                else if (vanishData.Type == VanishType.AROUND)
                 {
                     yield return IE_RemoveNeighborStack(grid);
                 }
-                else if (SpaceSpecialEffects[2] <= numberOfPlayerHexagon)
+                else if (vanishData.Type == VanishType.CONTAIN_COLOR)
                 {
                     yield return IE_RemoveStacksContainColor(color);
                 }
@@ -357,7 +376,7 @@ public class LevelController : MonoBehaviour
         }
     }
 
-    private IEnumerator IE_RemoveRandomStack()
+    public IEnumerator IE_RemoveRandomStack()
     {
         GridHexagon grid = GridManager.Instance.GetRandomGridHexagonContainStackAndNotLock();
 
@@ -367,7 +386,23 @@ public class LevelController : MonoBehaviour
             yield break;
         }
 
-        yield return IE_RemoveStackOnGrid(grid);
+        StackHexagon stack = grid.StackOfCell;
+
+        yield return stack.PlayParticles(VanishType.RANDOM);
+
+        List<Hexagon> hexagons = stack.Hexagons;
+        int numberOfPlayerHexagon = hexagons.Count;
+        float offsetDelayTime = 0;
+        while (hexagons.Count > 0)
+        {
+            Hexagon playerHexagon = hexagons[hexagons.Count - 1];
+            playerHexagon.SetParent(null);
+            playerHexagon.TweenVanish(offsetDelayTime);
+            offsetDelayTime += GameConstants.HexagonConstants.TIME_DELAY;
+            stack.RemovePlayerHexagon(playerHexagon);
+        }
+
+        yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM + (numberOfPlayerHexagon - 1) * GameConstants.HexagonConstants.TIME_DELAY);
     }
 
     private IEnumerator IE_RemoveNeighborStack(GridHexagon grid)
@@ -380,7 +415,11 @@ public class LevelController : MonoBehaviour
                 continue;
             }
             else
-                yield return grids[i].IE_RemoveStack();
+            {
+                StackHexagon stack = grids[i].StackOfCell;
+                yield return stack.PlayParticles(VanishType.AROUND);
+                yield return stack.IE_Remove();
+            }
         }
     }
 
@@ -395,26 +434,11 @@ public class LevelController : MonoBehaviour
                 continue;
             }
             else
-                yield return grids[i].StackOfCell.IE_Remove();
+            {
+                StackHexagon stack = grids[i].StackOfCell;
+                yield return stack.PlayParticles(VanishType.AROUND);
+                yield return stack.IE_Remove();
+            }
         }
-    }
-
-    private IEnumerator IE_RemoveStackOnGrid(GridHexagon grid)
-    {
-        StackHexagon stack = grid.StackOfCell;
-        List<Hexagon> hexagons = stack.Hexagons;
-        int numberOfPlayerHexagon = hexagons.Count;
-        float offsetDelayTime = 0;
-        while (hexagons.Count > 0)
-        {
-            Hexagon playerHexagon = hexagons[0];
-            playerHexagon.SetParent(null);
-            playerHexagon.TweenVanish(offsetDelayTime);
-            offsetDelayTime += GameConstants.HexagonConstants.TIME_DELAY;
-            stack.RemovePlayerHexagon(playerHexagon);
-            //hexagons.RemoveAt(0);
-        }
-
-        yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM + (numberOfPlayerHexagon - 1) * GameConstants.HexagonConstants.TIME_DELAY);
     }
 }

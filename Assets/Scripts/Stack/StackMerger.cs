@@ -6,26 +6,6 @@ using UnityEngine;
 
 public class StackMerger : MonoBehaviour
 {    
-    public IEnumerator IE_Merger(StackHexagon source, StackHexagon target)
-    {
-        List<Hexagon> hexagons = GetHexagons(source);
-        yield break;
-    }
-
-    private List<Hexagon> GetHexagons(StackHexagon stack)
-    {
-        List<Hexagon> hexagons = new List<Hexagon>();
-        Color color = stack.GetTopHexagonColor();
-        foreach (Hexagon hex in stack.Hexagons)
-        {
-            if(ColorUtils.ColorEquals(color, hex.Color))
-            {
-                hexagons.Add(hex);
-            }
-        }
-
-        return hexagons;
-    }
 
     //[SerializeField]
     //private LayerMask gridHexagonLayerMask;

@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GalleryRelic : MonoBehaviour
 {
     public static Action<int> OnRelicClaim;
-    public static Action<int> OnCoutDownCompleted;
+    public static Action<int> OnCountdownCompleted;
 
     [Header("Model Selecter")]
     [SerializeField]
@@ -23,33 +24,28 @@ public class GalleryRelic : MonoBehaviour
     [SerializeField]
     private Image _ImgRelic;
     [SerializeField]
-    private TMP_Text _txtCoutdown;
-    [SerializeField]
-    private TMP_Text _txtClaimCoin;
-    [SerializeField]
     private TMP_Text _txtName;
-    [SerializeField]
-    private Button _BtnClaim;
-    [SerializeField]
-    private Button _BtnCollect;
 
     [SerializeField]
     private Button _BtnInfo;
+    [SerializeField]
+    private GameObject _ObjProgress;
+    [SerializeField]
+    private Slider _SliderProgress;
+    [SerializeField]
+    private TMP_Text _txtCoutdown;
+
+    [SerializeField]
+    private GameObject _ObjCoinClaim;
+    [SerializeField]
+    private TMP_Text _txtCoinClaim;
 
     private GalleryRelicData _data;
     private RelicData _relicData;
 
-    //private int _idx;
-    //public int[] _idRelics;
-    //private int _idGallery;
-
     private TimerUtils.CountdownTimer _timer = null;
     public void OnInit(GalleryRelicData galleryRelicData, int idGallery, int[] idRelics)
     {
-        //_idx = transform.GetSiblingIndex();
-        //_idGallery = idGallery;
-        //_idRelics = idRelics;
-
         _data = galleryRelicData;
 
         if (_data == null)
@@ -74,7 +70,7 @@ public class GalleryRelic : MonoBehaviour
     {
         _timer = null;
         _ObjCollect.SetActive(false);
-        _ObjSelecter.SetActive(true);
+        _ObjSelecter.SetActive(true);        
     }
 
     private void SetUpModelCollection()
@@ -86,43 +82,68 @@ public class GalleryRelic : MonoBehaviour
         UpdateArtRelic();
         UpdateTxtCoinClaim();
 
-        if (_data.State == GalleryRelicState.LOCK)
-        {
-            _BtnClaim.gameObject.SetActive(false);
-            _txtCoutdown.gameObject.SetActive(false);
-            _BtnCollect.gameObject.SetActive(true);
-            _BtnInfo.interactable = false;
-            return;
-        }
-        else
-        {
-            _BtnCollect.gameObject.SetActive(false);
-            _BtnInfo.interactable = true;
-        }
+        ActiveUnLockState();
+        SetUpCountdownTimer();
+    }
+
+    private void ActiveUnLockState()
+    {        
+        _BtnInfo.interactable = true;
+    }
+
+    private void SetUpCountdownTimer()
+    {
+        _ObjProgress.gameObject.SetActive(false);
+        _ObjCoinClaim.gameObject.SetActive(false);
 
         TimeSpan subTime = GetTimeFromLastClick();
         if (subTime.Hours <= 0 && subTime.Minutes <= 0)
         {
-            _timer = null;
-            _BtnClaim.gameObject.SetActive(true);
-            _txtCoutdown.gameObject.SetActive(false);            
-
-            OnCoutDownCompleted?.Invoke(_relicData.Coin);
+            CountdownCompleted();
         }
         else
         {
-            _timer = new TimerUtils.CountdownTimer(subTime.Hours * 60 + subTime.Minutes);
-            _timer.OnTimerStop += OnCountdownCompleted;
-            _timer.Start();
+            CountdownProgressing();
+        }
+    }
 
-            _BtnClaim.gameObject.SetActive(false);
-            _txtCoutdown.gameObject.SetActive(true);
-        }        
+    private void CountdownCompleted()
+    {
+        _timer = null;
+        _ObjCoinClaim.gameObject.SetActive(true);
+        OnCountdownCompleted?.Invoke(_relicData.Coin);
+    }
+
+    private void CountdownProgressing()
+    {
+        _ObjProgress.gameObject.SetActive(true);
+
+        DateTime lastTime = DateTime.Parse(_data.LastTimer);
+        DateTime targetTime = lastTime.AddMinutes(_relicData.Timer).AddSeconds(60);
+        DateTime currTime = DateTime.Now;
+        TimeSpan time = targetTime.Subtract(lastTime);
+        TimeSpan timePassed = currTime.Subtract(lastTime);
+        TimeSpan timeRemaining = targetTime.Subtract(currTime);
+
+        _SliderProgress.maxValue = (float)time.TotalMinutes;
+        _SliderProgress.minValue = 0;
+        _SliderProgress.value = (float)timeRemaining.TotalMinutes;
+        UpdateSliderProgress(_SliderProgress.value);
+
+        _timer = new TimerUtils.CountdownTimer((float)timeRemaining.TotalMinutes);
+        _timer.OnTimerStop += OnCountdownStopped;
+        _timer.Start();
+        UpdateTimer();
+    }
+
+    private void UpdateSliderProgress(float value)
+    {
+        _SliderProgress.value = value;
     }
 
     private void UpdateTxtCoinClaim()
     {
-        _txtClaimCoin.text = "+" + _relicData.Coin;
+        _txtCoinClaim.text = "+" + _relicData.Coin + " Coin";
     }
 
     private void UpdateTxtName()
@@ -138,31 +159,28 @@ public class GalleryRelic : MonoBehaviour
     private void Start()
     {
         _BtnSelecter.onClick.AddListener(OnClickSelecter);
-        _BtnClaim.onClick.AddListener(OnClickClaim);
         _BtnInfo.onClick.AddListener(OnClickInfo);
-        _BtnCollect.onClick.AddListener(OnClickCollect);
-
     }
 
     private void OnDestroy()
     {
         _BtnSelecter.onClick.RemoveListener(OnClickSelecter);
-        _BtnClaim.onClick.RemoveListener(OnClickClaim);
         _BtnInfo.onClick.RemoveListener(OnClickInfo);
-        _BtnCollect.onClick.RemoveListener(OnClickCollect);
     }
 
     private void Update()
     {
         if(_timer != null)
         {
-            UpdateTimer(_timer.GetTime());
             _timer.Tick(Time.deltaTime);
+            UpdateSliderProgress(_SliderProgress.value - Time.deltaTime);
+            UpdateTimer();
         }
     }
 
-    private void UpdateTimer(float minute)
+    private void UpdateTimer()
     {
+        float minute = _SliderProgress.value;
         TimeSpan t = TimeSpan.FromMinutes(minute);
         _txtCoutdown.text = $"{t.Hours}h:{t.Minutes}m";
     }
@@ -174,15 +192,25 @@ public class GalleryRelic : MonoBehaviour
 
     private void OnClickClaim()
     {
-        //TODO: Add coin to player
-        _data.LastTimer = DateTime.Now.ToString();
-        TimeSpan timeSpan = GetTimeFromLastClick();
-        _timer = new TimerUtils.CountdownTimer(timeSpan.Hours * 60 + timeSpan.Minutes);
-        _timer.OnTimerStop += OnCountdownCompleted;
-        _timer.Start();
+        _ObjCoinClaim.gameObject.SetActive(false);
+        _ObjProgress.gameObject.SetActive(true);
 
-        _BtnClaim.gameObject.SetActive(false);
-        _txtCoutdown.gameObject.SetActive(true);
+        DateTime lastTime = DateTime.Parse(_data.LastTimer);
+        DateTime targetTime = lastTime.AddMinutes(_relicData.Timer).AddSeconds(60);
+        DateTime currTime = DateTime.Now;
+        TimeSpan time = targetTime.Subtract(lastTime);
+        TimeSpan timePassed = currTime.Subtract(lastTime);
+        TimeSpan timeRemaining = targetTime.Subtract(currTime);
+
+        _SliderProgress.maxValue = (float)time.TotalMinutes;
+        _SliderProgress.minValue = 0;
+        _SliderProgress.value = (float)timeRemaining.TotalMinutes;
+        UpdateSliderProgress(_SliderProgress.value);
+
+        _timer = new TimerUtils.CountdownTimer((float)timeRemaining.TotalMinutes);
+        _timer.OnTimerStop += OnCountdownStopped;
+        _timer.Start();
+        UpdateTimer();
 
         OnRelicClaim?.Invoke(_relicData.Coin);
     }
@@ -192,22 +220,15 @@ public class GalleryRelic : MonoBehaviour
         GUIManager.Instance.ShowPopup<PopupGalleryRelic>(_data);
     }
 
-    private void OnClickCollect()
+    private void OnCountdownStopped()
     {
-        ChallengeManager.Instance.OnInit(_data);
-        GUIManager.Instance.HidePopup<PopupGallery>();
-        GUIManager.Instance.HideScreen<ScreenMain>();
-    }
-
-    private void OnCountdownCompleted()
-    {
-        _timer.OnTimerStop -= OnCountdownCompleted;
+        _timer.OnTimerStop -= OnCountdownStopped;
         _timer = null;
 
-        _BtnClaim.gameObject.SetActive(true);
-        _txtCoutdown.gameObject.SetActive(false);
-
-        OnCoutDownCompleted?.Invoke(_relicData.Coin);
+        _ObjProgress.gameObject.SetActive(false);
+        _ObjCoinClaim.gameObject.SetActive(true);
+        
+        OnCountdownCompleted?.Invoke(_relicData.Coin);
     }
 
     public void OnClaim()
@@ -223,7 +244,6 @@ public class GalleryRelic : MonoBehaviour
 
     private TimeSpan GetTimeFromLastClick()
     {
-        //DateTime targetTime = _data.LastTimeSpinFreeClicked.AddMinutes(timeToFree).AddSeconds(60); //Countdown => need add 60
         DateTime targetTime = DateTime.Parse(_data.LastTimer).AddMinutes(_relicData.Timer).AddSeconds(60);
         DateTime currTime = DateTime.Now;
         TimeSpan subTime = targetTime.Subtract(currTime);

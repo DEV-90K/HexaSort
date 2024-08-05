@@ -67,14 +67,6 @@ public class LevelManager : MonoSingleton<LevelManager>
     {
         amountHexagon = amount;
     }
-    
-    public void OnInitLevelByID(int IDLevel)
-    {
-        LevelData levelData = ResourceManager.instance.GetLevelByID(IDLevel);
-        LevelPresenterData presenterData = ResourceManager.instance.GetLevelPresenterDataByID(IDLevel);
-
-        OnInit(levelData, presenterData);
-    }
 
     public void OnInitCurrentLevel()
     {
@@ -153,6 +145,22 @@ public class LevelManager : MonoSingleton<LevelManager>
         GUIManager.instance.ShowScreen<ScreenMain>();
     }
 
+    public void OnRevice()
+    {
+        StartCoroutine(IE_OnRevice());
+    }
+
+    private IEnumerator IE_OnRevice()
+    {
+        int amount = UnityEngine.Random.Range(1, 5);
+
+        for(int i = 0; i < amount; i++)
+        {
+            yield return _levelControl.IE_RemoveRandomStack();
+        }
+        GameManager.instance.ChangeState(GameState.LEVEL_PLAYING);
+    }
+
     private void OnFinish()
     {
         _gridManager.CollectOccupied();
@@ -162,21 +170,23 @@ public class LevelManager : MonoSingleton<LevelManager>
 
     private void OnFinishLosed()
     {
-        OnFinish();
+        //OnFinish();
+        GameManager.Instance.ChangeState(GameState.FINISH);
         MainPlayer.instance.PlayingLosedLevel(_presenterData.Level);
-        StartCoroutine(IE_FinishLosed(1f));
+        StartCoroutine(IE_FinishLosed(0f));
     }
 
     private IEnumerator IE_FinishLosed(float delay)
     {
         yield return new WaitForSeconds(delay);        
         GUIManager.instance.ShowPopup<PopupLevelLosed>(_presenterData);
-        _levelData = null;
-        _presenterData = null;
+        //_levelData = null;
+        //_presenterData = null;
     }
 
     private void OnFinishWoned()
     {
+        GameManager.Instance.ChangeState(GameState.FINISH);
         OnFinish();
         MainPlayer.instance.PlayingWonedLevel(_presenterData.Level);        
         StartCoroutine(IE_FinishWoned(1f));
@@ -216,7 +226,7 @@ public class LevelManager : MonoSingleton<LevelManager>
     private IEnumerator IE_OnBoostHammer(Hexagon hexagon)
     {
         StackHexagon stackHexagon = hexagon.HexagonStack;
-        Vector3 hammerPos = stackHexagon.GetTopPositon();
+        Vector3 hammerPos = stackHexagon.GetTopPosition();
         _hammer.gameObject.SetActive(true);
         _hammer.transform.position = hammerPos;
         yield return _hammer.IE_HummerAction();
@@ -300,7 +310,6 @@ public class LevelManager : MonoSingleton<LevelManager>
 
     private void LevelController_OnTurnCompleted()
     {
-
         if (amountHexagon >= _presenterData.Goal)
         {
             OnFinishWoned();

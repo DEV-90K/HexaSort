@@ -9,6 +9,9 @@ public class PopupBase : MonoBehaviour
     public virtual void Show()
     {
         gameObject.SetActive(true);
+        LeanTween.scale(gameObject, Vector3.one, 0.2f)
+            .setFrom(Vector3.one * 0.63f)
+            .setEaseOutBack();            
     }
 
     public virtual void HideByDelay(float delay)
@@ -19,12 +22,17 @@ public class PopupBase : MonoBehaviour
 
     public virtual void Hide()
     {
-        gameObject.SetActive(false);
-
-        if(!canReused)
-        {
-            Destroy(gameObject);
-        }
+        LeanTween.scale(gameObject, Vector3.one * 0.63f, 0.2f)
+            .setFrom(Vector3.one)
+            .setEaseInBack()
+            .setOnComplete(() =>
+            {
+                gameObject.SetActive(false);
+                if (!canReused)
+                {
+                    Destroy(gameObject);
+                }
+            });
     }
 
     public void OnSetup()

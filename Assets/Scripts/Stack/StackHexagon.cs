@@ -7,6 +7,8 @@ public class StackHexagon : PoolMember
 {
     [SerializeField]
     private CanvasStackHexagon canvasStack;
+    [SerializeField]
+    private Transform tf_Ray;
     public List<Hexagon> Hexagons { get; private set; }
     private StackHexagonData _data;
     public void OnInit(StackHexagonData data)
@@ -33,6 +35,11 @@ public class StackHexagon : PoolMember
         ShowCanvas();
     }
 
+    public Transform GetTransformRay()
+    {
+        return tf_Ray;
+    }
+
     public void TweenShowTrick()
     {
         foreach (Hexagon hex  in Hexagons)
@@ -47,29 +54,6 @@ public class StackHexagon : PoolMember
         {
             hex.TweenHideTrick();
         }
-    }
-
-    public IEnumerator IE_RemoveByTopColor()
-    {
-        Color topColor = GetTopHexagonColor();
-        int numberOfPlayerHexagon = 0;
-        float offsetDelayTime = 0;
-        while (Hexagons.Count > 0)
-        {
-            Hexagon playerHexagon = Hexagons[Hexagons.Count - 1];
-            if (!ColorUtils.ColorEquals(topColor, playerHexagon.Color))
-            {
-                break;
-            }
-
-            numberOfPlayerHexagon++;            
-            playerHexagon.SetParent(null);
-            playerHexagon.TweenVanish(offsetDelayTime);
-            offsetDelayTime += GameConstants.HexagonConstants.TIME_DELAY;
-            RemovePlayerHexagon(playerHexagon);
-        }
-
-        yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM + (numberOfPlayerHexagon - 1) * GameConstants.HexagonConstants.TIME_DELAY);
     }
 
     public int GetNumberSimilarColor()
@@ -108,11 +92,6 @@ public class StackHexagon : PoolMember
     public Color GetTopHexagonColor()
     {
         return Hexagons[^1].Color;
-    }
-
-    public Vector3 GetTopPositon()
-    {
-        return canvasStack.transform.position;
     }
 
     public void PlaceOnGridHexagon()
@@ -180,11 +159,11 @@ public class StackHexagon : PoolMember
         //Remove bottom to top
         while (Hexagons.Count > 0)
         {
-            Hexagon playerHexagon = Hexagons[0];
+            Hexagon playerHexagon = Hexagons[Hexagons.Count - 1];
             playerHexagon.SetParent(null);
             playerHexagon.TweenVanish(offsetDelayTime);
             offsetDelayTime += GameConstants.HexagonConstants.TIME_DELAY;
-            Hexagons.RemoveAt(0);
+            RemovePlayerHexagon(playerHexagon);
         }
 
         yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM + (numberOfPlayerHexagon - 1) * GameConstants.HexagonConstants.TIME_DELAY);
@@ -208,6 +187,31 @@ public class StackHexagon : PoolMember
         }
 
         yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM + (numberOfPlayerHexagon - 1) * GameConstants.HexagonConstants.TIME_DELAY);
+    }
+
+    public IEnumerator IE_Spawn()
+    {
+        HideCanvas();
+        foreach (Hexagon hex in Hexagons)
+        {
+            hex.DisableCollider();
+            hex.transform.localScale = Vector3.zero;
+        }
+
+        for (int i = 0; i < Hexagons.Count; i++)
+        {
+            Hexagon hex = Hexagons[i];
+            hex.TweenShow(GameConstants.HexagonConstants.TIME_DELAY * i);
+        }
+
+        yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM + (Hexagons.Count - 1) * GameConstants.HexagonConstants.TIME_DELAY);
+        
+        ShowCanvas();
+        foreach (Hexagon hex in Hexagons)
+        {
+            hex.EnableCollider();
+            hex.transform.localScale = Vector3.one;
+        }
     }
 
     #region Canvas  
@@ -235,10 +239,15 @@ public class StackHexagon : PoolMember
             {
                 amount++;
             }
-        }
+        }        
 
-        canvasStack.transform.position = GetTopPosition();
-        canvasStack.UpdateTxtNumber(amount);
+        canvasStack.OnShow(GetTopPosition(), amount);
+    }
+
+    public IEnumerator ShowAnimEffect(VanishType type)
+    {
+        ShowCanvas();
+        return canvasStack.OnShowAnim(type);
     }
 
     //When merge and remove completed
@@ -249,15 +258,18 @@ public class StackHexagon : PoolMember
             return;
         }
 
-        canvasStack.gameObject.SetActive(true);
         UpdateCanvas();
     }
 
     //When in processing merge and remove > 10;
     public void HideCanvas()
     {
-        Debug.Log("Hide Canvas: " + gameObject.GetInstanceID());
-        canvasStack.gameObject.SetActive(false);
+        canvasStack.OnHide();
+    }
+
+    public IEnumerator PlayParticles(VanishType type)
+    {
+        yield return canvasStack.PlayParticle(type);
     }
     #endregion Canvas
 

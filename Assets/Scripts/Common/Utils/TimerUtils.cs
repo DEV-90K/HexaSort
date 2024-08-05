@@ -20,9 +20,8 @@ public class TimerUtils : MonoBehaviour
             IsRunning = false;
         }
 
-        public void Start()
-        {
-            Time = initialTime;
+        public virtual void Start()
+        {            
             if (!IsRunning)
             {
                 IsRunning = true;
@@ -62,6 +61,12 @@ public class TimerUtils : MonoBehaviour
             }
         }
 
+        public override void Start()
+        {
+            Reset();
+            base.Start();
+        }
+
         public bool IsFinished => Time <= 0;
 
         public void Reset() => Time = initialTime;
@@ -77,15 +82,28 @@ public class TimerUtils : MonoBehaviour
 
     public class StopwatchTimer : Timer
     {
-        public StopwatchTimer() : base(0) { }
+        public StopwatchTimer(float value) : base(value) { }
 
         public override void Tick(float deltaTime)
         {
-            if (IsRunning)
+            if (IsRunning && Time < initialTime)
             {
                 Time += deltaTime;
             }
+
+            if (IsRunning && Time >= initialTime)
+            {
+                Stop();
+            }
         }
+
+        public override void Start()
+        {
+            Reset();
+            base.Start();
+        }
+
+        public bool IsFinished => Time >= initialTime;
 
         public void Reset() => Time = 0;
 

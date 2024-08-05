@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,7 +25,7 @@ public class PopupChallengeLosed : PopupBase
         _ArtRelic.sprite = art;
     }
 
-    private void Awake()
+    private void Start()
     {
         _BtnHome.onClick.AddListener(OnClickBtnHome);
         _BtnReplay.onClick.AddListener(OnClickBtnReplay);

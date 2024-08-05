@@ -37,6 +37,7 @@ public class GUIManager : PersistentMonoSingleton<GUIManager>
 
     public T ShowScreen<T>(params object[] paras) where T : ScreenBase
     {
+        HideAllPopup();
         ScreenBase screen = screenManager.GetScreen<T>();
         screen.OnSetup();
         screen.OnInit(paras);

@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public interface IStackOnPlaced
@@ -106,14 +104,21 @@ public class StackManager : MonoSingleton<StackManager>, IStackOnPlaced, IStackS
 
         stackHexagons.Clear();
         stackSpawner.OnEnterSpawn();
+
         for (int i = 0; i < pointSpawns.Length; i++)
         {
            StackHexagon stack = stackSpawner.Spawn(pointSpawns[i]);
+           
+            LeanTween.moveLocalX(stack.gameObject, 0f, 0.1f)
+                .setFrom((i+1) * 3f)
+                .setEaseInOutSine()
+                .setDelay(i * 0.05f);
+
            stackHexagons.Add(stack);
         }
     }
 
-    public virtual void CollectRandomed()
+    public void CollectRandomed()
     {
         stackCollects = new List<StackHexagon>();
         foreach (StackHexagon stack in stackHexagons)

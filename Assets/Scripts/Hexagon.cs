@@ -85,20 +85,32 @@ public class Hexagon : PoolMember
 
     public void MoveToGridHexagon(Vector3 localPos, float delayTime)
     {
+        Vector3 centerPoint = Vector3.Lerp(localPos, transform.localPosition, 0.5f).Add(y: GameConstants.HexagonConstants.HEIGHT_BONUS);
+
         LeanTween.cancel(gameObject);
-        LeanTween.moveLocal(gameObject, localPos, GameConstants.HexagonConstants.TIME_ANIM)
-            .setEaseInOutSine()
+        LeanTween.moveLocal(gameObject, centerPoint, GameConstants.HexagonConstants.TIME_ANIM/2)
+            .setEaseInSine()
+            .setOnComplete(() =>
+            {
+                LeanTween.moveLocal(gameObject, localPos, GameConstants.HexagonConstants.TIME_ANIM/2)
+                .setEaseOutSine();
+            })
             .setDelay(delayTime);
 
         Vector3 direction = (localPos - transform.localPosition).With(y: 0).normalized;
         Vector3 v = transform.rotation * direction;
-        Vector3 rotationAxis = Vector3.Cross(Vector3.up, v);
+        Vector3 rotationAxis = Vector3.Cross(Vector3.up, direction);
 
-        LeanTween.rotateAround(gameObject, rotationAxis, 180, GameConstants.HexagonConstants.TIME_ANIM)
-            .setEaseInOutSine()
+        LeanTween.rotateAround(gameObject, rotationAxis, 90, GameConstants.HexagonConstants.TIME_ANIM / 2)
+            .setEaseInSine()
             .setOnComplete(() =>
             {
-                transform.localEulerAngles = Vector3.zero;
+                LeanTween.rotateAround(gameObject, rotationAxis, 90, GameConstants.HexagonConstants.TIME_ANIM / 2)
+                    .setEaseOutSine()
+                    .setOnComplete(() =>
+                    {
+                        transform.localEulerAngles = Vector3.zero;
+                    });
             })
             .setDelay(delayTime);
     }
@@ -114,6 +126,14 @@ public class Hexagon : PoolMember
                     Collect();
                 }
              );
+    }
+
+    public void TweenShow(float offsetDelayTime)
+    {
+        LeanTween.cancel(gameObject);
+        LeanTween.scale(gameObject, Vector3.one, GameConstants.HexagonConstants.TIME_ANIM / 2)
+            .setEaseOutExpo()
+            .setDelay(offsetDelayTime);
     }
 
     public void OnResert()

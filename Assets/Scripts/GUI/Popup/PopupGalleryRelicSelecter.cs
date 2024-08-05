@@ -1,9 +1,6 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Experimental.AI;
 using UnityEngine.UI;
 
 public class PopupGalleryRelicSelecter : PopupBase
@@ -29,16 +26,13 @@ public class PopupGalleryRelicSelecter : PopupBase
     [SerializeField]
     private Image _RelicArt;
 
-    private GalleryRelic _Grallery;
-    private GalleryData _GalleryData;
+    [SerializeField]
+    private TMP_Text _MatAmount;
 
-    //private int _idGallery;
-    //private int[] _idRelics; 
-    //private int _idxGalleryRelic;
+    private GalleryData _GalleryData;
 
     private GalleryRelicData _selectGalleryRelic;
     private RelicData _selectData;
-    private Sprite _selectSprite;
 
     public override void OnInit(object[] paras)
     {
@@ -76,11 +70,9 @@ public class PopupGalleryRelicSelecter : PopupBase
                 galleryRelicDatas.Add(data);
         }
 
-        //_idxGalleryRelic = (int)paras[2];
-        //_Grallery = (GalleryRelic)paras[3];
-
         SetUpRelicItems(galleryRelicDatas);
         ShowSelection(galleryRelicDatas[0]);
+        UpdateTxtPlayerMaterial();
     }
 
     private void SetUpRelicItems(List<GalleryRelicData> galleryRelicDatas)
@@ -129,17 +121,21 @@ public class PopupGalleryRelicSelecter : PopupBase
 
     private void OnClickBtnSelection()
     {
-        //_Grallery.ShowRelic(_idxGalleryRelic, _selectData.ID);
+        //GUIManager.Instance.HideScreen<ScreenMain>();
+        //GUIManager.Instance.HideAllPopup();
 
-        GUIManager.Instance.HideScreen<ScreenMain>();
-        GUIManager.Instance.HideAllPopup();
+        //MainPlayer.Instance.SubMaterial(_selectData.Material);
+        //if(_selectGalleryRelic.State == GalleryRelicState.NONE)
+        //{
+        //    _selectGalleryRelic.State = GalleryRelicState.LOCK;
+        //}
+        //ChallengeManager.Instance.OnInit(_selectGalleryRelic);
 
         MainPlayer.Instance.SubMaterial(_selectData.Material);
-        if(_selectGalleryRelic.State == GalleryRelicState.NONE)
-        {
-            _selectGalleryRelic.State = GalleryRelicState.LOCK;
-        }
-        ChallengeManager.Instance.OnInit(_selectGalleryRelic);
+        _selectGalleryRelic.State = GalleryRelicState.COLLECT;
+        MainPlayer.Instance.CollectGalleryRelic(_selectGalleryRelic);
+        GUIManager.Instance.ShowPopup<PopupGallery>(_selectGalleryRelic.IDGallery);
+        Hide();
     }
 
     public void ShowSelection(RelicData data, Sprite relicArt)
@@ -195,5 +191,10 @@ public class PopupGalleryRelicSelecter : PopupBase
     private void UpdateTxtMaterial()
     {
         _TxtMaterial.text = _selectData.Material + " Material\nPlay Collect";
+    }
+
+    private void UpdateTxtPlayerMaterial()
+    {
+        _MatAmount.text = MainPlayer.Instance.GetMaterial().ToString();
     }
 }

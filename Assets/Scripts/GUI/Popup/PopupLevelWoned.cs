@@ -24,7 +24,6 @@ public class PopupLevelWoned : PopupBase
     public override void Show()
     {
         base.Show();
-        GameManager.Instance.ChangeState(GameState.PAUSE);
         UpdateTxtCoin(_presenterData.Coin);
         UpdateTxtMaterial(_presenterData.Material);
     }
@@ -40,9 +39,7 @@ public class PopupLevelWoned : PopupBase
     }
 
     private void OnClickBtnReward()
-    {
-        GameManager.Instance.ChangeState(GameState.FINISH);
-
+    {        
         MainPlayer.Instance.AddCoin(_presenterData.Coin);
         MainPlayer.Instance.AddMaterial(_presenterData.Material);
         
@@ -74,10 +71,30 @@ public class PopupLevelWoned : PopupBase
 
     private void UpdateTxtMaterial(int mal)
     {
+        if(mal <= 0)
+        {
+            _TextMaterial.transform.parent.gameObject.SetActive(false);
+            return;
+        }
+        else
+        {
+            _TextMaterial.transform.parent.gameObject.SetActive(true);
+        }
+
         _TextMaterial.text = "+" + mal;
     }
     private void UpdateTxtCoin(int coin)
     {
+        if (coin <= 0)
+        {
+            _TextCoin.transform.parent.gameObject.SetActive(false);
+            return;
+        }
+        else
+        {
+            _TextCoin.transform.parent.gameObject.SetActive(true);
+        }
+
         _TextCoin.text = "+" + coin;
     }
 }

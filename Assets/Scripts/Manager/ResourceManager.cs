@@ -30,6 +30,8 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
 
     private DialogueData[] _dialogueDatas;
 
+    private StackVanishData[] _stackVanishDatas;
+    private Dictionary<VanishType, Sprite> _cacheVanishSprite = new Dictionary<VanishType, Sprite>();
     public void LoadResource()
     {
         _levelPresenterDatas = LoadLevelPresenterDatas();
@@ -43,7 +45,8 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         _galleryDatas = LoadGalleryDatas();
 
         _dialogueDatas = LoadDialogueDatas();
-        _dialogueDatas.DebugLogObject();
+
+        _stackVanishDatas = LoadStackVanishDatas();
     }
 
     #region Mechanic Config
@@ -1005,4 +1008,58 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         return datas.ToArray();
     }
     #endregion Dialogue Data
+
+    #region Stack Vanish Data
+    private StackVanishData[] LoadStackVanishDatas()
+    {
+        StackVanishData data1 = new StackVanishData();
+        data1.Type = VanishType.NONE;
+        data1.Name = "NONE";
+        data1.Description = "";
+
+        StackVanishData data2 = new StackVanishData();
+        data2.Type = VanishType.RANDOM;
+        data2.Name = "RANDOM";
+        data2.Description = "Vanish Random Stack On Grid";
+
+        StackVanishData data3 = new StackVanishData();
+        data3.Type = VanishType.AROUND;
+        data3.Name = "AROUND";
+        data3.Description = "Vanish All Stack Around On Grid";
+
+        StackVanishData data4 = new StackVanishData();
+        data4.Type = VanishType.CONTAIN_COLOR;
+        data4.Name = "COLOR";
+        data4.Description = "Vanish All Stack Cointain Same Color On Grid";
+        
+        return new StackVanishData[] { data1, data2, data3, data4 };
+    }
+
+    public StackVanishData GetStackVanishData(VanishType type)
+    {
+        for(int i = 0; i < _stackVanishDatas.Length; i++)
+        {
+            if(type == _stackVanishDatas[i].Type)
+            {
+                return _stackVanishDatas[i];
+            }
+        }
+
+        return null;
+    }
+
+    public Sprite GetStackVanishSprite(VanishType type)
+    {
+        if (_cacheVanishSprite.ContainsKey(type))
+        {
+            return (Sprite)_cacheVanishSprite[type];
+        }
+
+        string key = EnumUtils.ParseString(type);
+        string path = string.Format("Vanishes/{0}", key);
+        Sprite art = Resources.Load<Sprite>(path);
+        _cacheVanishSprite[type] = art;
+        return art;
+    }
+    #endregion Stack Vanish Data
 }

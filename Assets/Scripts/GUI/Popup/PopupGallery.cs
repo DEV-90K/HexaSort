@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Claims;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,9 +13,8 @@ public class PopupGallery : PopupBase
     private Button _BtnCollectCoin;
     [SerializeField]
     private TMP_Text _TxtCoin;
-
     [SerializeField]
-    private Button _BtnWaiting;
+    private TMP_Text _TxtRelics;
     [SerializeField]
     private Transform _Contain;
     [SerializeField]
@@ -37,10 +37,6 @@ public class PopupGallery : PopupBase
         _galleryRelicDatas = MainPlayer.Instance.GetGalleryRelicByID(_data.ID);
 
         _amountCoin = 0;
-        bool stateOfBtnWait = _galleryRelicDatas.Length > 0 ? true : false;
-        _BtnWaiting.gameObject.SetActive(stateOfBtnWait);
-        _BtnCollectCoin.gameObject.SetActive(false);
-
         _rels = InitGalleryRelics();
         foreach (GalleryRelicData galleryRelicData in _galleryRelicDatas)
         {
@@ -48,6 +44,9 @@ public class PopupGallery : PopupBase
         }
 
         UpdateGalleryName();
+        UpdateTxtRelics();
+        UpdateTxtCoin();
+        UpdateBtnCollectCoin();
     }
 
     private GalleryRelic[] InitGalleryRelics()
@@ -85,20 +84,19 @@ public class PopupGallery : PopupBase
     private void OnEnable()
     {
         GalleryRelic.OnRelicClaim += GalleryRelic_OnRelicClaim;
-        GalleryRelic.OnCoutDownCompleted += GalleryRelic_OnCoutDownCompleted;
+        GalleryRelic.OnCountdownCompleted += GalleryRelic_OnCoutDownCompleted;
     }
 
     private void OnDisable()
     {
         GalleryRelic.OnRelicClaim -= GalleryRelic_OnRelicClaim;
-        GalleryRelic.OnCoutDownCompleted -= GalleryRelic_OnCoutDownCompleted;
+        GalleryRelic.OnCountdownCompleted -= GalleryRelic_OnCoutDownCompleted;
     }
 
     private void Start()
     {
         _BtnBack.onClick.AddListener(OnClickBtnBack);
         _BtnCollectCoin.onClick.AddListener(OnClickBtnCollect);
-        _BtnWaiting.onClick.AddListener(OnClickBtnWaiting);
     }
 
     private void OnDestroy()
@@ -120,41 +118,57 @@ public class PopupGallery : PopupBase
         }
     }
 
-    private void OnClickBtnWaiting()
-    {
-        Debug.Log("OnClickBtnWaiting");
-    }
     private void GalleryRelic_OnRelicClaim(int amount)
     {
         _amountCoin -= amount;
         UpdateTxtCoin();
-
-        if (_amountCoin <= 0)
-        {
-            _BtnCollectCoin.gameObject.SetActive(false);
-            _BtnWaiting.gameObject.SetActive(true);
-        }
+        UpdateBtnCollectCoin();
     }
 
     private void GalleryRelic_OnCoutDownCompleted(int amount)
     {
         _amountCoin += amount;
         UpdateTxtCoin();
-
-        if (_amountCoin > 0)
-        {
-            _BtnCollectCoin.gameObject.SetActive(true);
-            _BtnWaiting.gameObject.SetActive(false);
-        }
+        UpdateBtnCollectCoin();
     }
 
     private void UpdateTxtCoin()
     {
-        _TxtCoin.text = _amountCoin.ToString();
+        if(_amountCoin == 0)
+        {
+            _TxtCoin.text = "Claim";
+        }
+        else
+        {
+            _TxtCoin.text = _amountCoin + " Coin";
+        }        
     }
 
     private void UpdateGalleryName()
     {
         _TxtGalleryName.text = _data.Name;
+    }
+
+    private void UpdateTxtRelics()
+    {
+        if(_galleryRelicDatas.Length == 0)
+        {
+            _TxtRelics.text = "You don't have any relics \n Collect it !!";
+        }
+        else
+            _TxtRelics.text = $"You have {_galleryRelicDatas.Length}/{_data.IDRelics.Length} Relics";
+    }
+
+    private void UpdateBtnCollectCoin()
+    {
+        if(_amountCoin == 0)
+        {
+            _BtnCollectCoin.interactable = false;
+        }
+        else
+        {
+            _BtnCollectCoin.interactable = true;
+        }
+
     }
 }

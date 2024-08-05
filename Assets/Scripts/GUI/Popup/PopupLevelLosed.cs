@@ -9,6 +9,8 @@ public class PopupLevelLosed : PopupBase
     private Button _BtnHome;
     [SerializeField]
     private Button _BtnReplay;
+    [SerializeField]
+    private Button _BtnRevice;
 
     private LevelPresenterData _presenterData;
 
@@ -28,12 +30,14 @@ public class PopupLevelLosed : PopupBase
     {
         _BtnHome.onClick.AddListener(OnClickBtnHome);
         _BtnReplay.onClick.AddListener(OnClickBtnReplay);
+        _BtnRevice.onClick.AddListener(OnClickBtnRevice);
     }
 
     private void OnDestroy()
     {
         _BtnHome.onClick.RemoveListener(OnClickBtnHome);
         _BtnReplay.onClick.RemoveListener(OnClickBtnReplay);
+        _BtnRevice.onClick.RemoveListener(OnClickBtnRevice);
     }
 
     private void OnClickBtnHome()
@@ -46,7 +50,13 @@ public class PopupLevelLosed : PopupBase
 
     private void OnClickBtnReplay()
     {
-        LevelManager.Instance.OnInitLevelByID(_presenterData.Level);
+        LevelManager.Instance.OnReplay();
+        Hide();
+    }
+
+    private void OnClickBtnRevice()
+    {
+        LevelManager.Instance.OnRevice();
         Hide();
     }
 }

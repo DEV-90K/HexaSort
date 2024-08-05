@@ -11,8 +11,6 @@ public class StackRandomSpawner : StackSpawner
     private List<StackHexagon> cacheStacks = new List<StackHexagon>();
     private int _amountOfColor;
     private int[] _probabilitiesOfSimilarColor;
-    //private Color[] _cacheColors;
-    //private Color[] _colors;
 
     private HexagonData[] _hexagonDatas;
     private HexagonData[] _cacheHexagonDatas;
@@ -22,23 +20,6 @@ public class StackRandomSpawner : StackSpawner
         LoadConfig();
 
         HexagonData[] datas = ResourceManager.Instance.GetAllHexagonData();
-        //List<Color> listColors = new List<Color>();
-
-        //for (int i = 0; i < datas.Length; i++)
-        //{
-        //    HexagonData data = datas[i];
-
-        //    if (data.ID >= 20)
-        //        continue;
-
-        //    if (ColorUtility.TryParseHtmlString(data.HexColor, out Color color))
-        //    {
-        //        listColors.Add(color);
-        //    }
-        //}
-
-        //_cacheColors = listColors.ToArray();
-
         List<HexagonData> list = new List<HexagonData>();
         foreach (HexagonData data in datas)
         {
@@ -212,19 +193,11 @@ public class StackRandomSpawner : StackSpawner
         return false;
     }
 
-    //Get Random Color base on config amount = _colors.length();
-    //private Color[] GetRandomColors_v2()
-    //{
-    //    return _colors.OrderBy(x => Random.value).ToArray();
-    //}
-
     private HexagonData[] GetRandomHexagonDatas()
     {
         return _hexagonDatas.OrderBy(x => Random.value).ToArray();
     }
 
-
-    //Hexagons same color
     private int[] GetRandomHexagons(int totalHexagon, int numberSplit)
     {
         int[] arrHexagon = new int[numberSplit];

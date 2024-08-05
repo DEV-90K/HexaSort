@@ -185,6 +185,41 @@ MonoBehaviour:
   hexagonStack: {fileID: 1421524477317019889, guid: 6781c8713805f6e439366faa82bfbbec, type: 3}
   playerHexagon: {fileID: 7853804604023892965, guid: 7f99a515520a5e2469c415a0a3191801, type: 3}
   hexagonClampf: {x: 8, y: 10}
+--- !u!1 &53081566
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 53081567}
+  m_Layer: 11
+  m_Name: Notice Container
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &53081567
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 53081566}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1015358137}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &63738333
 GameObject:
   m_ObjectHideFlags: 0
@@ -1062,6 +1097,7 @@ RectTransform:
   m_Children:
   - {fileID: 63738334}
   - {fileID: 1398043654}
+  - {fileID: 53081567}
   - {fileID: 1844555019}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1573,6 +1609,7 @@ GameObject:
   - component: {fileID: 1639941845}
   - component: {fileID: 1639941844}
   - component: {fileID: 1639941846}
+  - component: {fileID: 1639941847}
   m_Layer: 11
   m_Name: GUI Manager
   m_TagString: Untagged
@@ -1650,6 +1687,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _DialougeRoot: {fileID: 1844555019}
   _DialougeBox: {fileID: 6163674046264543677, guid: 9100e01d4e5184b4b877064c5b94a41d, type: 3}
+--- !u!114 &1639941847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1639941841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8feb3d9f40cfb884eb3bec99a8cd723d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _NoticeRoot: {fileID: 1844555019}
+  _NotiveVanish: {fileID: 980983454089227299, guid: 41848c432e8d40947a7ee0f8c352b360, type: 3}
 --- !u!1 &1681613251
 GameObject:
   m_ObjectHideFlags: 0

@@ -152,14 +152,12 @@ public class ScreenLevel : ScreenBase, IBoostHammer, IBoostSwap
 
     private void Hexagon_OnVanish()
     {
-        if(GameManager.Instance.IsState(GameState.FINISH))
+        if(GameManager.Instance.IsState(GameState.LEVEL_PLAYING))
         {
-            return;
+            amount++;
+            LevelManager.Instance.UpdateAmountHexagon(amount);
+            UpdateTxtRatio(amount);
+            UpdateImgFill(amount / (float)presenterData.Goal);
         }
-
-        amount++;
-        LevelManager.Instance.UpdateAmountHexagon(amount);
-        UpdateTxtRatio(amount);
-        UpdateImgFill(amount / (float)presenterData.Goal);
     }
 }
