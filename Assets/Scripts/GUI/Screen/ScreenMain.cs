@@ -14,23 +14,12 @@ public class ScreenMain : ScreenBase
     private Button _BtnGrallery_2;
     [SerializeField]
     private Button _BtnGrallery_3;
-    [SerializeField]
-    private TMP_Text _txtCoin;
-    [SerializeField]
-    private TMP_Text _txtMaterial;
+    //[SerializeField]
+    //private TMP_Text _txtCoin;
+    //[SerializeField]
+    //private TMP_Text _txtMaterial;
     [SerializeField]
     private Button _btnChestReward;
-
-    private int _coin;
-    private int _material;
-
-    public override void OnInit(params object[] paras)
-    {
-        base.OnInit(paras);
-
-        _coin = MainPlayer.Instance.GetCoin();
-        _material = MainPlayer.Instance.GetMaterial();
-    }
 
     public void OnInitWithScene()
     {
@@ -55,33 +44,8 @@ public class ScreenMain : ScreenBase
     {
         base.Show();
         GameManager.Instance.ChangeState(GameState.START);
-        UpdateTxtCoin();
-        UpdateTxtMaterial();
     }
 
-    private void OnEnable()
-    {
-        MainPlayer.OnChangeCoin += MainPlayer_OnChangeCoin;
-        MainPlayer.OnChangeMaterial += MainPlayer_OnChangeMaterial;
-    }
-
-    private void OnDisable()
-    {
-        MainPlayer.OnChangeCoin -= MainPlayer_OnChangeCoin;
-        MainPlayer.OnChangeMaterial -= MainPlayer_OnChangeMaterial;
-    }
-
-    private void MainPlayer_OnChangeCoin(int amount)
-    {
-        _coin = amount;
-        UpdateTxtCoin();
-    }    
-
-    private void MainPlayer_OnChangeMaterial(int amount)
-    {
-        _material = amount;
-        UpdateTxtMaterial();
-    }    
 
     private void Start()
     {        
@@ -127,13 +91,13 @@ public class ScreenMain : ScreenBase
         GUIManager.Instance.ShowPopup<PopupGallery>(3);
     }
 
-    private void UpdateTxtCoin()
-    {
-        _txtCoin.text = _coin.ToString();
-    }
+    //private void UpdateTxtCoin()
+    //{
+    //    _txtCoin.text = _coin.ToString();
+    //}
 
-    private void UpdateTxtMaterial()
-    {
-        _txtMaterial.text = _material.ToString();
-    }
+    //private void UpdateTxtMaterial()
+    //{
+    //    _txtMaterial.text = _material.ToString();
+    //}
 }

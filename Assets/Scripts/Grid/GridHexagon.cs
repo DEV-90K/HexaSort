@@ -10,6 +10,8 @@ public class GridHexagon : PoolMember
     [SerializeField]
     private GameObject model;
     [SerializeField]
+    private ParticleSystem particle;
+    [SerializeField]
     private CanvasGridHexagon _Canvas;
 
     public Color Color
@@ -79,23 +81,6 @@ public class GridHexagon : PoolMember
         LeanTween.cancel(model);
         Color = normalColor;
     }
-    public IEnumerator IE_RemoveStack()
-    {
-        List<Hexagon> hexagons = StackOfCell.Hexagons;
-        int numberOfPlayerHexagon = hexagons.Count;
-        float offsetDelayTime = 0;
-        while (hexagons.Count > 0)
-        {
-            Hexagon playerHexagon = hexagons[0];
-            playerHexagon.SetParent(null);
-            playerHexagon.TweenVanish(offsetDelayTime);
-            offsetDelayTime += GameConstants.HexagonConstants.TIME_DELAY;
-            StackOfCell.RemovePlayerHexagon(playerHexagon);
-            //hexagons.RemoveAt(0);
-        }
-
-        yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM + (numberOfPlayerHexagon - 1) * GameConstants.HexagonConstants.TIME_DELAY);
-    }
 
     public void CollectImmediate()
     {
@@ -148,6 +133,7 @@ public class GridHexagon : PoolMember
         if(stack != null)
         {
             stack.transform.localEulerAngles = Vector3.zero;
+            particle.Play();
         }
     }
 

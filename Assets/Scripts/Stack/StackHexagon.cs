@@ -189,6 +189,11 @@ public class StackHexagon : PoolMember
         yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM + (numberOfPlayerHexagon - 1) * GameConstants.HexagonConstants.TIME_DELAY);
     }
 
+    public float GetTimeRemove()
+    {        
+        return GameConstants.HexagonConstants.TIME_ANIM + (Hexagons.Count - 1) * GameConstants.HexagonConstants.TIME_DELAY;        
+    }
+
     public IEnumerator IE_Spawn()
     {
         HideCanvas();

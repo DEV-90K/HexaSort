@@ -69,7 +69,7 @@ public class CanvasStackHexagon : MonoBehaviour
     }
 
     public IEnumerator WaitUntilAnimCompleted()
-    {
+    {   
         yield return new WaitUntil(() => hasAnim == false);
     }
 
@@ -96,7 +96,9 @@ public class CanvasStackHexagon : MonoBehaviour
         }
 
         particle.Play();
-        yield return new WaitUntil(() => particle.isPlaying == false);
+        yield return new WaitForSeconds(2f);
+        particle.Stop();
+        //yield return new WaitUntil(() => particle.isPlaying == false);
         txtNumber.gameObject.SetActive(true);
     }
 
@@ -111,10 +113,7 @@ public class CanvasStackHexagon : MonoBehaviour
         {
             Camera cam = Camera.main;
             transform.LookAt(transform.position + cam.transform.rotation * Vector3.forward, cam.transform.rotation * Vector3.up);
-            txtNumber.transform.LookAt(stack.position, Quaternion.Euler(90, 0, 0) * (transform.rotation * Vector3.up));
-            //Vector3 angle = transform.localEulerAngles;
-            //angle.x = 90;
-            //transform.localEulerAngles = angle;            
+            txtNumber.transform.LookAt(stack.position, Quaternion.Euler(90, 0, 0) * (transform.rotation * Vector3.up));           
         }
     }
 }

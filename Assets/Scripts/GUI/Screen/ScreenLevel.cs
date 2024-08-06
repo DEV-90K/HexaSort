@@ -14,7 +14,7 @@ public class ScreenLevel : ScreenBase, IBoostHammer, IBoostSwap
     [SerializeField]
     private TMP_Text _txtRatio;
     [SerializeField]
-    private TMP_Text _txtCoin;
+    private TMP_Text _txtLevel;
     [SerializeField]
     private Slider _imgFill;
 
@@ -45,7 +45,7 @@ public class ScreenLevel : ScreenBase, IBoostHammer, IBoostSwap
         amount = LevelManager.Instance.GetAmountHexagon();
         UpdateTxtRatio(amount);
         UpdateImgFill(amount / (float)presenterData.Goal);
-        UpdateTxtPlayerCoin();        
+        UpdateTxtLevel();
     }
 
     public override void Hide()
@@ -139,16 +139,21 @@ public class ScreenLevel : ScreenBase, IBoostHammer, IBoostSwap
     {
         _txtRatio.text = $"{Mathf.Min(amount, presenterData.Goal)}/{presenterData.Goal}";        
     }
+    private void UpdateTxtLevel()
+    {
+        _txtLevel.text = $"Level {presenterData.Level}";
+    }
 
     private void UpdateImgFill(float ratio)
     {
         _imgFill.value = Mathf.Min(ratio, 1);
     }
 
-    private void UpdateTxtPlayerCoin()
-    {
-        _txtCoin.text = MainPlayer.Instance.GetCoin().ToString();
-    }
+
+    //private void UpdateTxtPlayerCoin()
+    //{
+    //    _txtCoin.text = MainPlayer.Instance.GetCoin().ToString();
+    //}
 
     private void Hexagon_OnVanish()
     {

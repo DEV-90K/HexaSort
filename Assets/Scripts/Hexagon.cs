@@ -99,7 +99,7 @@ public class Hexagon : PoolMember
 
         Vector3 direction = (localPos - transform.localPosition).With(y: 0).normalized;
         Vector3 v = transform.rotation * direction;
-        Vector3 rotationAxis = Vector3.Cross(Vector3.up, direction);
+        Vector3 rotationAxis = Vector3.Cross(Vector3.up, v);
 
         LeanTween.rotateAround(gameObject, rotationAxis, 90, GameConstants.HexagonConstants.TIME_ANIM / 2)
             .setEaseInSine()

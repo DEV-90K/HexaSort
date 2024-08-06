@@ -1,4 +1,6 @@
+using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,6 +28,13 @@ public class PopupGalleryRelic : PopupBase
 
         UpdateArtRelic();
         UpdateTxtName();
+        _txtDescription.text = "";
+        _txtValue.text = "";        
+    }
+
+    public override void Show()
+    {
+        base.Show();
         UpdateTxtDescription();
         UpdateTxtValue();
     }
@@ -37,12 +46,35 @@ public class PopupGalleryRelic : PopupBase
 
     private void UpdateTxtDescription()
     {
-        _txtDescription.text = "+ Description: " +_relicData.Description;
+        //_txtDescription.text = "+ Description: " +_relicData.Description;
+        _txtDescription.text = "";
+        StartCoroutine(IE_ShowDescription());
+    }
+
+    private IEnumerator IE_ShowDescription()
+    {
+        foreach (char letter in _relicData.Description)
+        {
+            _txtDescription.text += letter;
+            yield return null;
+        }
     }
 
     private void UpdateTxtValue()
     {
-        _txtValue.text = "+ Display value: " +_relicData.Coin + "Coin" + "/" + _relicData.Timer + "Minute";
+        //_txtValue.text = "+ Display value: " +_relicData.Coin + "Coin" + "/" + _relicData.Timer + "Minute";
+        _txtValue.text = "";
+
+        StartCoroutine(IE_ShowValue());
+    }
+
+    private IEnumerator IE_ShowValue()
+    {
+        foreach (char letter in _relicData.Description)
+        {
+            _txtValue.text += letter;
+            yield return null;
+        }
     }
 
     private void UpdateArtRelic()

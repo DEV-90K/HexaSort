@@ -41,7 +41,7 @@ public class PopupGallery : PopupBase
         foreach (GalleryRelicData galleryRelicData in _galleryRelicDatas)
         {
             _rels[galleryRelicData.Position].OnInit(galleryRelicData, _data.ID, _data.IDRelics);
-        }
+        }        
 
         UpdateGalleryName();
         UpdateTxtRelics();
@@ -163,11 +163,11 @@ public class PopupGallery : PopupBase
     {
         if(_amountCoin == 0)
         {
-            _BtnCollectCoin.interactable = false;
+            _BtnCollectCoin.gameObject.SetActive(false);
         }
         else
         {
-            _BtnCollectCoin.interactable = true;
+            _BtnCollectCoin.gameObject.SetActive(true);
         }
 
     }

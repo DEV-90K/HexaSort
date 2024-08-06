@@ -415,12 +415,30 @@ public class LevelController : MonoBehaviour
                 continue;
             }
             else
-            {
+            {                
                 StackHexagon stack = grids[i].StackOfCell;
-                yield return stack.PlayParticles(VanishType.AROUND);
-                yield return stack.IE_Remove();
+                StartCoroutine(stack.PlayParticles(VanishType.AROUND));
             }
         }
+
+        yield return new WaitForSeconds(2f); //Time particles completed
+
+        float max = Mathf.NegativeInfinity;
+        for (int i = 0; i < grids.Count; i++)
+        {
+            if (grid.State == GridHexagonState.LOCK_BY_GOAL || grid.State == GridHexagonState.LOCK_BY_ADS)
+            {
+                continue;
+            }
+            else
+            {
+                StackHexagon stack = grids[i].StackOfCell;
+                max = Mathf.Max(max, stack.GetTimeRemove());
+                StartCoroutine(stack.IE_Remove());
+            }
+        }
+
+        yield return new WaitForSeconds(max);
     }
 
     private IEnumerator IE_RemoveStacksContainColor(Color color)
@@ -436,9 +454,25 @@ public class LevelController : MonoBehaviour
             else
             {
                 StackHexagon stack = grids[i].StackOfCell;
-                yield return stack.PlayParticles(VanishType.AROUND);
-                yield return stack.IE_Remove();
+                StartCoroutine(stack.PlayParticles(VanishType.CONTAIN_COLOR));
             }
         }
+        yield return new WaitForSeconds(2f); //Time particles completed
+
+        float max = Mathf.NegativeInfinity;
+        for (int i = 0; i < grids.Length; i++)
+        {
+            if (grids[i].State == GridHexagonState.LOCK_BY_GOAL || grids[i].State == GridHexagonState.LOCK_BY_ADS)
+            {
+                continue;
+            }
+            else
+            {
+                StackHexagon stack = grids[i].StackOfCell;
+                max = Mathf.Max(max, stack.GetTimeRemove());
+                StartCoroutine(stack.IE_Remove());
+            }
+        }
+        yield return new WaitForSeconds(max);
     }
 }

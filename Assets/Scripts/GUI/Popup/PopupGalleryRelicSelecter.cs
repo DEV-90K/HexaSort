@@ -10,8 +10,6 @@ public class PopupGalleryRelicSelecter : PopupBase
     private Button _BtnClose;
     [SerializeField]
     private Button _BtnSelection;
-    [SerializeField]
-    private TMP_Text _TxtMaterial;
 
     [SerializeField]
     private SelectionRelic _RelicItem;
@@ -23,11 +21,13 @@ public class PopupGalleryRelicSelecter : PopupBase
     private TMP_Text _RelicDescription;
     [SerializeField]
     private TMP_Text _RelicValue;
-    [SerializeField]
-    private Image _RelicArt;
 
     [SerializeField]
     private TMP_Text _MatAmount;
+
+    [SerializeField]
+    private RelicSelecter _RelicSelecter;
+    [SerializeField]
 
     private GalleryData _GalleryData;
 
@@ -121,16 +121,6 @@ public class PopupGalleryRelicSelecter : PopupBase
 
     private void OnClickBtnSelection()
     {
-        //GUIManager.Instance.HideScreen<ScreenMain>();
-        //GUIManager.Instance.HideAllPopup();
-
-        //MainPlayer.Instance.SubMaterial(_selectData.Material);
-        //if(_selectGalleryRelic.State == GalleryRelicState.NONE)
-        //{
-        //    _selectGalleryRelic.State = GalleryRelicState.LOCK;
-        //}
-        //ChallengeManager.Instance.OnInit(_selectGalleryRelic);
-
         MainPlayer.Instance.SubMaterial(_selectData.Material);
         _selectGalleryRelic.State = GalleryRelicState.COLLECT;
         MainPlayer.Instance.CollectGalleryRelic(_selectGalleryRelic);
@@ -183,15 +173,10 @@ public class PopupGalleryRelicSelecter : PopupBase
         _RelicName.text = data.Name;
         _RelicDescription.text = "+ Description: " + data.Description;
         _RelicValue.text = "+ Display value: " + data.Coin + "Coin" + "/" + data.Timer + "Minute";
-        _RelicArt.sprite = relicArt;
 
-        UpdateTxtMaterial();
+        _RelicSelecter.Anim_OnInit(relicArt);        
     }
 
-    private void UpdateTxtMaterial()
-    {
-        _TxtMaterial.text = _selectData.Material + " Material\nPlay Collect";
-    }
 
     private void UpdateTxtPlayerMaterial()
     {
