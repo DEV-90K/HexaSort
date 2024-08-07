@@ -2380,8 +2380,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8feb3d9f40cfb884eb3bec99a8cd723d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _NoticeRoot: {fileID: 1844555019}
+  _NoticeRoot: {fileID: 53081567}
   _NotiveVanish: {fileID: 980983454089227299, guid: 41848c432e8d40947a7ee0f8c352b360, type: 3}
+  _Canvas: {fileID: 1015358140}
+  _Camera: {fileID: 1557762709}
 --- !u!1 &1681613251
 GameObject:
   m_ObjectHideFlags: 0

@@ -171,8 +171,8 @@ public class PopupGalleryRelicSelecter : PopupBase
         _selectData = data;
 
         _RelicName.text = data.Name;
-        _RelicDescription.text = "+ Description: " + data.Description;
-        _RelicValue.text = "+ Display value: " + data.Coin + "Coin" + "/" + data.Timer + "Minute";
+        _RelicDescription.text = data.Description;
+        _RelicValue.text = data.Coin + "Coin" + "/" + data.Timer + "Minute";
 
         _RelicSelecter.Anim_OnInit(relicArt);        
     }

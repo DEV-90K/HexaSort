@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 public class FirebaseManager : PersistentMonoSingleton<FirebaseManager>
 {
     #region Template
-    private FB_RemoteConfig _remoteConfig;
+    private FB_RemoteConfig _remoteConfig = null;
     Firebase.FirebaseApp appOnCloud = null;
 
     public async Task ConnectToFirebase()

@@ -9,10 +9,16 @@ public class LoadSystem : MonoBehaviour
 {    
     [SerializeField]
     private float _TimeLoading = 5f;
+
+    [Header("True => Completed Load Data, Completed Time => Load Game")]
+    [Header("False => Completed Load Data => Load Game")]
+    [SerializeField]
+    private bool _WaitTiming = true;
     [SerializeField]
     private ScreenLoader _ScreenLoader;
 
     private TimerUtils.CountdownTimer _CountDownTimer = null;
+    private bool _Loading = false;
 
     private void OnEnable()
     {
@@ -47,6 +53,7 @@ public class LoadSystem : MonoBehaviour
 
     private async void EnterLoading()
     {
+        _Loading = true;
         Debug.Log("Load System");
         await FirebaseConnecting();
         Debug.Log("FirebaseConnecting Completed");
@@ -54,13 +61,47 @@ public class LoadSystem : MonoBehaviour
         await ResourceLoading();
         Debug.Log("ResourceLoading Completed");
         _ScreenLoader.LoadToTarget(null);
-        await PlayerLoading();
-        _ScreenLoader.LoadToTarget(100f);
-        _CountDownTimer.Stop();
+        await Task.Delay(3000);
+        await PlayerLoading();        
+        _Loading = false;
+
+        if (_WaitTiming)
+        {            
+            //Data load done
+            //Load game when countdown completed
+
+            if (_CountDownTimer.IsFinished)
+            {
+                _ScreenLoader.LoadToComplete();
+                EnterLoading();
+            }
+            else
+            {
+                //Wait count down completed
+                _ScreenLoader.LoadToComplete(_CountDownTimer.GetTime());
+            }
+        }
+        else
+        {            
+            if (_CountDownTimer.IsFinished)
+            {
+                _ScreenLoader.LoadToComplete();
+                EnterLoading();
+            }
+            else
+            {
+                //Load game immediately
+                _ScreenLoader.LoadToComplete();
+                _CountDownTimer.Stop();
+            }
+        }
     }
 
     private void ExitLoading()
     {
+        if (_Loading) 
+            return;
+
         StartCoroutine(IE_SceneLoading("Game"));
     }
 
@@ -73,7 +114,6 @@ public class LoadSystem : MonoBehaviour
             try
             {
                 await FirebaseManager.Instance.ConnectToFirebase();
-                Debug.Log("Return FirebaseTask");
                 return;
             }
             catch (Exception e)
@@ -84,7 +124,7 @@ public class LoadSystem : MonoBehaviour
                     return;
                 }
 
-                await Task.Delay(retry * 1000 + UnityEngine.Random.Range(0, retry * 1000));
+                await Task.Delay(retry * 2000 + UnityEngine.Random.Range(0, retry * 1000));
                 retry--;
             }
         }
@@ -104,7 +144,7 @@ public class LoadSystem : MonoBehaviour
 
     private IEnumerator IE_SceneLoading(string sceneName)
     {
-        yield return new WaitUntil(() => _ScreenLoader.CheckLoad());
+        yield return IE_ScreenLoader();
 
         string currentSceneName = SceneManager.GetActiveScene().name;
         AsyncOperation asyncOp = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
@@ -117,5 +157,10 @@ public class LoadSystem : MonoBehaviour
         SceneManager.UnloadSceneAsync(currentSceneName);
         ScreenMain screenMain = GUIManager.Instance.ShowScreen<ScreenMain>();
         screenMain.OnInitWithScene();
+    }
+
+    private IEnumerator IE_ScreenLoader()
+    {
+        yield return new WaitUntil(() => _ScreenLoader.CheckLoad());
     }
 }

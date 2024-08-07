@@ -8,6 +8,10 @@ public class NoticeManager : MonoSingleton<NoticeManager>
     private Transform _NoticeRoot;
     [SerializeField]
     private NoticeVanish _NotiveVanish;
+    [SerializeField]
+    private Canvas _Canvas;
+    [SerializeField]
+    private Camera _Camera;
 
     public IEnumerator IE_ShowNoticeVanish(StackVanishData data)
     {

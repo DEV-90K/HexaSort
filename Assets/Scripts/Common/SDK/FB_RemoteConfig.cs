@@ -47,7 +47,7 @@ public class FB_RemoteConfig
     {
         if (fetchData.IsCanceled)
         {
-            Debug.Log("[Firebase] Fetch canceled.");
+            Debug.Log("[Firebase] Fetch canceled.");           
         }
         else if (fetchData.IsFaulted)
         {
