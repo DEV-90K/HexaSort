@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.GraphicsBuffer;
-using static UnityEngine.Rendering.DebugUI;
 
 public class ScreenLoader : MonoBehaviour
 {
@@ -34,14 +32,10 @@ public class ScreenLoader : MonoBehaviour
         }
 
         targetProgress = (float)target;
-        Debug.Log("LoadToTarget: " + targetProgress);
-        //StartCoroutine(IE_OnLoading((float)target));
     }
 
     public void LoadToComplete(float timeRemain = 0f)
     {
-        Debug.Log("Time Reamain: " + timeRemain);
-
         targetProgress = 100;
         StartCoroutine(IE_Remaning(timeRemain));
     }

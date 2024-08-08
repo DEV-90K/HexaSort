@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -20,37 +19,7 @@ public class LoadSystem : MonoBehaviour
     private TimerUtils.CountdownTimer _CountDownTimer = null;
     private bool _Loading = false;
 
-    private void OnEnable()
-    {
-        GameManager.OnChangeState += GameManager_OnChangeState;
-    }
-
-    private void OnDisable()
-    {
-        GameManager.OnChangeState -= GameManager_OnChangeState;
-    }
-
-    private void GameManager_OnChangeState(GameState state)
-    {
-        if(state == GameState.LOADING)
-        {
-            _CountDownTimer.Start();
-        }
-    }
-
-    private void Start()
-    {        
-        _CountDownTimer = new TimerUtils.CountdownTimer(_TimeLoading);
-        _CountDownTimer.OnTimerStart += EnterLoading;
-        _CountDownTimer.OnTimerStop += ExitLoading;        
-    }
-
-    private void Update()
-    {
-        if(_CountDownTimer != null)
-            _CountDownTimer.Tick(Time.deltaTime);
-    }
-
+    #region Modifine
     private async void EnterLoading()
     {
         _Loading = true;
@@ -62,14 +31,11 @@ public class LoadSystem : MonoBehaviour
         Debug.Log("ResourceLoading Completed");
         _ScreenLoader.LoadToTarget(null);
         await Task.Delay(3000);
-        await PlayerLoading();        
+        await PlayerLoading();
         _Loading = false;
 
         if (_WaitTiming)
-        {            
-            //Data load done
-            //Load game when countdown completed
-
+        {
             if (_CountDownTimer.IsFinished)
             {
                 _ScreenLoader.LoadToComplete();
@@ -77,12 +43,11 @@ public class LoadSystem : MonoBehaviour
             }
             else
             {
-                //Wait count down completed
                 _ScreenLoader.LoadToComplete(_CountDownTimer.GetTime());
             }
         }
         else
-        {            
+        {
             if (_CountDownTimer.IsFinished)
             {
                 _ScreenLoader.LoadToComplete();
@@ -90,19 +55,10 @@ public class LoadSystem : MonoBehaviour
             }
             else
             {
-                //Load game immediately
                 _ScreenLoader.LoadToComplete();
                 _CountDownTimer.Stop();
             }
         }
-    }
-
-    private void ExitLoading()
-    {
-        if (_Loading) 
-            return;
-
-        StartCoroutine(IE_SceneLoading("Game"));
     }
 
     private async Task FirebaseConnecting()
@@ -140,6 +96,44 @@ public class LoadSystem : MonoBehaviour
     {
         MainPlayer.Instance.LoadData();
         await Task.CompletedTask;
+    }
+
+    #endregion Modifine
+
+
+    private void OnEnable()
+    {
+        GameManager.OnChangeState += GameManager_OnChangeState;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.OnChangeState -= GameManager_OnChangeState;
+    }
+
+    private void GameManager_OnChangeState(GameState state)
+    {
+        if(state == GameState.LOADING)
+        {
+            _CountDownTimer = new TimerUtils.CountdownTimer(_TimeLoading);
+            _CountDownTimer.OnTimerStart += EnterLoading;
+            _CountDownTimer.OnTimerStop += ExitLoading;
+            _CountDownTimer.Start();
+        }
+    }
+
+    private void Update()
+    {
+        if(_CountDownTimer != null)
+            _CountDownTimer.Tick(Time.deltaTime);
+    }
+
+    private void ExitLoading()
+    {
+        if (_Loading) 
+            return;
+
+        StartCoroutine(IE_SceneLoading("Game"));
     }
 
     private IEnumerator IE_SceneLoading(string sceneName)
