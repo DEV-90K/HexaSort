@@ -14,6 +14,8 @@ public class PopupGalleryRelicSelecter : PopupBase
     [SerializeField]
     private SelectionRelic _RelicItem;
     [SerializeField]
+    private ScrollRect _RelicScroll;
+    [SerializeField]
     private Transform _RelicContain;
     [SerializeField]
     private TMP_Text _RelicName;
@@ -70,34 +72,32 @@ public class PopupGalleryRelicSelecter : PopupBase
         }
 
         SetUpRelicItems(galleryRelicDatas);
-        ShowSelection(galleryRelicDatas[0]);
     }
 
     private void SetUpRelicItems(List<GalleryRelicData> galleryRelicDatas)
     {
-        if (_RelicContain.childCount > galleryRelicDatas.Count)
+        int itemsCount = galleryRelicDatas == null ? 0 : galleryRelicDatas.Count;
+        int childCount = this._RelicContain.childCount;
+        for (int i = 0; i < itemsCount; i++)
         {
-            for (int i = galleryRelicDatas.Count; i < _RelicContain.childCount; i++)
+            SelectionRelic gObj = null;
+            if (i >= childCount)
             {
-                _RelicContain.GetChild(i).gameObject.SetActive(false);
+                gObj = Instantiate(_RelicItem, _RelicContain);
+                childCount += 1;
             }
+            else
+                gObj = this._RelicContain.GetChild(i).GetComponent<SelectionRelic>();
+            gObj.gameObject.SetActive(true);
+            gObj.OnInit(this, galleryRelicDatas[i], i == 0);
         }
 
-        if (_RelicContain.childCount < galleryRelicDatas.Count)
+        for (int i = itemsCount; i < childCount; i++)
         {
-            for (int i = _RelicContain.childCount; i < galleryRelicDatas.Count; i++)
-            {
-                Instantiate(_RelicItem, _RelicContain);
-            }
+            this._RelicContain.GetChild(i).gameObject.SetActive(false);
         }
+        this._RelicScroll.verticalNormalizedPosition = 1;
 
-        for (int i = 0; i < galleryRelicDatas.Count; i++)
-        {
-            if (_RelicContain.GetChild(i).TryGetComponent(out SelectionRelic relic))
-            {
-                relic.OnInit(this, galleryRelicDatas[i]);
-            }
-        }
     }
 
     private void Start()
@@ -126,20 +126,6 @@ public class PopupGalleryRelicSelecter : PopupBase
         Hide();
     }
 
-    public void ShowSelection(RelicData data, Sprite relicArt)
-    {
-        if(data.Material > MainPlayer.Instance.GetMaterial())
-        {
-            _BtnSelection.interactable = false;
-        }
-        else
-        {
-            _BtnSelection.interactable = true;
-        }
-
-        UpdateRelicSelection(data, relicArt);
-    }
-
     public void ShowSelection(GalleryRelicData data, Sprite relicArt)
     {
         _selectGalleryRelic = data;
@@ -155,14 +141,6 @@ public class PopupGalleryRelicSelecter : PopupBase
 
         UpdateRelicSelection(relicData, relicArt);
     }    
-
-    private void ShowSelection(GalleryRelicData data)
-    {
-        _selectGalleryRelic = data;
-        RelicData relicData = ResourceManager.Instance.GetRelicDataByID(_selectGalleryRelic.IDRelic);
-        Sprite relicArt = ResourceManager.Instance.GetRelicSpriteByID(_selectGalleryRelic.IDRelic);
-        ShowSelection(relicData, relicArt);
-    }
 
     private void UpdateRelicSelection(RelicData data, Sprite relicArt)
     {

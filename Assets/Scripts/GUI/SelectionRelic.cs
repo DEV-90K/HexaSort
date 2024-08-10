@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class SelectionRelic : MonoBehaviour
 {
     [SerializeField]
-    private Button _BtnSelection;
+    private Toggle _BtnSelection;
     [SerializeField]
     private Image _ImageRelic;
 
@@ -23,27 +23,27 @@ public class SelectionRelic : MonoBehaviour
     //    _popupSlection = popupSlection;
     //}
 
-    public void OnInit(PopupGalleryRelicSelecter popupSlection, GalleryRelicData galleryRelicData)
+    public void OnInit(PopupGalleryRelicSelecter popupSlection, GalleryRelicData galleryRelicData, bool isSelect = false)
     {
         _galleryRelicData = galleryRelicData;
         _data = ResourceManager.Instance.GetRelicDataByID(_galleryRelicData.IDRelic);
         _relicArt = ResourceManager.Instance.GetRelicSpriteByID(_data.ID);
         _ImageRelic.sprite = _relicArt;
         _popupSlection = popupSlection;
+
+        this._BtnSelection.onValueChanged.RemoveAllListeners();
+        this._BtnSelection.onValueChanged.AddListener(OnClickSelection);
+
+        if (this._BtnSelection.isOn && isSelect)
+            this.OnClickSelection(isSelect);
+
+        this._BtnSelection.isOn = isSelect;
     }    
 
-    private void Start()
+    private void OnClickSelection(bool isOn)
     {
-        _BtnSelection.onClick.AddListener(OnClickSelection);
-    }
-
-    private void OnDestroy()
-    {
-        _BtnSelection.onClick.AddListener(OnClickSelection);
-    }
-
-    private void OnClickSelection()
-    {
-        _popupSlection.ShowSelection(_galleryRelicData, _relicArt);
+        if (_galleryRelicData == null || _relicArt == null) return;
+        if (isOn)
+            _popupSlection.ShowSelection(_galleryRelicData, _relicArt);
     }
 }

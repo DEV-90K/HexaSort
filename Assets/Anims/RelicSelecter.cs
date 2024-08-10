@@ -15,7 +15,13 @@ public class RelicSelecter : MonoBehaviour
     public void Anim_OnInit(Sprite sprite)
     {
         _Sprite = sprite;
-        _Animator.SetBool("IsSelected", true);
+       // this.Anim_OnShow();
+        _Animator.SetTrigger("TrgSelected");
+    }
+
+    private void OnEnable()
+    {
+        _Animator.SetTrigger("TrgSelected");
     }
 
     public void Anim_OnShow()
@@ -25,6 +31,6 @@ public class RelicSelecter : MonoBehaviour
 
     public void Anim_OnShowCompleted()
     {
-        _Animator.SetBool("IsSelected", false);
+       // _Animator.SetBool("IsSelected", false);
     }
 }
