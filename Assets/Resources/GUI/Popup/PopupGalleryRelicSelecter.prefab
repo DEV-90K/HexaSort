@@ -471,10 +471,10 @@ RectTransform:
   - {fileID: 1670527507719367419}
   m_Father: {fileID: 2120931496828352318}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 150, y: -90}
-  m_SizeDelta: {x: 180, y: 180}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2936331001358939850
 CanvasRenderer:
@@ -604,10 +604,10 @@ RectTransform:
   - {fileID: 6951754819448177422}
   m_Father: {fileID: 5739081054721330753}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 150, y: -90}
-  m_SizeDelta: {x: 300, y: 180}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &9138578704090293569
 MonoBehaviour:
@@ -1960,11 +1960,10 @@ MonoBehaviour:
   canReused: 1
   _BtnClose: {fileID: 632219559960403401}
   _BtnSelection: {fileID: 6106132835771176854}
-  _TxtMaterial: {fileID: 7759892978963870849}
   _RelicItem: {fileID: 6754747913728326270}
   _RelicContain: {fileID: 2120931496828352318}
   _RelicName: {fileID: 1620831507773305797}
   _RelicDescription: {fileID: 1865874751042855496}
   _RelicValue: {fileID: 4884804560960879189}
-  _MatAmount: {fileID: 0}
+  _RelicCost: {fileID: 7759892978963870849}
   _RelicSelecter: {fileID: 7328640137110895170}

@@ -35,7 +35,7 @@ public class PopupBase : MonoBehaviour
             });
     }
 
-    public void OnSetup()
+    public virtual void OnSetup()
     {
         //throw new NotImplementedException();
     }

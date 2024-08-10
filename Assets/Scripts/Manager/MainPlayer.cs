@@ -45,7 +45,6 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
 
     public bool CheckTimeToChestReward()
     {
-        return false;
         TimeSpan span = GetTimeFromLastClick(_PlayerData.ChestLastTime, 10);
         if(span.TotalMilliseconds <= 0)
         {
@@ -245,10 +244,14 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
 
         PlayerLevelData levelData = new PlayerLevelData(IDLevel, level, levelPresenterData);
 
+        string chestTime = DateTime.Now.AddMinutes(-11f).ToString();
+
         int coin = 50;
         int material = 20;
 
-        return new PlayerData(coin, material, levelData);
+        PlayerData playerData = new PlayerData(coin, material, levelData);
+        playerData.ChestLastTime = chestTime;
+        return playerData;
     }
 
     #endregion Player Data

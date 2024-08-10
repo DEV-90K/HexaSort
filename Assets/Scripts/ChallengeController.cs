@@ -122,6 +122,7 @@ public class ChallengeController : MonoBehaviour
         List<Hexagon> hexagons = GridManager.Instance.GetPlayerHexagonNeedMerge(color, gridHexagons);
         GridManager.Instance.RemovePlayerHexagonFromOldStack(gridHexagons, hexagons);
         StackManager.Instance.MergePlayerHexagon(grid.StackOfCell, hexagons);
+
         grid.StackOfCell.HideCanvas();
         yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM + (hexagons.Count - 1) * GameConstants.HexagonConstants.TIME_DELAY);
         grid.StackOfCell.ShowCanvas();

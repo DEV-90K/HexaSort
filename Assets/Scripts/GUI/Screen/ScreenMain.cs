@@ -14,22 +14,18 @@ public class ScreenMain : ScreenBase
     private Button _BtnGrallery_2;
     [SerializeField]
     private Button _BtnGrallery_3;
-    //[SerializeField]
-    //private TMP_Text _txtCoin;
-    //[SerializeField]
-    //private TMP_Text _txtMaterial;
     [SerializeField]
-    private Button _btnChestReward;
+    private ButtonChest_ScreenMain _btnChest;
 
     public void OnInitWithScene()
     {
-        if (MainPlayer.Instance.CheckWelcomePlayer())
+        if (false && MainPlayer.Instance.CheckWelcomePlayer())
         {
             DialogueData data = ResourceManager.Instance.GetDialogueDataByType(DialogueType.WELCOME);
             DialogueManager.Instance.ShowDialougeBox(data);
         }
         else if (MainPlayer.Instance.CheckTimeToChestReward())
-        {
+        {            
             DialogueData data = ResourceManager.Instance.GetDialogueDataByType(DialogueType.CHEST_REWARD);
             DialogueManager.Instance.ShowDialougeBox(data);
         }
@@ -44,6 +40,7 @@ public class ScreenMain : ScreenBase
     {
         base.Show();
         GameManager.Instance.ChangeState(GameState.START);
+        _btnChest.UpdateButton();
     }
 
 
@@ -53,7 +50,6 @@ public class ScreenMain : ScreenBase
         _BtnGrallery_1.onClick.AddListener(OnClickGrallery_1);
         _BtnGrallery_2.onClick.AddListener(OnClickGrallery_2);
         _BtnGrallery_3.onClick.AddListener(OnClickGrallery_3);
-        _btnChestReward.onClick.AddListener(OnClickChestReward);
     }
 
     private void OnDestroy()
@@ -62,12 +58,6 @@ public class ScreenMain : ScreenBase
         _BtnGrallery_1.onClick.RemoveListener(OnClickGrallery_1);
         _BtnGrallery_2.onClick.RemoveListener(OnClickGrallery_2);
         _BtnGrallery_3.onClick.RemoveListener(OnClickGrallery_3);
-        _btnChestReward.onClick.RemoveListener(OnClickChestReward);
-    }
-
-    private void OnClickChestReward()
-    {
-        GUIManager.Instance.ShowPopup<PopupChestReward>();
     }
 
     private void OnClickBtnPlay()
@@ -90,14 +80,4 @@ public class ScreenMain : ScreenBase
     {
         GUIManager.Instance.ShowPopup<PopupGallery>(3);
     }
-
-    //private void UpdateTxtCoin()
-    //{
-    //    _txtCoin.text = _coin.ToString();
-    //}
-
-    //private void UpdateTxtMaterial()
-    //{
-    //    _txtMaterial.text = _material.ToString();
-    //}
 }

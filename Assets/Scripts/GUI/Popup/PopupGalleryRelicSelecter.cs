@@ -21,9 +21,8 @@ public class PopupGalleryRelicSelecter : PopupBase
     private TMP_Text _RelicDescription;
     [SerializeField]
     private TMP_Text _RelicValue;
-
     [SerializeField]
-    private TMP_Text _MatAmount;
+    private TMP_Text _RelicCost;
 
     [SerializeField]
     private RelicSelecter _RelicSelecter;
@@ -72,7 +71,6 @@ public class PopupGalleryRelicSelecter : PopupBase
 
         SetUpRelicItems(galleryRelicDatas);
         ShowSelection(galleryRelicDatas[0]);
-        UpdateTxtPlayerMaterial();
     }
 
     private void SetUpRelicItems(List<GalleryRelicData> galleryRelicDatas)
@@ -173,13 +171,12 @@ public class PopupGalleryRelicSelecter : PopupBase
         _RelicName.text = data.Name;
         _RelicDescription.text = data.Description;
         _RelicValue.text = data.Coin + "Coin" + "/" + data.Timer + "Minute";
-
+        UpdateRelicCost(data.Material);
         _RelicSelecter.Anim_OnInit(relicArt);        
     }
 
-
-    private void UpdateTxtPlayerMaterial()
+    private void UpdateRelicCost(int cost)
     {
-        _MatAmount.text = MainPlayer.Instance.GetMaterial().ToString();
+        _RelicCost.text = cost + " Material";
     }
 }

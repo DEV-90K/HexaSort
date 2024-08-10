@@ -149,12 +149,6 @@ public class ScreenLevel : ScreenBase, IBoostHammer, IBoostSwap
         _imgFill.value = Mathf.Min(ratio, 1);
     }
 
-
-    //private void UpdateTxtPlayerCoin()
-    //{
-    //    _txtCoin.text = MainPlayer.Instance.GetCoin().ToString();
-    //}
-
     private void Hexagon_OnVanish()
     {
         if(GameManager.Instance.IsState(GameState.LEVEL_PLAYING))

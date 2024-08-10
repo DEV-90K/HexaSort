@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +10,11 @@ public class PopupChestReward : PopupBase
     [SerializeField]
     private Button _btnClaim;
     [SerializeField]
+    private Button _btnClose;
+    [SerializeField]
     private ChestController _chestControl;
+    [SerializeField]
+    private TMP_Text _txtTutorial;
     [SerializeField]
     private ChestReward[] _chestRewards;
 
@@ -18,22 +23,30 @@ public class PopupChestReward : PopupBase
     private void Start()
     {
         _btnClaim.onClick.AddListener(OnClickClaim);
+        _btnClose.onClick.AddListener(OnClickClose);
     }
 
     private void OnDestroy()
     {
         _btnClaim.onClick.RemoveListener(OnClickClaim);
+        _btnClose.onClick.RemoveListener(OnClickClose);
     }
 
     public void OnClickClaim()
     {
+        Claim();
+        Hide();
+    }
+
+    private void Claim()
+    {
         MainPlayer.Instance.UpdateChestLastTime();
 
-        if(_rewardData.Type == RewardType.COIN)
+        if (_rewardData.Type == RewardType.COIN)
         {
             MainPlayer.Instance.AddCoin(_rewardData.Amount);
         }
-        else if(_rewardData.Type == RewardType.MATERIAL)
+        else if (_rewardData.Type == RewardType.MATERIAL)
         {
             MainPlayer.Instance.AddMaterial(_rewardData.Amount);
         }
@@ -50,12 +63,35 @@ public class PopupChestReward : PopupBase
             MainPlayer.Instance.AddHammer(_rewardData.Amount);
         }
 
+        GUIManager.Instance.GetScreen<ScreenMain>().Show();
+    }
+
+    public void OnClickClose()
+    {
+        if(_btnClaim.gameObject.activeSelf)
+        {
+            Claim();
+        }
+
         Hide();
+    }
+    public void HideChests()
+    {
+        foreach (ChestReward chest in _chestRewards)
+        {
+            chest.TweenMoveHide();
+        }
+    }
+
+    public void ShowButtonClaim()
+    {
+        _txtTutorial.gameObject.SetActive(false);
+        _btnClaim.gameObject.SetActive(true);
     }
 
     public override void OnInit(object[] paras)
     {
-        base.OnInit(paras);        
+        base.OnInit(paras);
         _rewardData = _chestControl.GetChestRewardData();
 
         foreach (ChestReward chestReward in _chestRewards)
@@ -67,14 +103,7 @@ public class PopupChestReward : PopupBase
     public override void Show()
     {
         base.Show();
-        _rewardData.DebugLogObject();
-    }
-
-    public void PreventInteraction()
-    {
-        foreach (ChestReward chest in _chestRewards)
-        {
-            chest.DisableCollider();
-        }
+        _txtTutorial.gameObject.SetActive(true);
+        _btnClaim.gameObject.SetActive(false);
     }
 }

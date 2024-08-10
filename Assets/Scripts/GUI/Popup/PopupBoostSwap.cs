@@ -30,6 +30,7 @@ public class PopupBoostSwap : PopupBase
     private Vector3 originPosStackContact;
 
     private LevelPresenterData _presenterData;
+    private RectTransform m_RectTransform;
 
     public override void OnInit(object[] paras)
     {
@@ -54,6 +55,8 @@ public class PopupBoostSwap : PopupBase
     }
     private void Awake()
     {
+        m_RectTransform = GetComponent<RectTransform>();
+        OnSetup();
         btnClose.onClick.AddListener(OnClickButton);
     }
 
@@ -257,5 +260,21 @@ public class PopupBoostSwap : PopupBase
         yield return new WaitForSeconds(0f);
         GUIManager.Instance.ShowScreen<ScreenLevel>(_presenterData);
         Hide();
+    }
+
+    public override void OnSetup()
+    {
+        // xu ly tai tho
+        float ratio = (float)Screen.height / (float)Screen.width;
+        if (ratio > 1920 / 1080f)
+        {
+            Vector2 leftBottom = m_RectTransform.offsetMin;
+            Vector2 rightTop = m_RectTransform.offsetMax;
+            rightTop.y = -100f;
+            m_RectTransform.offsetMax = rightTop;
+            leftBottom.y = 0f;
+            m_RectTransform.offsetMin = leftBottom;
+            //m_OffsetY = 100f;
+        }
     }
 }

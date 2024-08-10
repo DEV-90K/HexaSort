@@ -34,12 +34,17 @@ public class LevelController : MonoBehaviour
 
     public void OnPause()
     {
-        _trickCountdown.Pause();
-        _trickCountdown.Reset();
+        _trickCountdown?.Pause();
+        _trickCountdown?.Reset();
     }
 
     public void OnPlaying()
     {
+        if(_trickCountdown == null)
+        {
+            OnInit();
+        }
+
         _trickCountdown.Start();
     }
 

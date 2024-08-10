@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,10 +18,8 @@ public class CanvasStackHexagon : MonoBehaviour
     private Transform stack;
     [SerializeField]
     private Animator animator;
-    [SerializeField]
-    private ParticleSystem[] particles;
 
-    private ParticleSystem particle;
+    private StackHexagon _stackHexagon;
 
     private bool hasAnim = false;
     private bool isFollowing = false;
@@ -46,26 +45,18 @@ public class CanvasStackHexagon : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void OnShow(Vector3 wPos, int number)
+    public void OnShow()
     {
         isFollowing = true;
         gameObject.SetActive(true);
-        transform.position = wPos;
-        UpdateTxtNumber(number);       
+        OnUpdate();      
     }
 
-    public IEnumerator OnShowAnim(VanishType type = VanishType.NONE)
-    {   
-        
-
-        if (type != VanishType.NONE)
-        {
-            img.sprite = ResourceManager.Instance.GetStackVanishSprite(type);
-            animator.SetBool("IsShow", true);
-            hasAnim = true;
-
-            yield return WaitUntilAnimCompleted();
-        }
+    public void OnUpdate()
+    {
+        transform.position = _stackHexagon.GetTopPosition();
+        int number = _stackHexagon.GetNumberSimilarTopColor();
+        UpdateTxtNumber(number);
     }
 
     public IEnumerator WaitUntilAnimCompleted()
@@ -77,29 +68,6 @@ public class CanvasStackHexagon : MonoBehaviour
     {
         animator.SetBool("IsShow", false);
         hasAnim = false;
-    }
-
-    public IEnumerator PlayParticle(VanishType type)
-    {
-        txtNumber.gameObject.SetActive(false);
-        switch (type)
-        {
-            case VanishType.RANDOM:
-                particle = particles[0];
-                break;
-            case VanishType.AROUND:
-                particle = particles[1];
-                break;
-            case VanishType.CONTAIN_COLOR:
-                particle = particles[2];
-                break;
-        }
-
-        particle.Play();
-        yield return new WaitForSeconds(2f);
-        particle.Stop();
-        //yield return new WaitUntil(() => particle.isPlaying == false);
-        txtNumber.gameObject.SetActive(true);
     }
 
     public void UpdateTxtNumber(int number)
@@ -115,5 +83,10 @@ public class CanvasStackHexagon : MonoBehaviour
             transform.LookAt(transform.position + cam.transform.rotation * Vector3.forward, cam.transform.rotation * Vector3.up);
             txtNumber.transform.LookAt(stack.position, Quaternion.Euler(90, 0, 0) * (transform.rotation * Vector3.up));           
         }
+    }
+
+    public void OnInit(StackHexagon stackHexagon)
+    {
+        _stackHexagon = stackHexagon;
     }
 }

@@ -1086,7 +1086,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _TimeLoading: 20
-  _WaitTiming: 1
+  _WaitTiming: 0
   _ScreenLoader: {fileID: 8356058318013747665}
 --- !u!114 &4155531093273467406
 MonoBehaviour:

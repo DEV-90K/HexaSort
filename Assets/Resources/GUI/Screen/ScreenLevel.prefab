@@ -300,6 +300,7 @@ GameObject:
   - component: {fileID: 1231503048257536543}
   - component: {fileID: 1297002806933066498}
   - component: {fileID: 4701957145018474504}
+  - component: {fileID: 498313358327611823}
   m_Layer: 11
   m_Name: ToggleMenu
   m_TagString: Untagged
@@ -444,7 +445,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!114 &4701957145018474504
 MonoBehaviour:
@@ -463,6 +464,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 0
+--- !u!114 &498313358327611823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2134218323066491683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64822e5e9a405da4f98f741ebc59c605, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2135701634296121842
 GameObject:
   m_ObjectHideFlags: 0

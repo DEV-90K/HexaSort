@@ -65,7 +65,6 @@ public class StackController : MonoBehaviour
         }
 
         stackContact = hit.collider.GetComponent<Hexagon>().HexagonStack;
-        Debug.Log("Here");
         tf_Ray = stackContact.GetTransformRay();
         originPosStackContact = stackContact.transform.position;
     }
@@ -74,24 +73,6 @@ public class StackController : MonoBehaviour
     {
         StackDragging();
         GridDetection();
-
-        //Ray ray = GetRayFromMouseClicked();
-        //RaycastHit hit;
-        //Physics.Raycast(ray, out hit, 500, gridHexagonLayerMask);
-
-        //if (gridHexagonContact != null)
-        //{
-        //    gridHexagonContact.ShowColor();
-        //}
-
-        //if (hit.collider == null)
-        //{
-        //    DraggingAboveGround();
-        //}
-        //else
-        //{
-        //    DraggingAboveGridHexagon(hit);
-        //}
     }
 
     private void StackDragging()
@@ -110,20 +91,6 @@ public class StackController : MonoBehaviour
 
     private void GridDetection()
     {
-        //RaycastHit hitGrid;
-        //Physics.Raycast(GetRayFromMouseClicked(), out hitGrid, 500, gridHexagonLayerMask);
-
-        //if(hitGrid.collider == null)
-        //{
-        //    if(gridHexagonContact != null)
-        //    {
-        //        gridHexagonContact.ShowColor();
-        //        gridHexagonContact = null;
-        //    }
-
-        //    return;
-        //}
-
         GridHexagon gridHex = OverlapSphere();
         if (gridHex == null)
         {
@@ -136,8 +103,6 @@ public class StackController : MonoBehaviour
             return;
         }
 
-
-        //GridHexagon gridHex = hitGrid.collider.GetComponent<GridHexagon>();
         gridHexagonContact?.ShowColor();
 
         if(gridHex.CheckOccupied())
@@ -179,77 +144,6 @@ public class StackController : MonoBehaviour
         }
 
         return grid;
-    }
-
-    private void DraggingAboveGround()
-    {
-        RaycastHit hitGround;
-        Physics.Raycast(GetRayFromMouseClicked(), out hitGround, 500, groundLayerMask);
-
-        if (hitGround.collider == null)
-        {
-            return;
-        }
-
-        Vector3 stackTargetPos = hitGround.point.With(y: GameConstants.StackHexagonConstants.CONTACT_HEIGHT);
-        stackContact.transform.position = Vector3.MoveTowards(stackContact.transform.position, stackTargetPos, Time.deltaTime * 30);
-        gridHexagonContact = null;
-
-        float radius = _IStackSphereRadius.GetRadiusByGrid().x * 1.25f;
-        Collider[] neighborGridCellColliders = Physics.OverlapSphere(hitGround.point, radius, gridHexagonLayerMask);
-        if (neighborGridCellColliders.Length > 0)
-        {
-            DraggingAboveGridHexagon(neighborGridCellColliders[0].GetComponent<GridHexagon>());
-        }
-    }
-
-    private void DraggingAboveGridHexagon(RaycastHit hit)
-    {
-        GridHexagon gridHexagon = hit.collider.GetComponent<GridHexagon>();
-
-        if(gridHexagon.CheckOccupied())
-        {
-            DraggingAboveGridHexagonOccupied();
-        }
-        else
-        {
-            DraggingAboveGridHexagonNonOccupied(gridHexagon);
-        }
-    }
-
-    private void DraggingAboveGridHexagon(GridHexagon gridHexagon)
-    {
-        if (gridHexagon.CheckOccupied())
-        {
-            //DraggingAboveGridHexagonOccupied();
-        }
-        else
-        {
-            gridHexagon.ShowColorContact();
-            gridHexagonContact = gridHexagon;
-        }
-    }
-
-    private void DraggingAboveGridHexagonOccupied()
-    {
-        DraggingAboveGround();
-    }
-
-    private void DraggingAboveGridHexagonNonOccupied(GridHexagon gridHexagon)
-    {
-        RaycastHit hit;
-        Physics.Raycast(GetRayFromMouseClicked(), out hit, 500, gridHexagonLayerMask);
-
-        if (hit.collider == null)
-        {
-            return;
-        }
-
-        Vector3 stackTargetPos = hit.point.With(y: GameConstants.StackHexagonConstants.CONTACT_HEIGHT);
-        stackContact.transform.position = Vector3.MoveTowards(stackContact.transform.position, stackTargetPos, Time.deltaTime * 30);
-
-        gridHexagon.ShowColorContact();
-        gridHexagonContact = gridHexagon;
     }
 
     private void ControlMouseUp()

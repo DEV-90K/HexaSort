@@ -21,6 +21,8 @@ public class PopupBoostHammer : PopupBase
     [SerializeField]
     private LayerMask playerHexagon;
 
+    private RectTransform m_RectTransform;
+
     private IBoostHammer _able;
     private LevelPresenterData _presenterData;
 
@@ -54,6 +56,8 @@ public class PopupBoostHammer : PopupBase
 
     private void Awake()
     {
+        m_RectTransform = GetComponent<RectTransform>();
+        OnSetup();
         btnClose.onClick.AddListener(OnClickBtnClose);
     }
 
@@ -113,5 +117,21 @@ public class PopupBoostHammer : PopupBase
         yield return new WaitForSeconds(2f);
         GUIManager.Instance.ShowScreen<ScreenLevel>(_presenterData);
         Hide();
-    }    
+    }
+
+    public override void OnSetup()
+    {
+        // xu ly tai tho
+        float ratio = (float)Screen.height / (float)Screen.width;
+        if (ratio > 1920 / 1080f)
+        {
+            Vector2 leftBottom = m_RectTransform.offsetMin;
+            Vector2 rightTop = m_RectTransform.offsetMax;
+            rightTop.y = -100f;
+            m_RectTransform.offsetMax = rightTop;
+            leftBottom.y = 0f;
+            m_RectTransform.offsetMin = leftBottom;
+            //m_OffsetY = 100f;
+        }
+    }
 }

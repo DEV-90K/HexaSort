@@ -158,6 +158,7 @@ public class LevelManager : MonoSingleton<LevelManager>
         {
             yield return _levelControl.IE_RemoveRandomStack();
         }
+
         GameManager.instance.ChangeState(GameState.LEVEL_PLAYING);
     }
 
