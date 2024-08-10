@@ -2,10 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ScreenLoader : MonoBehaviour
 {
+#if UNITY_EDITOR
+    //[RuntimeInitializeOnLoadMethod]
+    //public static void SetupScenes()
+    //{
+    //    int c = SceneManager.sceneCount;
+    //    for (int i = 0; i < c; i++)
+    //    {
+    //        Scene scene = SceneManager.GetSceneAt(i);
+    //        if (scene.name != "Loading")
+    //        {
+    //            SceneManager.UnloadSceneAsync(scene);
+    //        }
+    //    }
+    //}
+#endif
+
     [SerializeField]
     private TMP_Text txtPrecent;
     [SerializeField]

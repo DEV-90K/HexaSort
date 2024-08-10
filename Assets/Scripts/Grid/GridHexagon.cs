@@ -72,14 +72,23 @@ public class GridHexagon : PoolMember
 
     public void TweenShowTrick()
     {
-        LeanTween.cancel(model);
-        LeanTween.color(model, contactColor, 1f).setLoopPingPong();
+        ParticleSystem.MainModule main = particle.main;
+        main.loop = true;
+
+        particle.Play();
+
+        //LeanTween.cancel(model);
+        //LeanTween.color(model, contactColor, 1f).setLoopPingPong();
     }
 
     public void TweenHideTrick()
     {
-        LeanTween.cancel(model);
-        Color = normalColor;
+        particle.Stop();
+        ParticleSystem.MainModule main = particle.main;
+        main.loop = false;
+
+        //LeanTween.cancel(model);
+        //Color = normalColor;
     }
 
     public void CollectImmediate()

@@ -78,6 +78,13 @@ public class LevelManager : MonoSingleton<LevelManager>
         OnInit(_levelData, _presenterData);
     }
 
+    public void OnInitLevelByID(int IDLevel)
+    {
+        _levelData = ResourceManager.instance.GetLevelByID(IDLevel);
+        _presenterData = ResourceManager.instance.GetLevelPresenterDataByID(IDLevel);
+        OnInit(_levelData, _presenterData);
+    }
+
     public void UpdateCurrentLevel(LevelPresenterData levelPresenter)
     {
         int IDLevel = levelPresenter.Level;

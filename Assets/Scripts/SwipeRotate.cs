@@ -98,7 +98,7 @@ public class SwipeRotate : MonoBehaviour
         Physics.Raycast(CameraUtils.GetRayFromMouseClicked(), out hit, 500, groundLayerMask);
         Vector3 mousePos = hit.point;
 
-        if(-5f < mousePos.z && mousePos.z < 5f)
+        if(-7f < mousePos.z && mousePos.z < 7f)
         {
             return true;
         }

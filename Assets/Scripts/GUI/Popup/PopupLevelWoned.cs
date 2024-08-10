@@ -55,7 +55,7 @@ public class PopupLevelWoned : PopupBase
                     DialogueData dialogueData = ResourceManager.Instance.GetDialogueDataByType(DialogueType.RELIC_COLLECT);
                     System.Action callback = () =>
                     {
-                        LevelManager.Instance.OnInitCurrentLevel();
+                        LevelManager.Instance.OnInitLevelByID(_presenterData.Level + 1);
                         Hide();
                     };
 

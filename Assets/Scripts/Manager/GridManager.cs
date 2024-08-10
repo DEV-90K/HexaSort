@@ -93,12 +93,22 @@ public class GridManager : MonoSingleton<GridManager>
 
     public void OnInit(GridData gridData)
     {
+        OnResert();
+
         _gridData = gridData;
         _gridHexagons = _gridSpawner.Spawn(_gridData);
         _gridLocks = GetGridHexagonLock();
         _GridUnit.OnInit();
 
         OnInitCompleted?.Invoke(GetMaxRadius());
+    }
+
+    private void OnResert()
+    {
+        if(_gridHexagons != null)
+        {
+            CollectAllImmediate();
+        }
     }
 
     private float GetMaxRadius()
