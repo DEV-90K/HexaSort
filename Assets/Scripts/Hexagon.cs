@@ -11,6 +11,8 @@ public class Hexagon : PoolMember
     private new Collider collider;
     [SerializeField]
     private GameObject model;
+    [SerializeField]
+    private TrailRenderer trail;
     public StackHexagon HexagonStack { get; private set; }
     public Color Color
     {
@@ -169,4 +171,21 @@ public class Hexagon : PoolMember
         return _data;
     }
     #endregion Hexagon Data
+
+    //private void Update()
+    //{
+    //    Controlling();
+    //}
+
+    //private void Controlling()
+    //{
+    //    if (Input.GetMouseButtonDown(0) && trail.enabled == false)
+    //    {
+    //        trail.enabled = true;
+    //    }
+    //    else if (Input.GetMouseButtonUp(0) && trail.enabled == true)
+    //    {
+    //        trail.enabled = false;
+    //    }
+    //}
 }
