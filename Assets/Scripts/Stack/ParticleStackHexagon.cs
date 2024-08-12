@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using static UnityEngine.ParticleSystem;
 
 public class ParticleStackHexagon : MonoBehaviour
 {
@@ -42,10 +43,16 @@ public class ParticleStackHexagon : MonoBehaviour
         }
 
         _particle.gameObject.SetActive(true);
+        _particle.playbackSpeed= 5f;
         _particle.Play();
-        yield return new WaitForSeconds(2f);
+        yield return WaitUntilCompleted();
         _particle.Stop();
         _particle.gameObject.SetActive(false);
         OnHide();
+    }
+
+    public IEnumerator WaitUntilCompleted()
+    {
+        yield return new WaitUntil(() => _particle.isPlaying == false);
     }
 }

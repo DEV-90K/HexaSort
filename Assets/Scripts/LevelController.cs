@@ -346,7 +346,8 @@ public class LevelController : MonoBehaviour
 
             if(vanishData.Type != VanishType.NONE)
             {
-               yield return NoticeManager.Instance.IE_ShowNoticeVanish(vanishData);
+                NoticeManager.Instance.ShowNoticeVanish(vanishData);
+               //StartCoroutine(NoticeManager.Instance.IE_ShowNoticeVanish(vanishData));
             }
 
             if (GameManager.Instance.IsState(GameState.LEVEL_PLAYING))
@@ -413,6 +414,7 @@ public class LevelController : MonoBehaviour
     private IEnumerator IE_RemoveNeighborStack(GridHexagon grid)
     {
         List<GridHexagon> grids = GridManager.Instance.GetNeighborGidHexagon(grid);
+        Coroutine coroutine = null;
         for (int i = 0; i < grids.Count; i++)
         {
             if (grid.State == GridHexagonState.LOCK_BY_GOAL || grid.State == GridHexagonState.LOCK_BY_ADS)
@@ -422,11 +424,14 @@ public class LevelController : MonoBehaviour
             else
             {                
                 StackHexagon stack = grids[i].StackOfCell;
-                StartCoroutine(stack.PlayParticles(VanishType.AROUND));
+                coroutine = StartCoroutine(stack.PlayParticles(VanishType.AROUND));
             }
         }
 
-        yield return new WaitForSeconds(2f); //Time particles completed
+        if(coroutine != null)
+        {
+            yield return coroutine;
+        }
 
         float max = Mathf.NegativeInfinity;
         for (int i = 0; i < grids.Count; i++)
@@ -449,8 +454,8 @@ public class LevelController : MonoBehaviour
     private IEnumerator IE_RemoveStacksContainColor(Color color)
     {
         GridHexagon[] grids = GridManager.Instance.GetGridHexagonsContainColor(color);
-
-        for(int i = 0; i < grids.Length; i++)
+        Coroutine coroutine = null;
+        for (int i = 0; i < grids.Length; i++)
         {            
             if (grids[i].State == GridHexagonState.LOCK_BY_GOAL || grids[i].State == GridHexagonState.LOCK_BY_ADS)
             {
@@ -459,10 +464,14 @@ public class LevelController : MonoBehaviour
             else
             {
                 StackHexagon stack = grids[i].StackOfCell;
-                StartCoroutine(stack.PlayParticles(VanishType.CONTAIN_COLOR));
+                coroutine = StartCoroutine(stack.PlayParticles(VanishType.CONTAIN_COLOR));
             }
         }
-        yield return new WaitForSeconds(2f); //Time particles completed
+
+        if(coroutine != null)
+        {
+            yield return coroutine;
+        }
 
         float max = Mathf.NegativeInfinity;
         for (int i = 0; i < grids.Length; i++)
