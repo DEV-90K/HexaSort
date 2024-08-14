@@ -182,15 +182,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: Tap any stack to clear it
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 7887ab88e22a1bc4ab2986794875f51b, type: 2}
-  m_sharedMaterial: {fileID: -1489379929485998742, guid: 7887ab88e22a1bc4ab2986794875f51b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: bf092ce8ff4f1a347b2e99d9dd4be809, type: 2}
+  m_sharedMaterial: {fileID: 6114557377548333400, guid: bf092ce8ff4f1a347b2e99d9dd4be809, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4279904307
-  m_fontColor: {r: 0.2, g: 0.15686275, b: 0.101960786, a: 1}
+    rgba: 4281870111
+  m_fontColor: {r: 0.12156863, g: 0.15294118, b: 0.21960784, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -213,7 +213,7 @@ MonoBehaviour:
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 40
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -298,6 +298,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 276de9e04f506e946ae9bb77583224e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _Content: {fileID: 915822669154246073}
   canReused: 1
   btnClose: {fileID: 7819105026409917634}
   playerHexagon:

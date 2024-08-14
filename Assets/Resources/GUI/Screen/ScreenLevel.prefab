@@ -903,15 +903,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: 50/200
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 7887ab88e22a1bc4ab2986794875f51b, type: 2}
-  m_sharedMaterial: {fileID: -1489379929485998742, guid: 7887ab88e22a1bc4ab2986794875f51b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: bf092ce8ff4f1a347b2e99d9dd4be809, type: 2}
+  m_sharedMaterial: {fileID: 6114557377548333400, guid: bf092ce8ff4f1a347b2e99d9dd4be809, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4281870111
+  m_fontColor: {r: 0.12156863, g: 0.15294118, b: 0.21960784, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -928,15 +928,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 43.7
-  m_fontSizeBase: 36
+  m_fontSize: 40
+  m_fontSizeBase: 40
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 1
   m_fontSizeMax: 50
   m_fontStyle: 0
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 512
+  m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -2306,9 +2306,9 @@ GameObject:
   - component: {fileID: 7052993137637148979}
   - component: {fileID: 7402788560900837615}
   - component: {fileID: 4665435046867130436}
-  - component: {fileID: 3031975937755306152}
+  - component: {fileID: 3292124658619045096}
   m_Layer: 11
-  m_Name: BtnConfig
+  m_Name: BtnSetting
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2427,7 +2427,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9148b9014dc1a3429db8f1a824e1a94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3031975937755306152
+--- !u!114 &3292124658619045096
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2436,7 +2436,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7314989812680151489}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f45c5673bb6c6ba43bc03b2fa70706b0, type: 3}
+  m_Script: {fileID: 11500000, guid: ca444ebc616822a4c97688de16f0b9cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &7743507502527807412
@@ -2873,8 +2873,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4281870111
+  m_fontColor: {r: 0.12156863, g: 0.15294118, b: 0.21960784, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

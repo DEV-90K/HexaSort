@@ -287,7 +287,7 @@ public class LevelController : MonoBehaviour
         List<Hexagon> hexagons = GridManager.Instance.GetPlayerHexagonNeedMerge(color, gridHexagons);
         GridManager.Instance.RemovePlayerHexagonFromOldStack(gridHexagons, hexagons);
         StackManager.Instance.MergePlayerHexagon(grid.StackOfCell, hexagons);
-        grid.StackOfCell.HideCanvas();
+        grid.StackOfCell.HideCanvas();        
         yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM + (hexagons.Count - 1) * GameConstants.HexagonConstants.TIME_DELAY);
         grid.StackOfCell.ShowCanvas();
 
@@ -327,6 +327,7 @@ public class LevelController : MonoBehaviour
         
         if (numberOfPlayerHexagon >= 10)
         {
+            AudioManager.Instance.PlaySoundReached();
             StackVanishData vanishData = ResourceManager.Instance.GetStackVanishData(VanishType.NONE);
             if (SpaceSpecialEffects[0] <= numberOfPlayerHexagon && numberOfPlayerHexagon < SpaceSpecialEffects[1])
             {

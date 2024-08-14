@@ -110,8 +110,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4279904050
-  m_fontColor: {r: 0.19607845, g: 0.15294118, b: 0.10196079, a: 1}
+    rgba: 4281870111
+  m_fontColor: {r: 0.12156863, g: 0.1526144, b: 0.21960784, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -319,8 +319,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4282475134
-  m_fontColor: {r: 0.49411765, g: 0.38431373, b: 0.25490198, a: 1}
+    rgba: 4280236071
+  m_fontColor: {r: 0.15261438, g: 0.21960784, b: 0.12156863, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -415,7 +415,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -42, y: -101}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4985477638262836170
@@ -469,7 +469,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _content: {fileID: 1155485610550571369}
-  _hola: {fileID: 0}
   _txtName: {fileID: 1063611063755070804}
   _txtDescription: {fileID: 4093369007715359583}
   _art: {fileID: 1469746469724357723}

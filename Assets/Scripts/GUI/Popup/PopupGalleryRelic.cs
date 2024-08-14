@@ -70,7 +70,8 @@ public class PopupGalleryRelic : PopupBase
 
     private IEnumerator IE_ShowValue()
     {
-        foreach (char letter in _relicData.Description)
+        string value = _relicData.Coin + "/H";
+        foreach (char letter in value)
         {
             _txtValue.text += letter;
             yield return null;

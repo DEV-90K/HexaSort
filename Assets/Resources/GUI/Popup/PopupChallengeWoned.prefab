@@ -391,10 +391,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 5844238127149685630}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -95}
-  m_SizeDelta: {x: 660, y: 120}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6703895549044856269
 CanvasRenderer:
@@ -424,10 +424,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Completed!
+  m_text: Completed !
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 0ab23707508101c41a787c7581b570d7, type: 2}
-  m_sharedMaterial: {fileID: -842209352228158028, guid: 0ab23707508101c41a787c7581b570d7, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: bf092ce8ff4f1a347b2e99d9dd4be809, type: 2}
+  m_sharedMaterial: {fileID: 6114557377548333400, guid: bf092ce8ff4f1a347b2e99d9dd4be809, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -451,10 +451,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 60
+  m_fontSize: 72
   m_fontSizeBase: 60
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -1261,8 +1261,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 660, y: 120}
+  m_AnchoredPosition: {x: 4.65, y: -88.71}
+  m_SizeDelta: {x: 456.68, y: 108.14}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9091429413768966449
 CanvasRenderer:
@@ -1433,6 +1433,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b354aeb9f3ba4841ac06ac80dac67a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _Content: {fileID: 5679918087131455366}
   canReused: 1
   _BtnHome: {fileID: 2039252754354795224}
   _BtnGallery: {fileID: 1381941374724708088}

@@ -38,6 +38,8 @@ public class PopupBoostHammer : PopupBase
         base.Show();
         OnStackMoving?.Invoke(false);
         _able.EnterBoostHammer();
+
+        AudioManager.Instance.PlaySoundBoost();
         GameManager.Instance.ChangeState(GameState.PAUSE);
     }
 

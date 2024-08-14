@@ -189,8 +189,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4279904307
-  m_fontColor: {r: 0.2, g: 0.15686275, b: 0.101960786, a: 1}
+    rgba: 4281870111
+  m_fontColor: {r: 0.12156863, g: 0.15294118, b: 0.21960784, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -213,7 +213,7 @@ MonoBehaviour:
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 34
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -493,6 +493,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7cb3d9505e04be419cfde1765876058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _Content: {fileID: 803050855685601242}
   canReused: 1
   btnClose: {fileID: 4551610568145743017}
   playerHexagonLayerMask:

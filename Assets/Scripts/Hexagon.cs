@@ -13,6 +13,8 @@ public class Hexagon : PoolMember
     private GameObject model;
     [SerializeField]
     private TrailRenderer trail;
+    [SerializeField]
+    private HexagonAudio _Audio;
     public StackHexagon HexagonStack { get; private set; }
     public Color Color
     {
@@ -51,6 +53,8 @@ public class Hexagon : PoolMember
             normalColor = color;
             ColorUtility.TryParseHtmlString("#525252", out trickColor);
         }
+
+        //PlaySpawn();
     }
 
     public void Configure(StackHexagon hexStack)
@@ -85,8 +89,8 @@ public class Hexagon : PoolMember
         Color = normalColor;
     }
 
-    public void MoveToGridHexagon(Vector3 localPos, float delayTime)
-    {
+    public void TweenMovingToGrid(Vector3 localPos, float delayTime)
+    {        
         Vector3 centerPoint = Vector3.Lerp(localPos, transform.localPosition, 0.5f).Add(y: GameConstants.HexagonConstants.HEIGHT_BONUS);
 
         LeanTween.cancel(gameObject);
@@ -104,13 +108,17 @@ public class Hexagon : PoolMember
         Vector3 rotationAxis = Vector3.Cross(Vector3.up, v);
 
         LeanTween.rotateAround(gameObject, rotationAxis, 90, GameConstants.HexagonConstants.TIME_ANIM / 2)
+            .setOnStart(() =>
+            {
+                PlayMerge();
+            })
             .setEaseInSine()
             .setOnComplete(() =>
             {
                 LeanTween.rotateAround(gameObject, rotationAxis, 90, GameConstants.HexagonConstants.TIME_ANIM / 2)
                     .setEaseOutSine()
                     .setOnComplete(() =>
-                    {
+                    {                        
                         transform.localEulerAngles = Vector3.zero;
                     });
             })
@@ -118,24 +126,20 @@ public class Hexagon : PoolMember
     }
 
     public void TweenVanish(float offsetDelayTime)
-    {
+    {        
         LeanTween.cancel(gameObject);
         LeanTween.scale(gameObject, Vector3.zero, GameConstants.HexagonConstants.TIME_ANIM)
             .setEaseInBack()
             .setDelay(offsetDelayTime)
+            .setOnStart(() =>
+            {
+                PlaySort();
+            })
             .setOnComplete(() =>
-                {
+                {                    
                     Collect();
                 }
              );
-    }
-
-    public void TweenShow(float offsetDelayTime)
-    {
-        LeanTween.cancel(gameObject);
-        LeanTween.scale(gameObject, Vector3.one, GameConstants.HexagonConstants.TIME_ANIM / 2)
-            .setEaseOutExpo()
-            .setDelay(offsetDelayTime);
     }
 
     public void OnResert()
@@ -172,20 +176,20 @@ public class Hexagon : PoolMember
     }
     #endregion Hexagon Data
 
-    //private void Update()
-    //{
-    //    Controlling();
-    //}
+    #region Hexagon Audio
+    private void PlayMerge()
+    {
+        _Audio.PlayMerge();
+    }
 
-    //private void Controlling()
-    //{
-    //    if (Input.GetMouseButtonDown(0) && trail.enabled == false)
-    //    {
-    //        trail.enabled = true;
-    //    }
-    //    else if (Input.GetMouseButtonUp(0) && trail.enabled == true)
-    //    {
-    //        trail.enabled = false;
-    //    }
-    //}
+    private void PlaySort()
+    {
+        _Audio.PlaySort();
+    }
+
+    private void PlaySpawn()
+    {
+        _Audio.PlaySpawn();
+    }
+    #endregion Hexagon Audio
 }

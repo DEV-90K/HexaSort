@@ -112,7 +112,7 @@ public class StackHexagon : PoolMember
         }
 
         Hexagons.Add(playerHexagon);
-        playerHexagon.SetParent(transform);
+        playerHexagon.SetParent(transform);        
 
         UpdateCanvas();
     }

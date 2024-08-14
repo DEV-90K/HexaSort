@@ -173,7 +173,7 @@ public class StackManager : MonoSingleton<StackManager>, IStackOnPlaced, IStackS
             float yOffset = yOfCurrentGridHexagon + (i + 1) * GameConstants.HexagonConstants.HEIGHT;
             Vector3 localPos = Vector3.up * yOffset;
             playerHexagon.Configure(stackHexagon);
-            playerHexagon.MoveToGridHexagon(localPos, i * GameConstants.HexagonConstants.TIME_DELAY);
+            playerHexagon.TweenMovingToGrid(localPos, i * GameConstants.HexagonConstants.TIME_DELAY);
         }
     }
 

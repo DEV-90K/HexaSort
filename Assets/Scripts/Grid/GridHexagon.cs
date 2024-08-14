@@ -143,6 +143,8 @@ public class GridHexagon : PoolMember
         {
             stack.transform.localEulerAngles = Vector3.zero;
             particle.Play();
+
+            AudioManager.Instance.PlaySoundPlaced();
         }
     }
 

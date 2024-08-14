@@ -24,6 +24,7 @@ public class NoticeManager : MonoSingleton<NoticeManager>
         }
 
         _currentNotiveVanish = SpawnNoticeVanish(data);
+        AudioManager.instance.PlaySoundNoticeVanish();
         StartCoroutine(IE_ShowNoticeVanish());
     }
 
