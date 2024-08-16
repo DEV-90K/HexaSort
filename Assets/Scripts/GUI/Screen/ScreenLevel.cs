@@ -1,3 +1,4 @@
+using Audio_System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -11,6 +12,9 @@ public interface IBoostTrick
 
 public class ScreenLevel : ScreenBase, IBoostHammer, IBoostSwap
 {
+    [SerializeField]
+    private MusicData musicData;
+
     [SerializeField]
     private TMP_Text _txtRatio;
     [SerializeField]
@@ -40,6 +44,7 @@ public class ScreenLevel : ScreenBase, IBoostHammer, IBoostSwap
     public override void Show()
     {
         base.Show();
+        MusicManager.Instance.Play(musicData);
         GameManager.Instance.ChangeState(GameState.LEVEL_PLAYING);
 
         amount = LevelManager.Instance.GetAmountHexagon();

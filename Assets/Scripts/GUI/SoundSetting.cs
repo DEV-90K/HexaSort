@@ -1,4 +1,7 @@
+using Audio_System;
+using System;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 
 public class SoundSetting : MonoBehaviour
@@ -12,17 +15,20 @@ public class SoundSetting : MonoBehaviour
     [SerializeField]
     private Toggle _Toggle;
 
-    private float _volume;
+    private float _volume;    
+
+    public void OnInit(float vol, bool canSound)
+    {
+        OnToggle(canSound);
+        _volume = vol;
+        UpdateSlider();
+    }
 
     private void Start()
     {
         _BtnAdd.onClick.AddListener(OnClickAdd);
         _BtnSub.onClick.AddListener(OnClickSub);
         _Toggle.onValueChanged.AddListener(OnToggle);
-
-        _volume = AudioManager.Instance.GetSoundVolume();
-        UpdateSlider();
-        _Toggle.isOn = AudioManager.Instance.CanSound();
     }
 
     private void OnDestroy()
@@ -36,13 +42,11 @@ public class SoundSetting : MonoBehaviour
     {
         _volume += 0.1f;
         UpdateSlider();
-        AudioManager.Instance.PlaySoundSetting(_volume);
     }
 
     private void OnClickSub() {
         _volume -= 0.1f;
         UpdateSlider();
-        AudioManager.Instance.PlaySoundSetting(_volume);
     }
 
     private void UpdateSlider()
@@ -62,12 +66,22 @@ public class SoundSetting : MonoBehaviour
         }
 
         _Slider.value = _volume;
+        SoundManager.Instance.Volumne(_Slider.value);
     }
 
     private void OnToggle(bool toggle)
     {
-        Debug.Log("Ontoggle: " + toggle);
         _Toggle.isOn = toggle;
-        AudioManager.Instance.UpdateSoundState(toggle);
+        SoundManager.Instance.CanSound = toggle;
+    }
+
+    public float GetVol()
+    {
+        return _volume;
+    }
+
+    public bool CheckCanSound()
+    {
+        return _Toggle.isOn;
     }
 }

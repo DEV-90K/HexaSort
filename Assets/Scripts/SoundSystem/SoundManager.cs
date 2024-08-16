@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.Pool;
 
 namespace Audio_System
 {
-    public class SoundManager : PersistentMonoSingleton<SoundManager>
+    public class SoundManager : MonoSingleton<SoundManager>
     {
         IObjectPool<SoundEmitter> soundEmitterPool;
         readonly List<SoundEmitter> activeSoundEmitters = new();
@@ -19,12 +20,18 @@ namespace Audio_System
         void Start()
         {
             InitializePool();
+
+            PlayerAudioData audioData = MainPlayer.Instance.GetAudioData();
+            CanSound = audioData.CanSound;
+            Volumne(audioData.SoundVol);
         }
 
         public SoundBuilder CreateSoundBuilder() => new SoundBuilder(this);
 
         public bool CanPlaySound(SoundData data)
         {
+            if(!CanSound) return false;
+
             if (!data.frequentSound) return true;
 
             if (FrequentSoundEmitters.Count >= maxSoundInstances)
@@ -100,5 +107,18 @@ namespace Audio_System
             Destroy(soundEmitter.gameObject);
         }
         #endregion Unity Object Pool
+
+        #region Setting
+        [SerializeField]
+        private AudioMixer audioMixer;
+        public bool CanSound;
+
+        public void Volumne(float sliderVal)
+        {
+            float val = sliderVal.ToLogarithmicVolume();
+            audioMixer.SetFloat("SFXVolume", val);
+        }
+
+        #endregion Setting
     }
 }

@@ -151,6 +151,16 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
         OnChangeRefresh?.Invoke(_PlayerData.Refresh);
     }
 
+    public PlayerAudioData GetAudioData()
+    {
+        return _PlayerData.PlayerAudio;
+    }
+
+    public void UpdateAudioData(PlayerAudioData audioData)
+    {
+        _PlayerData.PlayerAudio = audioData;
+    }
+
     public void UpdateChestLastTime()
     {
         _PlayerData.ChestLastTime = DateTime.Now.ToString();
@@ -241,16 +251,21 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
         LevelData level = null;
         LevelPresenterData levelPresenterData = ResourceManager.instance.GetLevelPresenterDataByID(1);
         int IDLevel = 1;
-
         PlayerLevelData levelData = new PlayerLevelData(IDLevel, level, levelPresenterData);
-
         string chestTime = DateTime.Now.AddMinutes(-11f).ToString();
 
         int coin = 50;
         int material = 20;
 
+        PlayerAudioData audioData = new PlayerAudioData();
+        audioData.MusicVol = 0.3f;
+        audioData.CanMusic = true;
+        audioData.SoundVol = 0.7f;
+        audioData.CanSound = true;
+
         PlayerData playerData = new PlayerData(coin, material, levelData);
         playerData.ChestLastTime = chestTime;
+        playerData.PlayerAudio = audioData;
         return playerData;
     }
 

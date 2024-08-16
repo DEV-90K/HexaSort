@@ -1,3 +1,4 @@
+using Audio_System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -5,7 +6,10 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class ScreenMain : ScreenBase
-{    
+{
+    [SerializeField]
+    private MusicData musicData;
+
     [SerializeField]
     private Button _BtnPlay;
     [SerializeField]
@@ -39,8 +43,10 @@ public class ScreenMain : ScreenBase
     public override void Show()
     {
         base.Show();
-        GameManager.Instance.ChangeState(GameState.START);
         _btnChest.UpdateButton();
+
+        MusicManager.Instance.Play(musicData);
+        GameManager.Instance.ChangeState(GameState.START);
     }
 
 

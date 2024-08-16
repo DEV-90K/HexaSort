@@ -26,8 +26,6 @@ public class PopupLevelWoned : PopupBase
         base.Show();
         UpdateTxtCoin(_presenterData.Coin);
         UpdateTxtMaterial(_presenterData.Material);
-
-        AudioManager.Instance.PlayeSoundWin();
     }
 
     private void Start()

@@ -12,7 +12,6 @@ public class PopupBase : MonoBehaviour
     public virtual void Show()
     {
         gameObject.SetActive(true);
-        AudioManager.Instance.PlaySoundShowPopup();
         LeanTween.scale(_Content, Vector3.one, 0.2f)
             .setFrom(Vector3.one * 0.63f)
             .setEaseOutBack();            
@@ -26,8 +25,6 @@ public class PopupBase : MonoBehaviour
 
     public virtual void Hide()
     {
-
-        AudioManager.Instance.PlaySoundHidePopup();
         LeanTween.scale(_Content, Vector3.one * 0.63f, 0.2f)
             .setFrom(Vector3.one)
             .setEaseInBack()

@@ -45,7 +45,6 @@ public class PopupBoostSwap : PopupBase
         OnStackMoving?.Invoke(false);
         _able.EnterBoostSwap();
 
-        AudioManager.Instance.PlaySoundBoost();
         GameManager.Instance.ChangeState(GameState.PAUSE);
     }
 

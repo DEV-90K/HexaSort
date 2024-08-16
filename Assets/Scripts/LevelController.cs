@@ -327,7 +327,6 @@ public class LevelController : MonoBehaviour
         
         if (numberOfPlayerHexagon >= 10)
         {
-            AudioManager.Instance.PlaySoundReached();
             StackVanishData vanishData = ResourceManager.Instance.GetStackVanishData(VanishType.NONE);
             if (SpaceSpecialEffects[0] <= numberOfPlayerHexagon && numberOfPlayerHexagon < SpaceSpecialEffects[1])
             {

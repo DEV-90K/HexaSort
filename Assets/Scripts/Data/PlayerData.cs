@@ -7,6 +7,7 @@ public class PlayerData
     public int Refresh = 1054;
     public string ChestLastTime;
     public PlayerLevelData PlayerLevel;
+    public PlayerAudioData PlayerAudio;
     public PlayerData(int coin, int material, PlayerLevelData playerLevel)
     {
         Coin = coin;
@@ -41,4 +42,14 @@ public class PlayerLevelData
     {
         this.LevelPresenter = levelPresenter;
     }
+}
+
+public class PlayerAudioData
+{
+    public float SoundVol;
+    public bool CanSound;
+
+    public float MusicVol;
+    public bool CanMusic;
+
 }

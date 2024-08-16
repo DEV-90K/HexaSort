@@ -311,7 +311,6 @@ public class LevelManager : MonoSingleton<LevelManager>
     #region Boost Refresh
     public void OnBoostRefresh()
     {
-        AudioManager.instance.PlaySoundBoost();
         MainPlayer.instance.SubRefresh(1);
         _stackManager.ReGenerateStacks();
     }

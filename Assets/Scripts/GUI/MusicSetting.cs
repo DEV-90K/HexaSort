@@ -1,10 +1,15 @@
+using Audio_System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 
 public class MusicSetting : MonoBehaviour
 {
+    [SerializeField]
+    private AudioMixer _AudioMixer;
     [SerializeField]
     private Button _BtnAdd;
     [SerializeField]
@@ -16,15 +21,18 @@ public class MusicSetting : MonoBehaviour
 
     private float _volume;
 
+    public void OnInit(float vol, bool canSound)
+    {
+        OnToggle(canSound);
+        _volume = vol;
+        UpdateSlider();
+    }
+
     private void Start()
     {
         _BtnAdd.onClick.AddListener(OnClickAdd);
         _BtnSub.onClick.AddListener(OnClickSub);
         _Toggle.onValueChanged.AddListener(OnToggle);
-
-        _volume = AudioManager.Instance.GetMusicVolume();
-        UpdateSlider();
-        _Toggle.isOn = AudioManager.Instance.CanMusic();
     }
 
     private void OnDestroy()
@@ -38,14 +46,12 @@ public class MusicSetting : MonoBehaviour
     {
         _volume += 0.1f;
         UpdateSlider();
-        AudioManager.Instance.PlayMusicSetting(_volume);
     }
 
     private void OnClickSub()
     {
         _volume -= 0.1f;
         UpdateSlider();
-        AudioManager.Instance.PlayMusicSetting(_volume);
     }
 
     private void UpdateSlider()
@@ -65,12 +71,23 @@ public class MusicSetting : MonoBehaviour
         }
 
         _Slider.value = _volume;
+        MusicManager.Instance.Volumne(_Slider.value);
     }
 
     private void OnToggle(bool toggle)
     {
-        Debug.Log("Ontoggle: " + toggle);
         _Toggle.isOn = toggle;
-        AudioManager.Instance.UpdateMusicState(toggle);
+        MusicManager.Instance.CanMusic = toggle;
+    }
+
+    public float GetVol()
+    {
+        return _volume;
+    }
+
+    public bool CheckCanMusic()
+    {
+        return _Toggle.isOn;
     }
 }
+

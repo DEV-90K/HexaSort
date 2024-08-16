@@ -6,7 +6,7 @@ using UnityEngine.Audio;
 
 namespace Audio_System
 {
-    public class MusicManager : PersistentMonoSingleton<MusicManager>
+    public class MusicManager : MonoSingleton<MusicManager>
     {
         [SerializeField] List<MusicData> initialMusicList;
 
@@ -15,40 +15,17 @@ namespace Audio_System
         private float vanishFading = 0f;
 
         private MusicData musicData = null;
-
-        private AudioSource previous = null;
         private AudioSource current = null;
 
         private readonly Queue<MusicData> playlist = new();
         Coroutine coroutinePlay = null;
 
-        [SerializeField] private AudioMixer mixer = null;
-
-        void Start()
+        private void Start()
         {
-            //foreach (MusicData data in initialMusicList)
-            //{
-            //    AddToPlaylist(data);
-            //}
-
-            mixer.SetFloat("MusicVolume", Mathf.Log10(0.001f) * 20f);
+            PlayerAudioData audioData = MainPlayer.Instance.GetAudioData();
+            canMusic = audioData.CanMusic;
+            Volumne(audioData.MusicVol);
         }
-
-        public void AddToPlaylist(MusicData data)
-        {
-            playlist.Enqueue(data);
-            if (current == null && previous == null)
-            {
-                PlayNextTrack();
-            }
-        }
-
-        public void Clear()
-        {
-            playlist.Clear();
-
-            musicData = null;
-        }    
 
         public void PlayNextTrack()
         {
@@ -60,10 +37,13 @@ namespace Audio_System
 
         public void Play(MusicData data)
         {
-            if (current && current.clip == data.clip)
-            {
+            //if (current && current.clip == data.clip)
+            //{
+            //    return;
+            //}
+
+            if (!CanMusic) 
                 return;
-            }
 
             vanishFading = 0.001f;
             fading = 0.0f;
@@ -90,9 +70,9 @@ namespace Audio_System
             fading = 0.001f;
         }
 
-        public void Stop(MusicData data)
+        public void Stop()
         {
-            if(current == null || current.clip != data.clip)
+            if(current == null)
             {
                 Debug.Log("Music current not running");
                 return;
@@ -153,5 +133,44 @@ namespace Audio_System
                 vanishFading = 0.0f;
             }
         }
+
+        #region Setting
+        [SerializeField]
+        private AudioMixer audioMixer;
+        private bool canMusic = true;
+        public bool CanMusic
+        {
+            get
+            {
+                return canMusic;
+            }
+
+            set
+            {
+                canMusic = value;
+
+                if(canMusic)
+                {
+                    if(!current.isPlaying)
+                        Play(musicData);
+                }
+                else
+                {
+                    if(current.isPlaying)
+                    {
+                        current.Stop();
+                    }
+                        //Stop();
+                }
+            }
+        }
+
+        public void Volumne(float sliderVal)
+        {
+            float val = sliderVal.ToLogarithmicVolume();
+            audioMixer.SetFloat("MusicVolume", val);
+        }
+
+        #endregion Setting
     }
 }

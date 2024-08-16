@@ -1,3 +1,5 @@
+using Audio_System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,34 +7,28 @@ using UnityEngine;
 public class HexagonAudio : MonoBehaviour
 {
     [SerializeField]
-    private AudioSource _AudioSource;
+    private SoundData _SoundMerge;
     [SerializeField]
-    private AudioClip _Merge;
-    [SerializeField]
-    private AudioClip _Sort;
-    [SerializeField]
-    private AudioClip _Spawn;
+    private SoundData _SoundSort;
 
     public void PlayMerge()
     {
-        _AudioSource.clip = _Merge;
-        _AudioSource.Play();
+        SoundManager.Instance.CreateSoundBuilder()
+            .WithPosition(transform.position)
+            .WithRandomPitch()
+            .Play(_SoundMerge);
     }
 
     public void PlaySort()
     {
-        _AudioSource.clip = _Sort;
-        _AudioSource.Play();
+        SoundManager.Instance.CreateSoundBuilder()
+            .WithPosition(transform.position)
+            .WithRandomPitch()
+            .Play(_SoundSort);
     }
 
-    public void PlaySpawn()
+    internal void PlaySpawn()
     {
-        _AudioSource.clip = _Spawn;
-        _AudioSource.Play();
-    }
-
-    public void StopAudio()
-    {
-        _AudioSource.Stop();
+        throw new NotImplementedException();
     }
 }
