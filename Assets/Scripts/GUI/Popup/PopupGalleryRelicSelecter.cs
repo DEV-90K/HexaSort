@@ -148,13 +148,13 @@ public class PopupGalleryRelicSelecter : PopupBase
 
         _RelicName.text = data.Name;
         _RelicDescription.text = data.Description;
-        _RelicValue.text = data.Coin + "Coin" + "/" + data.Timer + "Minute";
+        _RelicValue.text = data.Coin + "/H";
         UpdateRelicCost(data.Material);
         _RelicSelecter.Anim_OnInit(relicArt);        
     }
 
     private void UpdateRelicCost(int cost)
     {
-        _RelicCost.text = cost + " Material";
+        _RelicCost.text = "-" + cost;
     }
 }
