@@ -29,7 +29,7 @@ public class StackChallengeManager : MonoSingleton<StackChallengeManager>, IStac
 
     public void OnInit(StackQueueData stackData)
     {
-        stackController.OnInit(this, this);
+        stackController.OnInit(this);
 
         if (stackData == null)
         {

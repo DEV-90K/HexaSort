@@ -5,6 +5,8 @@ using UnityEngine.Device;
 public class GUIManager : PersistentMonoSingleton<GUIManager>
 {
     [SerializeField]
+    public GadgetHeader GadgetHeader;
+    [SerializeField]
     private PopupManager popupManager;
     [SerializeField]
     private ScreenManager screenManager;

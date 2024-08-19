@@ -1,3 +1,4 @@
+using Audio_System;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,6 +6,9 @@ using UnityEngine;
 
 public class GridHexagon : PoolMember
 {
+    [SerializeField]
+    private SoundData _SoundPlaned;
+
     [SerializeField]
     private new Renderer renderer;
     [SerializeField]
@@ -137,6 +141,8 @@ public class GridHexagon : PoolMember
 
     public void SetStackOfCell(StackHexagon stack)
     {
+        SFX_Planed();
+
         StackOfCell = stack;
 
         if(stack != null)
@@ -211,6 +217,13 @@ public class GridHexagon : PoolMember
     public void OnUnLock()
     {
         State = GridHexagonState.NORMAL;
+    }
+
+    private void SFX_Planed()
+    {
+        SoundManager.Instance.CreateSoundBuilder()
+            .WithPosition(transform.position)
+            .Play(_SoundPlaned);
     }
 
     #region Grid Hexagon Data

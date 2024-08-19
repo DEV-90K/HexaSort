@@ -255,7 +255,7 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
         string chestTime = DateTime.Now.AddMinutes(-11f).ToString();
 
         int coin = 50;
-        int material = 20;
+        int material = 200;
 
         PlayerAudioData audioData = new PlayerAudioData();
         audioData.MusicVol = 0.3f;

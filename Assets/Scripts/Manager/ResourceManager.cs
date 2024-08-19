@@ -608,6 +608,11 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
         return null;
     }
 
+    public GalleryData[] GetGalleryDatas()
+    {
+        return this._galleryDatas;
+    }
+
     private GalleryData[] CreateGalleryDatas()
     {
         List<GalleryData> galleryDatas = new List<GalleryData>();

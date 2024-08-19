@@ -9,7 +9,11 @@ public class GadgetHeader : MonoBehaviour
     private TMP_Text _AmountCoin;
     [SerializeField]
     private TMP_Text _AmountMaterial;
-    
+    [SerializeField]
+    public Transform Coin;
+    [SerializeField]
+    public Transform Material;
+
     private RectTransform m_RectTransform;
 
     private void OnEnable()

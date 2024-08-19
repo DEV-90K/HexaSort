@@ -1,3 +1,4 @@
+using CollectionSystem;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -6,6 +7,10 @@ using UnityEngine.UI;
 
 public class PopupLevelWoned : PopupBase
 {
+    [SerializeField]
+    private CoinManager _CoinManager;
+    [SerializeField]
+    private MaterialManager _MaterialManager;
     [SerializeField]
     private Button _BtnReward;
     [SerializeField]
@@ -39,18 +44,30 @@ public class PopupLevelWoned : PopupBase
     }
 
     private void OnClickBtnReward()
-    {        
-        MainPlayer.Instance.AddCoin(_presenterData.Coin);
-        MainPlayer.Instance.AddMaterial(_presenterData.Material);
-        
-        int[] relicNotOwner = ResourceManager.Instance.GetRelicDatasPlayerNotOwner(1);
+    {
+        StartCoroutine(IE_VFX_Claim());        
+    }
 
+    private IEnumerator IE_VFX_Claim()
+    {
+        _CoinManager.VFX_ShowCoin(_presenterData.Coin);
+        _MaterialManager.VFX_ShowMaterial(_presenterData.Material);
+        float timeCoin = _CoinManager.GetTime();
+        Debug.Log("Time Coin: " + timeCoin);
+        float timeMaterial = _MaterialManager.GetTime();
+        Debug.Log("Time Material: " + timeMaterial);
+
+        _BtnReward.interactable = false;
+        yield return new WaitForSeconds(timeCoin);
+        _BtnReward.interactable = true;
+
+        int[] relicNotOwner = ResourceManager.Instance.GetRelicDatasPlayerNotOwner(1);
         if (relicNotOwner.Length > 0)
         {
             for (int i = 0; i < relicNotOwner.Length; i++)
             {
                 RelicData data = ResourceManager.Instance.GetRelicDataByID(relicNotOwner[i]);
-                if(data.Material <= MainPlayer.Instance.GetMaterial())
+                if (data.Material <= MainPlayer.Instance.GetMaterial())
                 {
                     DialogueData dialogueData = ResourceManager.Instance.GetDialogueDataByType(DialogueType.RELIC_COLLECT);
                     System.Action callback = () =>
@@ -60,14 +77,14 @@ public class PopupLevelWoned : PopupBase
                     };
 
                     DialogueManager.Instance.ShowDialougeBox(dialogueData, callback);
-                    return;
+                    yield break;
                 }
             }
         }
 
         LevelManager.Instance.OnInitCurrentLevel();
         Hide();
-    }
+    }    
 
     private void UpdateTxtMaterial(int mal)
     {

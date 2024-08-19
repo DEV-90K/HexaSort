@@ -1,3 +1,4 @@
+using Audio_System;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -341,6 +342,9 @@ public class LevelController : MonoBehaviour
                 vanishData = ResourceManager.Instance.GetStackVanishData(VanishType.CONTAIN_COLOR);
             }
 
+            SoundManager.Instance.CreateSoundBuilder()
+                .WithPosition(stack.GetTopPosition())
+                .Play(stack.SoundReach);
 
             yield return StackManager.Instance.IE_RemovePlayerHexagonsFromStack(stack);
 
@@ -394,6 +398,13 @@ public class LevelController : MonoBehaviour
 
         StackHexagon stack = grid.StackOfCell;
 
+        //SFX
+        SoundData sound = SoundResource.Instance.SwordThrust;
+        SoundManager.Instance.CreateSoundBuilder()
+            .WithPosition(stack.GetTopPosition())
+            .WithRandomPitch()
+            .Play(sound);
+        //SFX
         yield return stack.PlayParticles(VanishType.RANDOM);
 
         List<Hexagon> hexagons = stack.Hexagons;

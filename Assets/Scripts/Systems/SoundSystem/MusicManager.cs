@@ -42,6 +42,11 @@ namespace Audio_System
             //    return;
             //}
 
+            if(current && current.isPlaying && current.clip == data.clip)
+            {
+                return;
+            }
+
             if (!CanMusic) 
                 return;
 
@@ -127,7 +132,6 @@ namespace Audio_System
             if (current)
                 current.volume = 1.0f - logFraction;
 
-            Debug.Log("fraction: " + fraction);
             if (fraction >= 1f)
             {
                 vanishFading = 0.0f;

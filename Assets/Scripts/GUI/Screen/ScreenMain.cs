@@ -13,11 +13,7 @@ public class ScreenMain : ScreenBase
     [SerializeField]
     private Button _BtnPlay;
     [SerializeField]
-    private Button _BtnGrallery_1;
-    [SerializeField]
-    private Button _BtnGrallery_2;
-    [SerializeField]
-    private Button _BtnGrallery_3;
+    private GUI_ScreenMain.Gallery[] _Galleries; 
     [SerializeField]
     private ButtonChest_ScreenMain _btnChest;
 
@@ -40,6 +36,18 @@ public class ScreenMain : ScreenBase
         }
     }
 
+    public override void OnInit(params object[] paras)
+    {
+        base.OnInit(paras);
+
+        GalleryData[] galleries = ResourceManager.Instance.GetGalleryDatas();
+
+        for(int i = 0; i < _Galleries.Length; i++)
+        {
+            _Galleries[i].OnInit(galleries[i].ID);
+        }
+    }
+
     public override void Show()
     {
         base.Show();
@@ -53,37 +61,16 @@ public class ScreenMain : ScreenBase
     private void Start()
     {        
         _BtnPlay.onClick.AddListener(OnClickBtnPlay);
-        _BtnGrallery_1.onClick.AddListener(OnClickGrallery_1);
-        _BtnGrallery_2.onClick.AddListener(OnClickGrallery_2);
-        _BtnGrallery_3.onClick.AddListener(OnClickGrallery_3);
     }
 
     private void OnDestroy()
     {
         _BtnPlay.onClick.RemoveListener(OnClickBtnPlay);
-        _BtnGrallery_1.onClick.RemoveListener(OnClickGrallery_1);
-        _BtnGrallery_2.onClick.RemoveListener(OnClickGrallery_2);
-        _BtnGrallery_3.onClick.RemoveListener(OnClickGrallery_3);
     }
 
     private void OnClickBtnPlay()
     {
         LevelManager.Instance.OnInitCurrentLevel();
         Hide();
-    }
-
-    private void OnClickGrallery_1()
-    {
-        GUIManager.Instance.ShowPopup<PopupGallery>(1);
-    }
-
-    private void OnClickGrallery_2()
-    {
-        GUIManager.Instance.ShowPopup<PopupGallery>(2);
-    }
-
-    private void OnClickGrallery_3()
-    {
-        GUIManager.Instance.ShowPopup<PopupGallery>(3);
     }
 }

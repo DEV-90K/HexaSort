@@ -17,16 +17,14 @@ public class StackController : MonoBehaviour
     private Transform tf_Ray;
 
     private IStackOnPlaced _stackPlaceable;
-    private IStackSphereRadius _IStackSphereRadius;
 
     private Vector3 originPosStackContact;
     private StackHexagon stackContact;
     private GridHexagon gridHexagonContact;
 
-    public void OnInit(IStackOnPlaced stackPlaceable, IStackSphereRadius stackSphereRadius)
+    public void OnInit(IStackOnPlaced stackPlaceable)
     {
         _stackPlaceable = stackPlaceable;
-        _IStackSphereRadius = stackSphereRadius;
     }
 
     private void Update()

@@ -1,3 +1,4 @@
+using Audio_System;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,6 +6,15 @@ using UnityEngine;
 
 public class StackHexagon : PoolMember
 {
+    [SerializeField]
+    public SoundData SoundReach;
+    [SerializeField]
+    public SoundData SoundSpawn;
+    [SerializeField] 
+    private SoundData _SoundUnlock;
+    [SerializeField]
+    public SoundData SoundPick;
+
     [SerializeField]
     private CanvasStackHexagon canvasStack;
     [SerializeField]

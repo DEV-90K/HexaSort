@@ -142,7 +142,7 @@ public class ScreenLevel : ScreenBase, IBoostHammer, IBoostSwap
 
     private void UpdateTxtRatio(int amount)
     {
-        _txtRatio.text = $"{Mathf.Min(amount, presenterData.Goal)}/{presenterData.Goal}";        
+        _txtRatio.text = $"{Mathf.Min(amount, presenterData.Goal)} / {presenterData.Goal}";        
     }
     private void UpdateTxtLevel()
     {

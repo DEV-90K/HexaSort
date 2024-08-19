@@ -1,3 +1,4 @@
+using Audio_System;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -186,10 +187,18 @@ public class LevelManager : MonoSingleton<LevelManager>
 
     private IEnumerator IE_FinishLosed(float delay)
     {
+        SFX_FinishLosed();
         yield return new WaitForSeconds(delay);        
         GUIManager.instance.ShowPopup<PopupLevelLosed>(_presenterData);
         //_levelData = null;
         //_presenterData = null;
+    }
+
+    private void SFX_FinishLosed()
+    {
+        SoundData data = SoundResource.instance.Failed;
+        SoundManager.instance.CreateSoundBuilder()
+            .Play(data);
     }
 
     private void OnFinishWoned()
@@ -198,14 +207,23 @@ public class LevelManager : MonoSingleton<LevelManager>
         OnFinish();
         MainPlayer.instance.PlayingWonedLevel(_presenterData.Level);        
         StartCoroutine(IE_FinishWoned(1f));
-    }
+    }    
 
     private IEnumerator IE_FinishWoned(float delay)
     {
+        SFX_FinishWoned();
         yield return new WaitForSeconds(delay);
         GUIManager.instance.ShowPopup<PopupLevelWoned>(_presenterData);
         _levelData = null;
         _presenterData = null;
+    }
+
+    private void SFX_FinishWoned()
+    {
+        SoundData sound = SoundResource.instance.Completed;
+
+        SoundManager.instance.CreateSoundBuilder()
+            .Play(sound);
     }
 
     #region Boost Hammer

@@ -5214,6 +5214,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   poolType: 2
+  _SoundPlaned:
+    clip: {fileID: 8300000, guid: b6832a5c7c2cb9c47813ff98c1120778, type: 3}
+    mixerGroup: {fileID: 5316577978923731317, guid: a3d05dfe05267164194a9d6f61584fbc, type: 2}
+    loop: 0
+    playOnAwake: 0
+    frequentSound: 0
   renderer: {fileID: 8294922368738064418}
   model: {fileID: 7502301547133229559}
   particle: {fileID: 4411949298171570204}

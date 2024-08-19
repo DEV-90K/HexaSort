@@ -137,7 +137,7 @@ public class PopupGallery : PopupBase
         }
         else
         {
-            _TxtCoin.text = _amountCoin + " Coin";
+            _TxtCoin.text = _amountCoin.ToString();
         }        
     }
 

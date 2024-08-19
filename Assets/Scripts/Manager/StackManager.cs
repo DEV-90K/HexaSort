@@ -1,3 +1,4 @@
+using Audio_System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,7 +14,7 @@ public interface IStackSphereRadius
 }
 
 public class StackManager : MonoSingleton<StackManager>, IStackOnPlaced, IStackSphereRadius
-{
+{    
     [SerializeField]
     protected Transform[] pointSpawns;
     [SerializeField]
@@ -34,14 +35,14 @@ public class StackManager : MonoSingleton<StackManager>, IStackOnPlaced, IStackS
     {
         base.Awake();
         stackHexagons = new List<StackHexagon>();
-        stackController.OnInit(this, this);
+        stackController.OnInit(this);
     }
 
     private void OnInit()
     {
         stackSpawner = randomSpawner;
         stackController.OnResert();
-        stackController.OnInit(this, this);
+        stackController.OnInit(this);
         GenerateStacks();
     }
 
@@ -57,7 +58,7 @@ public class StackManager : MonoSingleton<StackManager>, IStackOnPlaced, IStackS
         stackSpawner = dataSpawner;
         dataSpawner.OnInit(stackData);
         stackController.OnResert();
-        stackController.OnInit(this, this);
+        stackController.OnInit(this);
         GenerateStacks();
     }
 
@@ -108,11 +109,17 @@ public class StackManager : MonoSingleton<StackManager>, IStackOnPlaced, IStackS
         for (int i = 0; i < pointSpawns.Length; i++)
         {
            StackHexagon stack = stackSpawner.Spawn(pointSpawns[i]);
-           
+
             LeanTween.moveLocalX(stack.gameObject, 0f, 0.1f)
-                .setFrom((i+1) * 3f)
+                .setFrom((i + 1) * 3f)
                 .setEaseInOutSine()
-                .setDelay(i * 0.05f);
+                .setDelay(i * 0.05f)
+                .setOnComplete(() =>
+                {
+                    SoundManager.instance.CreateSoundBuilder()
+                        .WithPosition(stack.transform.position)
+                        .Play(stack.SoundSpawn);
+                });
 
            stackHexagons.Add(stack);
         }
