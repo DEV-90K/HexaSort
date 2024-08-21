@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Audio_System;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -30,6 +31,7 @@ namespace CollectionSystem
             this.amount = amount;
             Action callback_1 = () =>
             {
+                SFX_MaterialCollect();
                 MainPlayer.Instance.AddMaterial(4);
             };
             StartCoroutine(IE_ShowMaterial(amount, callback_1));
@@ -39,10 +41,17 @@ namespace CollectionSystem
                 this.amount += 1;
                 Action callback_2 = () =>
                 {
+                    SFX_MaterialCollect();
                     MainPlayer.Instance.AddMaterial(amountMaterial - amount * 3);
                 };
                 StartCoroutine(IE_ShowMaterial(1, callback_2));
             }
+        }
+
+        private void SFX_MaterialCollect()
+        {
+            SoundData soundData = SoundResource.Instance.MaterialCollect;
+            SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(soundData);
         }
 
         public float GetTime()
@@ -61,7 +70,14 @@ namespace CollectionSystem
         {
             for (int i = 0; i < amount; i++)
             {
-                Material Material = SpawnMaterial(_TF_Start.position + OffsetCircle(radius));
+                Material Material = SpawnMaterial(_TF_Start.position);
+                //Material.transform.position += OffsetCircle(radius);
+
+                if (Material.TryGetComponent<RectTransform>(out RectTransform rectTransform))
+                {
+                    rectTransform.anchoredPosition += OffsetCircle(100f);
+                }
+
                 Material.TweenMoving(_posEnd, timeMove, i * timeDelay, callback);
                 Material.TweenScale(Vector3.zero, Vector3.one, i * timeDelay);
             }
@@ -75,7 +91,7 @@ namespace CollectionSystem
             return Material;
         }
 
-        private Vector3 OffsetCircle(float radius)
+        private Vector2 OffsetCircle(float radius)
         {
             return UnityEngine.Random.insideUnitCircle * radius;
         }

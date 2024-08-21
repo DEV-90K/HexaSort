@@ -1,7 +1,9 @@
+using Audio_System;
 using CollectionSystem;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -45,7 +47,14 @@ public class PopupLevelWoned : PopupBase
 
     private void OnClickBtnReward()
     {
+        SFX_ClickReward();
         StartCoroutine(IE_VFX_Claim());        
+    }
+
+    private void SFX_ClickReward()
+    {
+        SoundData soundData = SoundResource.Instance.ButtonCollectCoin;
+        SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(soundData);
     }
 
     private IEnumerator IE_VFX_Claim()
@@ -53,9 +62,7 @@ public class PopupLevelWoned : PopupBase
         _CoinManager.VFX_ShowCoin(_presenterData.Coin);
         _MaterialManager.VFX_ShowMaterial(_presenterData.Material);
         float timeCoin = _CoinManager.GetTime();
-        Debug.Log("Time Coin: " + timeCoin);
         float timeMaterial = _MaterialManager.GetTime();
-        Debug.Log("Time Material: " + timeMaterial);
 
         _BtnReward.interactable = false;
         yield return new WaitForSeconds(timeCoin);
@@ -84,7 +91,7 @@ public class PopupLevelWoned : PopupBase
 
         LevelManager.Instance.OnInitCurrentLevel();
         Hide();
-    }    
+    }      
 
     private void UpdateTxtMaterial(int mal)
     {

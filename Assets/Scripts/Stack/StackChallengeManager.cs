@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class StackChallengeManager : MonoSingleton<StackChallengeManager>, IStackOnPlaced, IStackSphereRadius
+public class StackChallengeManager : MonoSingleton<StackChallengeManager>, IStackOnPlaced
 {
     public static Action OnAllStackPlaced;
 

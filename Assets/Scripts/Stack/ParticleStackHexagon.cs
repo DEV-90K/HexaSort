@@ -6,13 +6,21 @@ public class ParticleStackHexagon : MonoBehaviour
 {
     [SerializeField]
     private ParticleSystem[] _Particles;
+    [SerializeField]
+    private MeshCollider _MeshCollider;
 
     private StackHexagon _stackHexagon;
     private ParticleSystem _particle;
 
+    private void Start()
+    {
+        _MeshCollider.enabled = false;
+    }
+
     public void OnInit(StackHexagon stack)
     {
         _stackHexagon = stack;
+        _MeshCollider.enabled = false;
     }
 
     private void OnShow()
@@ -44,8 +52,11 @@ public class ParticleStackHexagon : MonoBehaviour
 
         _particle.gameObject.SetActive(true);
         _particle.playbackSpeed= 5f;
+        _particle.Stop();
         _particle.Play();
+        _MeshCollider.enabled = true;
         yield return WaitUntilCompleted();
+        _MeshCollider.enabled = false;
         _particle.Stop();
         _particle.gameObject.SetActive(false);
         OnHide();

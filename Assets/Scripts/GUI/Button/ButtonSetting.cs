@@ -1,3 +1,4 @@
+using Audio_System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,6 +26,13 @@ public class ButtonSetting : MonoBehaviour
 
     private void OnClickButton()
     {
+        SFX_ClickSetting();
         GUIManager.Instance.ShowPopup<PopupSetting>();
+    }
+
+    private void SFX_ClickSetting()
+    {
+        SoundData soundData = SoundResource.Instance.ButtonClick;
+        SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(soundData);
     }
 }

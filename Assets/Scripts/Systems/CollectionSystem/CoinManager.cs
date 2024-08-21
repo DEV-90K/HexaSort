@@ -1,5 +1,7 @@
+using Audio_System;
 using System;
 using System.Collections;
+using UnityEditor;
 using UnityEngine;
 
 namespace CollectionSystem
@@ -29,6 +31,7 @@ namespace CollectionSystem
             this.amount = amount;
             Action callback_1 = () =>
             {
+                SFX_CoinCollect();
                 MainPlayer.Instance.AddCoin(4);
             };
             StartCoroutine(IE_ShowCoin(amount, callback_1));
@@ -39,10 +42,17 @@ namespace CollectionSystem
 
                 Action callback_2 = () =>
                 {
+                    SFX_CoinCollect();
                     MainPlayer.Instance.AddCoin(amountCoin - amount * 4);
                 };
                 StartCoroutine(IE_ShowCoin(1, callback_2));
             }
+        }
+
+        private void SFX_CoinCollect()
+        {
+            SoundData soundData = SoundResource.Instance.CoinCollect;
+            SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(soundData);
         }
 
         public float GetTime()
@@ -60,7 +70,13 @@ namespace CollectionSystem
         {
             for (int i = 0; i < amount; i++)
             {
-                Coin coin = SpawnCoin(_TF_Start.position + OffsetCircle(1f));
+                Coin coin = SpawnCoin(_TF_Start.position);
+                
+                if(coin.TryGetComponent<RectTransform>(out RectTransform rectTransform))
+                {
+                    rectTransform.anchoredPosition += OffsetCircle(100f);
+                }
+
                 coin.TweenMoving(_posEnd, timeMove, i * timeDelay, callback);
                 coin.TweenScale(Vector3.zero, Vector3.one, i * timeDelay);
             }
@@ -74,7 +90,7 @@ namespace CollectionSystem
             return coin;
         }
 
-        private Vector3 OffsetCircle(float radius)
+        private Vector2 OffsetCircle(float radius)
         {
             return UnityEngine.Random.insideUnitCircle * radius;
         }

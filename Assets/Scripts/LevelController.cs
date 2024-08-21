@@ -366,7 +366,7 @@ public class LevelController : MonoBehaviour
                 }
                 else if (vanishData.Type == VanishType.CONTAIN_COLOR)
                 {
-                    yield return IE_RemoveStacksContainColor(color);
+                    yield return IE_RemoveStacksContainColor(color, grid);
                 }
             }
         }
@@ -400,12 +400,14 @@ public class LevelController : MonoBehaviour
 
         //SFX
         SoundData sound = SoundResource.Instance.SwordThrust;
-        SoundManager.Instance.CreateSoundBuilder()
+        SoundBuilder soundBuilder = SoundManager.Instance.CreateSoundBuilder()
             .WithPosition(stack.GetTopPosition())
-            .WithRandomPitch()
-            .Play(sound);
+            .WithRandomPitch();
+
+        soundBuilder.Play(sound);
         //SFX
         yield return stack.PlayParticles(VanishType.RANDOM);
+        soundBuilder.Stop();
 
         List<Hexagon> hexagons = stack.Hexagons;
         int numberOfPlayerHexagon = hexagons.Count;
@@ -420,12 +422,13 @@ public class LevelController : MonoBehaviour
         }
 
         yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM + (numberOfPlayerHexagon - 1) * GameConstants.HexagonConstants.TIME_DELAY);
-    }
+    }    
 
     private IEnumerator IE_RemoveNeighborStack(GridHexagon grid)
     {
         List<GridHexagon> grids = GridManager.Instance.GetNeighborGidHexagon(grid);
         Coroutine coroutine = null;
+
         for (int i = 0; i < grids.Count; i++)
         {
             if (grid.State == GridHexagonState.LOCK_BY_GOAL || grid.State == GridHexagonState.LOCK_BY_ADS)
@@ -440,8 +443,18 @@ public class LevelController : MonoBehaviour
         }
 
         if(coroutine != null)
-        {
+        {            
+            //SFX
+            SoundData sound = SoundResource.Instance.AoE_Ice_Storm;
+            SoundBuilder soundBuilder = SoundManager.Instance.CreateSoundBuilder()
+                .WithPosition(grid.transform.position)
+                .WithRandomPitch();
+
+            soundBuilder.Play(sound);
+            //SFX
             yield return coroutine;
+            soundBuilder.Stop();
+
         }
 
         float max = Mathf.NegativeInfinity;
@@ -462,7 +475,7 @@ public class LevelController : MonoBehaviour
         yield return new WaitForSeconds(max);
     }
 
-    private IEnumerator IE_RemoveStacksContainColor(Color color)
+    private IEnumerator IE_RemoveStacksContainColor(Color color, GridHexagon grid)
     {
         GridHexagon[] grids = GridManager.Instance.GetGridHexagonsContainColor(color);
         Coroutine coroutine = null;
@@ -481,7 +494,17 @@ public class LevelController : MonoBehaviour
 
         if(coroutine != null)
         {
+            //SFX
+            SoundData sound = SoundResource.Instance.AoE_Starts;
+            SoundBuilder soundBuilder = SoundManager.Instance.CreateSoundBuilder()
+                .WithPosition(grid.transform.position)
+                .WithRandomPitch();
+
+            soundBuilder.Play(sound);
+            //SFX
             yield return coroutine;
+            soundBuilder.Stop();
+
         }
 
         float max = Mathf.NegativeInfinity;

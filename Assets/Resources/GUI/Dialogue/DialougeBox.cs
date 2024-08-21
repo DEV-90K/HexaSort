@@ -1,3 +1,4 @@
+using Audio_System;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,6 +22,9 @@ public class DialougeBox : MonoBehaviour
     private Button _BtnBG;
     [SerializeField]
     private Animator _animator;
+    [SerializeField]
+    private AudioSource _audioSource;
+
 
     private DialogueData _data;
     private Action _actionSkip;
@@ -43,17 +47,17 @@ public class DialougeBox : MonoBehaviour
 
     public void OnExit()
     {
-        if(_data.Type == DialogueType.CHEST_REWARD)
+        if (_data.Type == DialogueType.CHEST_REWARD)
         {
             GUIManager.Instance.ShowPopup<PopupChestReward>();
         }
-        else if(_data.Type == DialogueType.RELIC_COLLECT)
+        else if (_data.Type == DialogueType.RELIC_COLLECT)
         {
             GUIManager.Instance.HideScreen<ScreenLevel>();
             GUIManager.Instance.HidePopup<PopupLevelWoned>();
             GUIManager.Instance.ShowPopup<PopupGallery>(1);
         }
-        
+
         Destroy(gameObject);
     }
 
@@ -70,6 +74,8 @@ public class DialougeBox : MonoBehaviour
 
     private IEnumerator IE_TypeSentence(string sentence)
     {
+        _audioSource.Play();
+
         _Conversation.text = "";
         _Navigation.text = "";
         foreach (char letter in sentence.ToCharArray())
@@ -78,6 +84,7 @@ public class DialougeBox : MonoBehaviour
             yield return null;
         }
 
+        _audioSource.Stop();
         UpdateNavigation();
     }
 
@@ -95,7 +102,7 @@ public class DialougeBox : MonoBehaviour
 
     private void OnClickNavigation()
     {
-        if(_sequences.Count == 0)
+        if (_sequences.Count == 0)
         {
             _animator.SetBool("IsOpen", false);
         }
@@ -107,13 +114,14 @@ public class DialougeBox : MonoBehaviour
 
     private void OnClickSkip()
     {
+        SFX_ClickSkip();
         _BtnSkip.gameObject.SetActive(false);
 
-        if(_actionSkip != null)
+        if (_actionSkip != null)
         {
             _actionSkip.Invoke();
         }
-        else if(_data.Type == DialogueType.RELIC_COLLECT)
+        else if (_data.Type == DialogueType.RELIC_COLLECT)
         {
             GUIManager.Instance.HideScreen<ScreenLevel>();
             GUIManager.Instance.HidePopup<PopupLevelWoned>();
@@ -125,6 +133,12 @@ public class DialougeBox : MonoBehaviour
         }
 
         Destroy(gameObject);
+    }
+
+    private void SFX_ClickSkip()
+    {
+        SoundData soundData = SoundResource.Instance.ButtonClick;
+        SoundManager.Instance.CreateSoundBuilder().Play(soundData);
     }
 
     private void Start()

@@ -1,3 +1,4 @@
+using Audio_System;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -68,8 +69,15 @@ public class ButtonBoostSwap : MonoBehaviour, IBoostTrick
             return;
         }
 
+        SFX_ClickButton();
         GUIManager.Instance.ShowPopup<PopupBoostSwap>(_able);
         GUIManager.Instance.HideScreen<ScreenLevel>();
+    }
+
+    private void SFX_ClickButton()
+    {
+        SoundData soundData = SoundResource.Instance.ButtonBooster;
+        SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(soundData);
     }
 
     public void ShowBoostTrick()

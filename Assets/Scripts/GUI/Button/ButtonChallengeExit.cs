@@ -8,6 +8,7 @@ public class ButtonChallengeExit : ButtonExit
 {
     public override void OnClickExit()
     {
+        SFX_ClickExit();
         ChallengeManager.Instance.OnExit();
         GUIManager.Instance.HideScreen<ScreenChallenge>();
     }

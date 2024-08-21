@@ -8,12 +8,7 @@ public interface IStackOnPlaced
     public void OnStackPlaced(StackHexagon stack);
 }
 
-public interface IStackSphereRadius
-{
-    public Vector3 GetRadiusByGrid();
-}
-
-public class StackManager : MonoSingleton<StackManager>, IStackOnPlaced, IStackSphereRadius
+public class StackManager : MonoSingleton<StackManager>, IStackOnPlaced
 {    
     [SerializeField]
     protected Transform[] pointSpawns;

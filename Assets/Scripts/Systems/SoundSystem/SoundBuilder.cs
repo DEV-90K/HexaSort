@@ -7,7 +7,7 @@ namespace Audio_System
         readonly SoundManager soundManager;
         Vector3 position = Vector3.zero;
         bool randomPitch;
-        SoundData soundData;
+        SoundEmitter emitter;
         public SoundBuilder(SoundManager soundManager)
         {
             this.soundManager = soundManager;
@@ -22,12 +22,6 @@ namespace Audio_System
         public SoundBuilder WithRandomPitch()
         {
             this.randomPitch = true;
-            return this;
-        }
-
-        public SoundBuilder WithSoundData(SoundData soundData)
-        {
-            this.soundData = soundData;
             return this;
         }
 
@@ -57,7 +51,13 @@ namespace Audio_System
                 soundEmitter.Node = soundManager.FrequentSoundEmitters.AddLast(soundEmitter);
             }
 
+            this.emitter = soundEmitter;
             soundEmitter.Play();
+        }
+
+        public void Stop()
+        {
+            emitter.Stop();
         }
     }
 }

@@ -48,6 +48,9 @@ public class LevelManager : MonoSingleton<LevelManager>
 
     private void Start()
     {
+        Debug.Log("Level 3: ");
+        ResourceManager.instance.GetLevelByID(3).DebugLogObject();
+
         LevelController.OnTurnCompleted += LevelController_OnTurnCompleted;
         _config = ResourceManager.instance.GetLevelConfig();
         _hammer.gameObject.SetActive(false);

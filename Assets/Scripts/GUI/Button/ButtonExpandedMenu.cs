@@ -1,3 +1,4 @@
+using Audio_System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -46,24 +47,21 @@ public class ButtonExpandedMenu : MonoBehaviour, IExpandedMenu
         _btn.onClick.RemoveListener(ToggleMenu);
     }
 
-    //private void OnResertMenu()
-    //{
-    //    foreach(RectTransform tf in _ItemExpands)
-    //    {
-    //        tf.position = transform.position;
-    //        tf.gameObject.SetActive(false);
-    //    }
-    //}
-
     private void ToggleMenu()
     {
-        Debug.Log("On Toggle Menu");
+        SFX_ToggleMenu();
         _isExpanded = !_isExpanded;
 
         if (_isExpanded) 
             ShowItems(); 
         else 
             HideItems();
+    }
+
+    private void SFX_ToggleMenu()
+    {
+        SoundData soundData = SoundResource.Instance.ButtonClick;
+        SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(soundData);
     }
 
     private void ShowItems()

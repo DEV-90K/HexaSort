@@ -1,3 +1,4 @@
+using Audio_System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -64,7 +65,14 @@ public class ButtonBoostRefresh : MonoBehaviour, IBoostTrick
             return;
         }
 
+        SFX_ClickButton();
         LevelManager.Instance.OnBoostRefresh();
+    }
+
+    private void SFX_ClickButton()
+    {
+        SoundData soundData = SoundResource.Instance.ButtonBooster;
+        SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(soundData);
     }
 
     public void ShowBoostTrick()

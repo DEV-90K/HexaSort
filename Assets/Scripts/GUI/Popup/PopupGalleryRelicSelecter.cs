@@ -1,3 +1,4 @@
+using Audio_System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -119,11 +120,18 @@ public class PopupGalleryRelicSelecter : PopupBase
 
     private void OnClickBtnSelection()
     {
+        SFX_Selection();
         MainPlayer.Instance.SubMaterial(_selectData.Material);
         _selectGalleryRelic.State = GalleryRelicState.COLLECT;
         MainPlayer.Instance.CollectGalleryRelic(_selectGalleryRelic);
         GUIManager.Instance.ShowPopup<PopupGallery>(_selectGalleryRelic.IDGallery);
         Hide();
+    }
+
+    private void SFX_Selection()
+    {
+        SoundData soundData = SoundResource.Instance.ButtonBuy;
+        SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(soundData);
     }
 
     public void ShowSelection(GalleryRelicData data, Sprite relicArt)

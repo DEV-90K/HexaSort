@@ -1,3 +1,4 @@
+using Audio_System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -69,8 +70,15 @@ public class ButtonBoostHammer : MonoBehaviour, IBoostTrick
             return;
         }
 
+        SFX_ClickButton();
         GUIManager.Instance.ShowPopup<PopupBoostHammer>(_able);
         GUIManager.Instance.HideScreen<ScreenLevel>();
+    }
+
+    private void SFX_ClickButton()
+    {
+        SoundData soundData = SoundResource.Instance.ButtonBooster;
+        SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(soundData);
     }
 
     public void ShowBoostTrick()

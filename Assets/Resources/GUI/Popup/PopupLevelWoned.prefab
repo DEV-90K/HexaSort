@@ -209,6 +209,7 @@ GameObject:
   - component: {fileID: 518269200477237676}
   - component: {fileID: 4260585210200351372}
   - component: {fileID: 7845783833626697788}
+  - component: {fileID: 9190715523813916942}
   m_Layer: 11
   m_Name: MiddleCenter
   m_TagString: Untagged
@@ -275,6 +276,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!111 &9190715523813916942
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1764013238145956908}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 1c148b06889a31f43a373555dfafffd1, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 1c148b06889a31f43a373555dfafffd1, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &1889995716850649748
 GameObject:
   m_ObjectHideFlags: 0
@@ -810,7 +827,7 @@ RectTransform:
   m_Children:
   - {fileID: 1637169301404402203}
   m_Father: {fileID: 1894001397990890964}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -24}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -225, y: 75}
@@ -1755,7 +1772,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7165149350906651029}
   m_Layer: 11
-  m_Name: Coin Collect
+  m_Name: Item Collect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1903,9 +1920,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Material: {fileID: -946683698667289211, guid: 72eda07c34677ef4d8497dc0adc27a02, type: 3}
   _TF_Start: {fileID: 2259370400528971089}
+  radius: 4
   timeMove: 1
   timeDelay: 0.04
-  amount: 10
 --- !u!1 &8108483591111344620
 GameObject:
   m_ObjectHideFlags: 0
@@ -1952,6 +1969,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Coin: {fileID: 8163009029438693301, guid: e5b558c2d35f38647b0452d9d79ef370, type: 3}
   _TF_Start: {fileID: 9041840765996736494}
+  radius: 4
   timeMove: 1
   timeDelay: 0.05
 --- !u!1 &8112917771962805352
@@ -1986,7 +2004,7 @@ RectTransform:
   m_Children:
   - {fileID: 8152900988887617979}
   m_Father: {fileID: 1894001397990890964}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 24}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 225, y: 75}

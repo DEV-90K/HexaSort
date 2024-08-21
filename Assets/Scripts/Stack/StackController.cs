@@ -53,6 +53,11 @@ public class StackController : MonoBehaviour
 
     private void ControlMouseDown()
     {
+        if(PopupManager.Instance.CheckAnyPopupShowed())
+        {
+            return;
+        }
+
         RaycastHit hit;
         Physics.Raycast(GetRayFromMouseClicked(), out hit, 500, playerHexagonLayerMask);
         
@@ -62,7 +67,7 @@ public class StackController : MonoBehaviour
             return;
         }
 
-        stackContact = hit.collider.GetComponent<Hexagon>().HexagonStack;
+        stackContact = hit.collider.GetComponent<Hexagon>().HexagonStack;        
         tf_Ray = stackContact.GetTransformRay();
         originPosStackContact = stackContact.transform.position;
     }
@@ -148,6 +153,13 @@ public class StackController : MonoBehaviour
     {
         if (gridHexagonContact != null)
             gridHexagonContact.ShowColor();
+
+        if (PopupManager.Instance.CheckAnyPopupShowed())
+        {
+            stackContact.transform.position = originPosStackContact;
+            stackContact = null;
+            return;
+        }
 
         if (gridHexagonContact)
         {

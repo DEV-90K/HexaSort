@@ -1,15 +1,9 @@
 using Audio_System;
-using System;
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.UI;
 
 public class SoundSetting : MonoBehaviour
 {
-    [SerializeField]
-    private Button _BtnAdd;
-    [SerializeField]
-    private Button _BtnSub;
     [SerializeField]
     private Slider _Slider;
     [SerializeField]
@@ -26,45 +20,18 @@ public class SoundSetting : MonoBehaviour
 
     private void Start()
     {
-        _BtnAdd.onClick.AddListener(OnClickAdd);
-        _BtnSub.onClick.AddListener(OnClickSub);
         _Toggle.onValueChanged.AddListener(OnToggle);
+        _Slider.onValueChanged.AddListener(OnSlider);
     }
 
     private void OnDestroy()
     {
-        _BtnAdd.onClick.RemoveListener(OnClickAdd);
-        _BtnSub.onClick.RemoveListener(OnClickSub);
         _Toggle.onValueChanged.RemoveListener(OnToggle);
-    }
-
-    private void OnClickAdd()
-    {
-        _volume += 0.1f;
-        UpdateSlider();
-    }
-
-    private void OnClickSub() {
-        _volume -= 0.1f;
-        UpdateSlider();
+        _Slider.onValueChanged.RemoveListener(OnSlider);
     }
 
     private void UpdateSlider()
     {
-        if(_volume >= 1f)
-        {
-            _BtnAdd.interactable = false;
-        }
-        else if(_volume <= 0f)
-        {
-            _BtnSub.interactable = false;
-        }
-        else
-        {
-            _BtnAdd.interactable = true;
-            _BtnSub.interactable = true;            
-        }
-
         _Slider.value = _volume;
         SoundManager.Instance.Volumne(_Slider.value);
     }
@@ -72,7 +39,14 @@ public class SoundSetting : MonoBehaviour
     private void OnToggle(bool toggle)
     {
         _Toggle.isOn = toggle;
+        _Slider.interactable = toggle;
         SoundManager.Instance.CanSound = toggle;
+    }
+
+    private void OnSlider(float val)
+    {
+        _volume = val;
+        UpdateSlider();
     }
 
     public float GetVol()

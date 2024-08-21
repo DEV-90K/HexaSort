@@ -1,4 +1,5 @@
 
+using Audio_System;
 using System;
 using UnityEngine;
 
@@ -11,10 +12,18 @@ public class PopupBase : MonoBehaviour
 
     public virtual void Show()
     {
+        SFX_ShowPopup();
+
         gameObject.SetActive(true);
         LeanTween.scale(_Content, Vector3.one, 0.2f)
             .setFrom(Vector3.one * 0.63f)
             .setEaseOutBack();            
+    }
+
+    public virtual void SFX_ShowPopup()
+    {
+        SoundData soundData = SoundResource.Instance.ShowPopup;
+        SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(soundData);
     }
 
     public virtual void HideByDelay(float delay)
@@ -25,6 +34,7 @@ public class PopupBase : MonoBehaviour
 
     public virtual void Hide()
     {
+        SFX_HidePopup();
         LeanTween.scale(_Content, Vector3.one * 0.63f, 0.2f)
             .setFrom(Vector3.one)
             .setEaseInBack()
@@ -36,6 +46,12 @@ public class PopupBase : MonoBehaviour
                     Destroy(gameObject);
                 }
             });
+    }
+
+    public virtual void SFX_HidePopup()
+    {
+        SoundData soundData = SoundResource.Instance.HidePopup;
+        SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(soundData);
     }
 
     public virtual void OnSetup()

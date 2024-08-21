@@ -1424,7 +1424,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 919
+    m_Bits: 9111
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -2328,7 +2328,7 @@ MonoBehaviour:
   m_RendererIndex: 0
   m_VolumeLayerMask:
     serializedVersion: 2
-    m_Bits: 6176
+    m_Bits: 14368
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 0
@@ -2391,7 +2391,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 6176
+    m_Bits: 14368
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -2619,7 +2619,6 @@ Transform:
   - {fileID: 1474444472}
   - {fileID: 2045198183}
   - {fileID: 1440442835}
-  - {fileID: 1805748287}
   - {fileID: 1639941842}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2745,61 +2744,6 @@ RectTransform:
   m_AnchoredPosition: {x: 200, y: -55}
   m_SizeDelta: {x: 300, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &1805748286
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1805748287}
-  - component: {fileID: 1805748288}
-  m_Layer: 0
-  m_Name: Audio Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1805748287
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1805748286}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1681613252}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1805748288
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1805748286}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b75f3f96264bbe44b98665011b1ffd43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _AudioSystem: {fileID: 0}
-  _SoundSetting: {fileID: 8300000, guid: b2b8105b4ef553e4bb29c479b1c80115, type: 3}
-  _SoundPlaced: {fileID: 8300000, guid: b2b8105b4ef553e4bb29c479b1c80115, type: 3}
-  _SoundVanishSpecial: {fileID: 0}
-  _SoundShowPopup: {fileID: 8300000, guid: be7bfe5f76b285a4f88e35a920bd7e8a, type: 3}
-  _SoundHidePopup: {fileID: 8300000, guid: 7ba538efdd457f44097991ad3224fe4d, type: 3}
-  _SoundReached: {fileID: 8300000, guid: 815bd771d0bc7d841966ab49cf7a97d4, type: 3}
-  _SoundNoticeVanish: {fileID: 8300000, guid: 0294052dbc52ec24e9878893a0594228, type: 3}
-  _SoundBoost: {fileID: 8300000, guid: 0294052dbc52ec24e9878893a0594228, type: 3}
-  _SoundWin: {fileID: 8300000, guid: 683f7eef2a7f6d446b6521c9c42c8843, type: 3}
-  _SoundOpenChest: {fileID: 8300000, guid: d18e393a15980144ab7850a0b2f33f2f, type: 3}
 --- !u!1 &1806850720
 GameObject:
   m_ObjectHideFlags: 0
@@ -2915,6 +2859,72 @@ MonoBehaviour:
     frequentSound: 0
   SwordThrust:
     clip: {fileID: 8300000, guid: 4beb38c01662e6b4a8087286d17fe7ee, type: 3}
+    mixerGroup: {fileID: 5316577978923731317, guid: a3d05dfe05267164194a9d6f61584fbc, type: 2}
+    loop: 0
+    playOnAwake: 0
+    frequentSound: 0
+  CoinCollect:
+    clip: {fileID: 8300000, guid: 46bd44b25101cfb41916c0948b552091, type: 3}
+    mixerGroup: {fileID: 5316577978923731317, guid: a3d05dfe05267164194a9d6f61584fbc, type: 2}
+    loop: 0
+    playOnAwake: 0
+    frequentSound: 1
+  MaterialCollect:
+    clip: {fileID: 8300000, guid: 46bd44b25101cfb41916c0948b552091, type: 3}
+    mixerGroup: {fileID: 5316577978923731317, guid: a3d05dfe05267164194a9d6f61584fbc, type: 2}
+    loop: 0
+    playOnAwake: 0
+    frequentSound: 1
+  AoE_Ice_Storm:
+    clip: {fileID: 8300000, guid: 98f01c4247d5d1d4495f23f1c6c18d74, type: 3}
+    mixerGroup: {fileID: 5316577978923731317, guid: a3d05dfe05267164194a9d6f61584fbc, type: 2}
+    loop: 0
+    playOnAwake: 0
+    frequentSound: 0
+  AoE_Starts:
+    clip: {fileID: 8300000, guid: eb07e259793087a4e893de67c039878b, type: 3}
+    mixerGroup: {fileID: 5316577978923731317, guid: a3d05dfe05267164194a9d6f61584fbc, type: 2}
+    loop: 0
+    playOnAwake: 0
+    frequentSound: 0
+  ButtonClick:
+    clip: {fileID: 8300000, guid: 219720f521ad51045bc15210e6e078ec, type: 3}
+    mixerGroup: {fileID: 5316577978923731317, guid: a3d05dfe05267164194a9d6f61584fbc, type: 2}
+    loop: 0
+    playOnAwake: 0
+    frequentSound: 1
+  ButtonCollectCoin:
+    clip: {fileID: 8300000, guid: 9db93734d79b17b428fbd191e5837bd0, type: 3}
+    mixerGroup: {fileID: 5316577978923731317, guid: a3d05dfe05267164194a9d6f61584fbc, type: 2}
+    loop: 0
+    playOnAwake: 0
+    frequentSound: 0
+  ButtonBooster:
+    clip: {fileID: 8300000, guid: eb8aef3e29a79014391542744decb925, type: 3}
+    mixerGroup: {fileID: 5316577978923731317, guid: a3d05dfe05267164194a9d6f61584fbc, type: 2}
+    loop: 0
+    playOnAwake: 0
+    frequentSound: 0
+  ButtonBuy:
+    clip: {fileID: 8300000, guid: 45fcd3f36e482ed489a3953835cd3805, type: 3}
+    mixerGroup: {fileID: 5316577978923731317, guid: a3d05dfe05267164194a9d6f61584fbc, type: 2}
+    loop: 0
+    playOnAwake: 0
+    frequentSound: 0
+  SelectRelic:
+    clip: {fileID: 8300000, guid: ae86a4ef54090d94d9d7bb5402a81f0f, type: 3}
+    mixerGroup: {fileID: 5316577978923731317, guid: a3d05dfe05267164194a9d6f61584fbc, type: 2}
+    loop: 0
+    playOnAwake: 0
+    frequentSound: 0
+  ShowPopup:
+    clip: {fileID: 8300000, guid: 5060bdb0cd002fd4b9bdcc0fa05d0d15, type: 3}
+    mixerGroup: {fileID: 5316577978923731317, guid: a3d05dfe05267164194a9d6f61584fbc, type: 2}
+    loop: 0
+    playOnAwake: 0
+    frequentSound: 0
+  HidePopup:
+    clip: {fileID: 8300000, guid: fddfe576c09a8ad45b32b055012e6a26, type: 3}
     mixerGroup: {fileID: 5316577978923731317, guid: a3d05dfe05267164194a9d6f61584fbc, type: 2}
     loop: 0
     playOnAwake: 0

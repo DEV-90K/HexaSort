@@ -1,3 +1,4 @@
+using Audio_System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -43,7 +44,15 @@ public class SelectionRelic : MonoBehaviour
     private void OnClickSelection(bool isOn)
     {
         if (_galleryRelicData == null || _relicArt == null) return;
+
+        SFX_ClickSelection();
         if (isOn)
             _popupSlection.ShowSelection(_galleryRelicData, _relicArt);
+    }
+
+    private void SFX_ClickSelection()
+    {
+        SoundData soundData = SoundResource.Instance.SelectRelic;
+        SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(soundData);
     }
 }

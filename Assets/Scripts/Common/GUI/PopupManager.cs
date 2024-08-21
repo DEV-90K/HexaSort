@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PopupManager : MonoBehaviour
+public class PopupManager : MonoSingleton<PopupManager>
 {
     #region Popup
     [SerializeField]
@@ -13,8 +13,9 @@ public class PopupManager : MonoBehaviour
     Dictionary<System.Type, PopupBase> popups = new Dictionary<System.Type, PopupBase>();
     Dictionary<System.Type, PopupBase> cachePopups = new Dictionary<System.Type, PopupBase>();
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         ClearPopups();
     }
     private void ClearPopups()
@@ -59,6 +60,11 @@ public class PopupManager : MonoBehaviour
         }
 
         return list;
+    }
+
+    public bool CheckAnyPopupShowed()
+    {
+        return GetPopupsShowed().Count > 0;
     }
 
     public bool CheckPopupShowed<T>() where T : PopupBase

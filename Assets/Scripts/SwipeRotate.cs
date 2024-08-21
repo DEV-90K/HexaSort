@@ -26,7 +26,7 @@ public class SwipeRotate : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetMouseButtonDown(0) && CheckZoneMouseDetech())
+        if(Input.GetMouseButtonDown(0) && CheckZoneMouseDetech() && !PopupManager.Instance.CheckAnyPopupShowed())
         {            
             isRotating = true;            
             startPosX = Input.mousePosition.x;

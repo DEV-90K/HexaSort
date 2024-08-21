@@ -1,3 +1,4 @@
+using Audio_System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -51,7 +52,14 @@ public class ButtonChest_ScreenMain : MonoBehaviour
 
     private void OnClickChestReward()
     {
+        SFX_ClickChestReward();
         GUIManager.Instance.ShowPopup<PopupChestReward>(this);
+    }
+
+    public void SFX_ClickChestReward()
+    {
+        SoundData soundData = SoundResource.Instance.ButtonClick;
+        SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(soundData);
     }
 
     private void ShowDeactive()

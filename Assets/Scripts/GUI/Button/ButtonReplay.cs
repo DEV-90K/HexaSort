@@ -1,3 +1,4 @@
+using Audio_System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,5 +27,11 @@ public class ButtonReplay : MonoBehaviour
     public virtual void OnClickBtnReplay()
     {
         LevelManager.Instance.OnReplay();
-    }    
+    }
+
+    public void SFX_ClickReplay()
+    {
+        SoundData soundData = SoundResource.Instance.ButtonClick;
+        SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(soundData);
+    }
 }
