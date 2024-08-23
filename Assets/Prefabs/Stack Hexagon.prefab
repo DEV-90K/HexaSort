@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7391584762171823518}
   - component: {fileID: 8709181406723765718}
   - component: {fileID: 5171729277971481584}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4908,7 +4908,7 @@ GameObject:
   - component: {fileID: 5421159909103392510}
   - component: {fileID: 5624910754514444220}
   - component: {fileID: 4473905183774166843}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: AoE Ice Storm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9810,7 +9810,7 @@ GameObject:
   - component: {fileID: 550785586519378978}
   - component: {fileID: 7920338823893319229}
   - component: {fileID: 7937460644239905333}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14783,7 +14783,7 @@ GameObject:
   - component: {fileID: 7881314973060167308}
   - component: {fileID: 2480887955965943485}
   - component: {fileID: 2313527546965993148}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: 'Ice Hit '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19675,7 +19675,7 @@ GameObject:
   - component: {fileID: 148817512822141929}
   - component: {fileID: 6351066445485918565}
   - component: {fileID: 6683362507825114715}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: Particle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24572,7 +24572,7 @@ GameObject:
   - component: {fileID: 9156869754006620740}
   - component: {fileID: 5924177243910363362}
   - component: {fileID: 1437877556657372742}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: Shockwave
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29478,7 +29478,7 @@ GameObject:
   - component: {fileID: 2500887513693518480}
   - component: {fileID: 4687251104995095179}
   - component: {fileID: 351622825703746997}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: Sword
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29573,7 +29573,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 0
+  moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
   randomSeed: 0
@@ -34368,7 +34368,7 @@ GameObject:
   - component: {fileID: 6667719693077817040}
   - component: {fileID: 2106485367121498933}
   - component: {fileID: 2089089043676047851}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39341,7 +39341,7 @@ GameObject:
   - component: {fileID: 6079144534754315704}
   - component: {fileID: 713243138993724385}
   - component: {fileID: 5690585645595582394}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: Smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44247,7 +44247,7 @@ GameObject:
   - component: {fileID: 1769175121453438027}
   - component: {fileID: 6365318068734530614}
   - component: {fileID: 5489241270089181635}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49135,7 +49135,7 @@ GameObject:
   - component: {fileID: 7672321582672691199}
   - component: {fileID: 5425086840766695535}
   - component: {fileID: 8514141991313954772}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: Flash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54041,7 +54041,7 @@ GameObject:
   - component: {fileID: 1891474455404657261}
   - component: {fileID: 2108289985305778834}
   - component: {fileID: 9123168691697122132}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58996,7 +58996,7 @@ GameObject:
   - component: {fileID: 2369898278350414616}
   - component: {fileID: 4765391257591822692}
   - component: {fileID: 5131300010700281514}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: Flash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -64093,7 +64093,7 @@ GameObject:
   - component: {fileID: 1325930201381966242}
   - component: {fileID: 2421663064522849115}
   - component: {fileID: 8278063906810870418}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: Ice Meteor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -69003,7 +69003,7 @@ GameObject:
   - component: {fileID: 4942097658670903787}
   - component: {fileID: 103414349700830115}
   - component: {fileID: 5828190373129472398}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: Flash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73909,7 +73909,7 @@ GameObject:
   - component: {fileID: 8050120306854201282}
   - component: {fileID: 8197730022155547923}
   - component: {fileID: 6993850643060521653}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: Crack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -78864,7 +78864,7 @@ GameObject:
   - component: {fileID: 2626627640460847522}
   - component: {fileID: 1442109515762247799}
   - component: {fileID: 6851765320555829291}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: AoE Stars
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -83865,7 +83865,7 @@ GameObject:
   - component: {fileID: 7913171475425369231}
   - component: {fileID: 4698772917184295366}
   - component: {fileID: 8380088980877522038}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: 'Star Hit '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88756,7 +88756,7 @@ GameObject:
   - component: {fileID: 6760360872276215859}
   - component: {fileID: 8307993233364370202}
   - component: {fileID: 1103911653868357590}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: Meteor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93668,7 +93668,7 @@ GameObject:
   - component: {fileID: 5770128489014822921}
   - component: {fileID: 992267933087377981}
   - component: {fileID: 5378332338060491490}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98641,7 +98641,7 @@ GameObject:
   - component: {fileID: 3596797836908248790}
   - component: {fileID: 3041925340661478931}
   - component: {fileID: 4689693941116060579}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -103538,7 +103538,7 @@ GameObject:
   - component: {fileID: 5585400504500382360}
   - component: {fileID: 7791408053611404640}
   - component: {fileID: 1393818283443046574}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: SnowGround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108435,7 +108435,7 @@ GameObject:
   - component: {fileID: 7768331368574907342}
   - component: {fileID: 2919012579665668290}
   - component: {fileID: 6965425288078334950}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: AoE Holy Sword
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -113365,7 +113365,7 @@ GameObject:
   - component: {fileID: 7556771501311852446}
   - component: {fileID: 6970775573811796232}
   - component: {fileID: 6707492230811365944}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: Shockwave
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -118387,6 +118387,9 @@ MonoBehaviour:
   - {fileID: 2919012579665668290}
   - {fileID: 5624910754514444220}
   - {fileID: 1442109515762247799}
+  _AoEHolySword: {fileID: 8563908961939979902}
+  _AoEIceStorm: {fileID: 201661733939740595}
+  _AoEStars: {fileID: 6708225296414906458}
   _MeshCollider: {fileID: 9105520753526486427}
 --- !u!64 &9105520753526486427
 MeshCollider:

@@ -421,7 +421,7 @@ public class LevelController : MonoBehaviour
             stack.RemovePlayerHexagon(playerHexagon);
         }
 
-        yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM + (numberOfPlayerHexagon - 1) * GameConstants.HexagonConstants.TIME_DELAY);
+        yield return new WaitForSeconds(GameConstants.HexagonConstants.TIME_ANIM + (numberOfPlayerHexagon) * GameConstants.HexagonConstants.TIME_DELAY);
     }    
 
     private IEnumerator IE_RemoveNeighborStack(GridHexagon grid)

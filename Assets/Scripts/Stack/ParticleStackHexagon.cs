@@ -7,6 +7,12 @@ public class ParticleStackHexagon : MonoBehaviour
     [SerializeField]
     private ParticleSystem[] _Particles;
     [SerializeField]
+    private GameObject _AoEHolySword;
+    [SerializeField]
+    private GameObject _AoEIceStorm;
+    [SerializeField]
+    private GameObject _AoEStars;
+    [SerializeField]
     private MeshCollider _MeshCollider;
 
     private StackHexagon _stackHexagon;
@@ -40,25 +46,27 @@ public class ParticleStackHexagon : MonoBehaviour
         switch (type)
         {
             case VanishType.RANDOM:
-                _particle = _Particles[0];
+                //_particle = _Particles[0];
+                _particle = Instantiate(_AoEHolySword, transform).GetComponent<ParticleSystem>();
                 break;
             case VanishType.AROUND:
-                _particle = _Particles[1];
+                //_particle = _Particles[1];
+                _particle = Instantiate(_AoEIceStorm, transform).GetComponent<ParticleSystem>();
                 break;
             case VanishType.CONTAIN_COLOR:
-                _particle = _Particles[2];
+                //_particle = _Particles[2];
+                _particle = Instantiate(_AoEStars, transform).GetComponent<ParticleSystem>();
                 break;
         }
 
         _particle.gameObject.SetActive(true);
         _particle.playbackSpeed= 5f;
-        _particle.Stop();
         _particle.Play();
         _MeshCollider.enabled = true;
         yield return WaitUntilCompleted();
         _MeshCollider.enabled = false;
         _particle.Stop();
-        _particle.gameObject.SetActive(false);
+        DestroyImmediate(_particle);
         OnHide();
     }
 

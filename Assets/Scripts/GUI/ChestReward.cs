@@ -72,7 +72,6 @@ public class ChestReward : MonoBehaviour
     public void TweenMoveHide()
     {
         _Animator.enabled = false;
-        Debug.Log("Tween Move Hide");
         LeanTween.move(gameObject, _HidePoint.position, 0.2f);
     }
 

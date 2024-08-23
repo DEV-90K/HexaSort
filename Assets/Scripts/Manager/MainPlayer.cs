@@ -170,9 +170,11 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
     {
         LevelData levelData = LevelManager.instance.GetLevelData();
         LevelPresenterData levelPresenterData = LevelManager.instance.GetPresenterData();
+        int amount = LevelManager.instance.GetAmountHexagon();
 
         _PlayerData.PlayerLevel.UpdateLevelData(levelData);
         _PlayerData.PlayerLevel.UpdateLevelPresenterData(levelPresenterData);
+        _PlayerData.PlayerLevel.UpdateAmountCollected(amount);
     } 
 
     public void CacheIDLevel(int IDLevel)

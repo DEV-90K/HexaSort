@@ -19,6 +19,7 @@ public class PlayerData
 public class PlayerLevelData
 {
     public int IDLevel { get; private set; } // Max Level Already Playing
+    public int AmountCollected { get; private set; } = 0;
     public LevelData Level { get; private set; } //Data Of Current Player Playing
     public LevelPresenterData LevelPresenter { get; private set; }
     public PlayerLevelData(int iDLevel, LevelData level, LevelPresenterData levelPresenter)
@@ -41,6 +42,11 @@ public class PlayerLevelData
     public void UpdateLevelPresenterData(LevelPresenterData levelPresenter)
     {
         this.LevelPresenter = levelPresenter;
+    }
+
+    public void UpdateAmountCollected(int amount)
+    {
+        this.AmountCollected = amount;
     }
 }
 

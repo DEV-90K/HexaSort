@@ -28,7 +28,9 @@ public class ButtonExit : MonoBehaviour
     {
         SFX_ClickExit();
         LevelManager.Instance.OnExit();
+
         GUIManager.Instance.HideScreen<ScreenLevel>();
+        GUIManager.Instance.ShowScreen<ScreenMain>();
     }
 
     public void SFX_ClickExit()

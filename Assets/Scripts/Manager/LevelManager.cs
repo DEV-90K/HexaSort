@@ -48,9 +48,6 @@ public class LevelManager : MonoSingleton<LevelManager>
 
     private void Start()
     {
-        Debug.Log("Level 3: ");
-        ResourceManager.instance.GetLevelByID(3).DebugLogObject();
-
         LevelController.OnTurnCompleted += LevelController_OnTurnCompleted;
         _config = ResourceManager.instance.GetLevelConfig();
         _hammer.gameObject.SetActive(false);
@@ -86,6 +83,7 @@ public class LevelManager : MonoSingleton<LevelManager>
     {
         _levelData = ResourceManager.instance.GetLevelByID(IDLevel);
         _presenterData = ResourceManager.instance.GetLevelPresenterDataByID(IDLevel);
+        amountHexagon = 0;
         OnInit(_levelData, _presenterData);
     }
 
@@ -122,13 +120,15 @@ public class LevelManager : MonoSingleton<LevelManager>
         }
         else
             _presenterData = playerLevelData.LevelPresenter;
+
+        amountHexagon = playerLevelData.AmountCollected;
     }
 
     private void OnInit(LevelData levelData, LevelPresenterData presenterData)
     {
         _levelData = levelData;
         _presenterData = presenterData;
-        amountHexagon = 0;
+//        amountHexagon = 0;
 
         _gridManager.OnInit(_levelData.Grid);
         _stackManager.Configure(_presenterData.Amount, _presenterData.Probabilities);
@@ -143,6 +143,8 @@ public class LevelManager : MonoSingleton<LevelManager>
     {
         _gridManager.CollectGridImmediate();
         _stackManager.CollectRandomImmediate();
+        amountHexagon = 0;
+
         OnInitCurrentLevel();
     }
 
@@ -152,8 +154,6 @@ public class LevelManager : MonoSingleton<LevelManager>
 
         _gridManager.CollectGridImmediate();
         _stackManager.CollectRandomImmediate();
-
-        GUIManager.instance.ShowScreen<ScreenMain>();
     }
 
     public void OnRevice()

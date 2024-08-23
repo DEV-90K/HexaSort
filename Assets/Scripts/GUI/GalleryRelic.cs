@@ -172,8 +172,8 @@ public class GalleryRelic : MonoBehaviour
     {
         if(_timer != null)
         {
-            _timer.Tick(Time.deltaTime);
-            UpdateSliderProgress(_SliderProgress.value - Time.deltaTime);
+            _timer.Tick(Time.deltaTime / 60f);
+            UpdateSliderProgress(_SliderProgress.value - Time.deltaTime / 60f);
             UpdateTimer();
         }
     }

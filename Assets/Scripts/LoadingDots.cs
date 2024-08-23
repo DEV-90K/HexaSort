@@ -27,18 +27,8 @@ public class LoadingDots : MonoBehaviour
 
     void Animate()
     {
-        Debug.Log("Animate");
         for (int i = 0; i < Dots.Length; i++)
         {
-            //LeanTween.moveLocalY(Dots[i], bounceHeight, bounceTime / 2)
-            //    .setDelay(i * bounceTime / 2)
-            //    .setEaseOutQuad()
-            //    .setOnComplete(() =>
-            //    {
-            //        LeanTween.moveLocalY(Dots[i], -bounceHeight, bounceTime/2)
-            //            .setEaseInQuad();
-            //    });
-
             LTSeq seq = LeanTween.sequence();
             seq.append(i * bounceTime / 2);
             seq.append(LeanTween.moveLocalY(Dots[i], bounceHeight, bounceTime / 2));

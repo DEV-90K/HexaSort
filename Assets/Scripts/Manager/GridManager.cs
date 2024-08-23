@@ -99,6 +99,7 @@ public class GridManager : MonoSingleton<GridManager>
         _gridHexagons = _gridSpawner.Spawn(_gridData);
         _gridLocks = GetGridHexagonLock();
         _GridUnit.OnInit();
+        _GridUnit.OnSetup(_gridData);
 
         OnInitCompleted?.Invoke(GetMaxRadius());
     }
