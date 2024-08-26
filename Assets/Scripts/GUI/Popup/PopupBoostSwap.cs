@@ -32,10 +32,9 @@ public class PopupBoostSwap : PopupBase
     private LevelPresenterData _presenterData;
     private RectTransform m_RectTransform;
 
-    public override void OnInit(object[] paras)
+    public void OnInit(IBoostSwap able)
     {
-        base.OnInit(paras);
-        _able = (IBoostSwap) paras[0];
+        _able = able;
         _presenterData = LevelManager.Instance.GetPresenterData();
     }
 
@@ -48,12 +47,12 @@ public class PopupBoostSwap : PopupBase
         GameManager.Instance.ChangeState(GameState.PAUSE);
     }
 
-    public override void Hide()
-    {
-        base.Hide();
-        OnStackMoving?.Invoke(true);
-        _able.ExitBoostSwap();
-    }
+    //public override void Hide()
+    //{
+    //    base.Hide();
+    //    OnStackMoving?.Invoke(true);
+    //    _able.ExitBoostSwap();
+    //}
     private void Awake()
     {
         m_RectTransform = GetComponent<RectTransform>();
@@ -64,7 +63,9 @@ public class PopupBoostSwap : PopupBase
     private void OnClickButton()
     {
         GUIManager.Instance.ShowScreen<ScreenLevel>(_presenterData);
-        Hide();
+        OnStackMoving?.Invoke(true);
+        _able.ExitBoostSwap();
+        PopupManager.Instance.HidePopup<PopupBoostSwap>();
     }
 
     private void Update()
@@ -260,7 +261,9 @@ public class PopupBoostSwap : PopupBase
     {
         yield return new WaitForSeconds(0f);
         GUIManager.Instance.ShowScreen<ScreenLevel>(_presenterData);
-        Hide();
+        OnStackMoving?.Invoke(true);
+        _able.ExitBoostSwap();
+        PopupManager.Instance.HidePopup<PopupBoostSwap>();
     }
 
     public override void OnSetup()

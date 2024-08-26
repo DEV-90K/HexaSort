@@ -14,10 +14,9 @@ public class PopupLevelLosed : PopupBase
 
     private LevelPresenterData _presenterData;
 
-    public override void OnInit(object[] paras)
+    public void OnInit(LevelPresenterData data)
     {
-        base.OnInit(paras);
-        _presenterData = (LevelPresenterData) paras[0];
+        _presenterData = data;
     }
 
     public override void Show()
@@ -45,18 +44,18 @@ public class PopupLevelLosed : PopupBase
         GameManager.Instance.ChangeState(GameState.FINISH);
         GUIManager.Instance.HideScreen<ScreenLevel>();
         GUIManager.Instance.ShowScreen<ScreenMain>();
-        Hide();
+        PopupManager.Instance.HidePopup<PopupLevelLosed>();
     }
 
     private void OnClickBtnReplay()
     {
         LevelManager.Instance.OnReplay();
-        Hide();
+        PopupManager.Instance.HidePopup<PopupLevelLosed>();
     }
 
     private void OnClickBtnRevice()
     {
         LevelManager.Instance.OnRevice();
-        Hide();
+        PopupManager.Instance.HidePopup<PopupLevelLosed>();
     }
 }

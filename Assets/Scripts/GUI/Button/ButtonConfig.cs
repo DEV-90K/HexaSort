@@ -25,6 +25,6 @@ public class ButtonConfig : MonoBehaviour
 
     private void OnClickButton()
     {
-        GUIManager.Instance.ShowPopup<PopupLevelConfig>();
+        PopupManager.Instance.ShowPopup<PopupLevelConfig>();
     }
 }

@@ -35,7 +35,7 @@ public class PopupChestReward : PopupBase
     public void OnClickClaim()
     {
         Claim();
-        Hide();
+        PopupManager.Instance.HidePopup<PopupChestReward>();
     }
 
     private void Claim()
@@ -73,7 +73,7 @@ public class PopupChestReward : PopupBase
             Claim();
         }
 
-        Hide();
+        PopupManager.Instance.HidePopup<PopupChestReward>();
     }
     public void HideChests()
     {
@@ -89,9 +89,8 @@ public class PopupChestReward : PopupBase
         _btnClaim.gameObject.SetActive(true);
     }
 
-    public override void OnInit(object[] paras)
+    public void OnInit()
     {
-        base.OnInit(paras);
         _rewardData = _chestControl.GetChestRewardData();
 
         foreach (ChestReward chestReward in _chestRewards)

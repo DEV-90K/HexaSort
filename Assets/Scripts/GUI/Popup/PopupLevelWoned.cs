@@ -1,6 +1,7 @@
 using Audio_System;
 using CollectionSystem;
 using GUILevelWoned;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -25,10 +26,9 @@ public class PopupLevelWoned : PopupBase
         
     private LevelPresenterData _presenterData;
 
-    public override void OnInit(object[] paras)
-    {
-        base.OnInit(paras);        
-        _presenterData = (LevelPresenterData)paras[0];        
+    public void OnInit(LevelPresenterData presenterData)
+    {   
+        _presenterData = presenterData;        
     }
 
     public override void Show()
@@ -95,7 +95,7 @@ public class PopupLevelWoned : PopupBase
                     System.Action callback = () =>
                     {
                         LevelManager.Instance.OnInitLevelByID(_presenterData.Level + 1);
-                        Hide();
+                        PopupManager.Instance.HidePopup<PopupLevelWoned>();
                     };
 
                     DialogueManager.Instance.ShowDialougeBox(dialogueData, callback);
@@ -105,7 +105,7 @@ public class PopupLevelWoned : PopupBase
         }
 
         LevelManager.Instance.OnInitCurrentLevel();
-        Hide();
+        PopupManager.Instance.HidePopup<PopupLevelWoned>();
     }      
 
     private void UpdateTxtMaterial(int mal)

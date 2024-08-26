@@ -48,7 +48,9 @@ public class GridHexagon : PoolMember
 
     private void Awake()
     {
-        ColorUtility.TryParseHtmlString("#525252", out contactColor);        
+        ColorUtility.TryParseHtmlString("#525252", out contactColor);
+        //Material mat = renderer.materials[1];
+        //mat.SetFloat("Scale", 0f);
     }
 
     public void OnInitialize(GridHexagonData gridHexagon, IGridPortability gridPortability)

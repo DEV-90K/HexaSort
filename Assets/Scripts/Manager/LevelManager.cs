@@ -191,8 +191,9 @@ public class LevelManager : MonoSingleton<LevelManager>
     private IEnumerator IE_FinishLosed(float delay)
     {
         SFX_FinishLosed();
-        yield return new WaitForSeconds(delay);        
-        GUIManager.instance.ShowPopup<PopupLevelLosed>(_presenterData);
+        yield return new WaitForSeconds(delay);
+        PopupLevelLosed popup = PopupManager.instance.ShowPopup<PopupLevelLosed>();
+        popup.OnInit(_presenterData);
         //_levelData = null;
         //_presenterData = null;
     }
@@ -216,7 +217,8 @@ public class LevelManager : MonoSingleton<LevelManager>
     {
         SFX_FinishWoned();
         yield return new WaitForSeconds(delay);
-        GUIManager.instance.ShowPopup<PopupLevelWoned>(_presenterData);
+        PopupLevelWoned popup = PopupManager.instance.ShowPopup<PopupLevelWoned>();
+        popup.OnInit(_presenterData);
         _levelData = null;
         _presenterData = null;
     }

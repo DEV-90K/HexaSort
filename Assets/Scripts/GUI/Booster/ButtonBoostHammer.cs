@@ -71,7 +71,10 @@ public class ButtonBoostHammer : MonoBehaviour, IBoostTrick
         }
 
         SFX_ClickButton();
-        GUIManager.Instance.ShowPopup<PopupBoostHammer>(_able);
+
+        PopupBoostHammer popup = PopupManager.Instance.ShowPopup<PopupBoostHammer>();
+        popup.OnInit(_able);
+
         GUIManager.Instance.HideScreen<ScreenLevel>();
     }
 

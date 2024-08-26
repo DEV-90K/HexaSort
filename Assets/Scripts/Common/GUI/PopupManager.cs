@@ -1,4 +1,5 @@
 
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,10 +12,10 @@ public class PopupManager : MonoSingleton<PopupManager>
     private PopupBase[] _popupPrefabs;
 
     Dictionary<System.Type, PopupBase> popups = new Dictionary<System.Type, PopupBase>();
-    Dictionary<System.Type, PopupBase> cachePopups = new Dictionary<System.Type, PopupBase>();
+    //Dictionary<System.Type, PopupBase> cachePopups = new Dictionary<System.Type, PopupBase>();
 
-    Dictionary<System.Type, PopupBase> active = new Dictionary<System.Type, PopupBase>();
-    Dictionary<System.Type, PopupBase> inactive = new Dictionary<System.Type, PopupBase>();
+    Dictionary<System.Type, PopupBase> cacheEnable = new Dictionary<System.Type, PopupBase>();
+    Dictionary<System.Type, PopupBase> cacheDisable = new Dictionary<System.Type, PopupBase>();
 
     protected override void Awake()
     {
@@ -29,84 +30,190 @@ public class PopupManager : MonoSingleton<PopupManager>
             UnityEngine.Object.Destroy(popupRoot.GetChild(i).gameObject);
         }
 
-        cachePopups.Clear();
+        //cachePopups.Clear();
 
         {
-            active.Clear();
-            inactive.Clear();
+            cacheEnable.Clear();
+            cacheDisable.Clear();
         }
     }
 
     private T CreatePopup<T>() where T : PopupBase
     {
         PopupBase popup = Instantiate(GetPrefab<T>(), popupRoot);
-        cachePopups[typeof(T)] = popup;
+        //cachePopups[typeof(T)] = popup;
         return popup as T;
     }
 
-    public T GetPopup<T>() where T : PopupBase
+    public T ShowPopup<T>() where T : PopupBase
     {
-        if (!CheckPopup<T>())
-        {
-            return CreatePopup<T>();
-        }
+        T popup = GetPopup<T>();
+        popup.OnSetup();
+        popup.Show();
 
-        return cachePopups[typeof(T)] as T;
+        CacheShowed<T>(popup);
+        return popup;
     }
 
-    //private bool CheckPopupActive<T>()
-    //{
-    //    System.Type type = typeof(T);
-    //    if(active.ContainsKey(Ty))
-    //}
-
-    //private T GetPopupActive<T>()
-    //{
-    //    System.Type type = typeof(T);
-    //    //return cachePopups.ContainsKey(type) && cachePopups[type] != null;
-
-    //}
-
-    public List<PopupBase> GetPopupsShowed()
+    private void CacheShowed<T>(T popup) where T : PopupBase
     {
-        List<PopupBase> list = new List<PopupBase>();
-        foreach (KeyValuePair<System.Type, PopupBase> item in cachePopups)
+        cacheDisable[typeof(T)] = null;
+        cacheEnable[typeof(T)] = popup;
+    }
+
+    public void HidePopup<T>(float delay = 0) where T : PopupBase
+    {
+        T popup = GetPopupEnable<T>();
+        popup.HideByDelay(delay);
+        CacheHided<T>(popup);
+    }
+
+    public void HideAllPopup()
+    {
+        List<System.Type> keys = new List<System.Type>(cacheEnable.Keys);
+        foreach (System.Type key in keys)
         {
-            if (item.Value != null && item.Value.gameObject.activeSelf)
+            PopupBase value = cacheEnable[key];
+            if (value != null)
             {
-                list.Add(item.Value);
+                value.HideByDelay(0);
+                cacheEnable[key] = null;
+                cacheDisable[key] = value;
             }
         }
-
-        return list;
     }
+
+    public void CacheHided<T>(T popup) where T : PopupBase
+    {
+        cacheEnable[typeof(T)] = null;
+        cacheDisable[typeof(T)] = popup;        
+    }
+
+    private T GetPopup<T>() where T : PopupBase
+    {
+        //if (!CheckPopup<T>())
+        //{
+        //    return CreatePopup<T>();
+        //}
+
+        //return cachePopups[typeof(T)] as T;
+
+        T popup = GetPopupEnable<T>();
+        if (popup != null) 
+            return popup;
+
+        popup = GetPopupDisable<T>();
+        if (popup != null)
+        {
+            return popup;
+        }
+
+        popup = CreatePopup<T>();
+        return popup;
+    }
+
+    private bool CheckPopupEnable<T>() where T : PopupBase
+    {
+        System.Type type = typeof(T);
+        return cacheEnable.ContainsKey(type) && cacheEnable[type] != null;
+    }
+
+    public T GetPopupEnable<T>() where T : PopupBase
+    {
+        if(!CheckPopupEnable<T>())
+        {
+            Debug.Log("Popup not enable");
+            return null;
+        }
+
+        System.Type type = typeof(T);
+        return cacheEnable[type] as T;
+
+    }
+
+    private bool CheckPopupDisable<T>() where T : PopupBase
+    {
+        System.Type type = typeof(T);
+        return cacheDisable.ContainsKey(type) && cacheDisable[type] != null;
+    }
+
+    private T GetPopupDisable<T>() where T : PopupBase
+    {
+        if (!CheckPopupDisable<T>())
+        {
+            Debug.Log("Popup not disable");
+            return null;
+        }
+
+        System.Type type = typeof(T);
+        return cacheDisable[type] as T;
+
+    }
+
+    //public List<T> GetPopupsShowed<T>() where T : PopupBase
+    //{
+    //    //List<PopupBase> list = new List<PopupBase>();
+    //    //foreach (KeyValuePair<System.Type, PopupBase> item in cachePopups)
+    //    //{
+    //    //    if (item.Value != null && item.Value.gameObject.activeSelf)
+    //    //    {
+    //    //        list.Add(item.Value);
+    //    //    }
+    //    //}
+
+    //    //return list;
+
+    //    List<T> list = new List<T>();
+    //    foreach (KeyValuePair<System.Type, PopupBase> item in cacheEnable)
+    //    {
+    //        if(item.Value != null)
+    //        {
+    //            list.Add(item.Value);
+    //        }
+    //    }
+
+    //    return list;
+    //}
 
     public bool CheckAnyPopupShowed()
     {
-        return GetPopupsShowed().Count > 0;
-    }
-
-    public bool CheckPopupShowed<T>() where T : PopupBase
-    {
-        if (CheckPopup<T>() && CheckPopupShowedFromCache<T>())
+        foreach (KeyValuePair<System.Type, PopupBase> item in cacheEnable)
         {
-            return true;
+            if(item.Value != null)
+            {
+                return true;
+            }
         }
 
         return false;
     }
 
-    private bool CheckPopupShowedFromCache<T>() where T : PopupBase
-    {
-        System.Type type = typeof(T);
-        return cachePopups[type].gameObject.activeSelf;
-    }
+    //public bool CheckPopupShowed<T>() where T : PopupBase
+    //{
+    //    if (CheckPopup<T>() && CheckPopupShowedFromCache<T>())
+    //    {
+    //        return true;
+    //    }
 
-    private bool CheckPopup<T>() where T : PopupBase
-    {
-        System.Type type = typeof(T);
-        return cachePopups.ContainsKey(type) && cachePopups[type] != null;
-    }
+    //    return false;
+    //}
+
+    //private bool CheckPopupShowedFromCache<T>() where T : PopupBase
+    //{
+    //    System.Type type = typeof(T);
+    //    return cachePopups[type].gameObject.activeSelf;
+    //}
+
+    //private bool CheckPopupShowedFromCache<T>() where T : PopupBase
+    //{
+    //    return CheckPopupEnable<T>();
+    //}
+
+    //private bool CheckPopup<T>() where T : PopupBase
+    //{
+    //    System.Type type = typeof(T);
+    //    return cachePopups.ContainsKey(type) && cachePopups[type] != null;
+    //}
 
     private T LoadPrefabs<T>() where T : PopupBase
     {

@@ -27,7 +27,8 @@ public class ButtonSetting : MonoBehaviour
     private void OnClickButton()
     {
         SFX_ClickSetting();
-        GUIManager.Instance.ShowPopup<PopupSetting>();
+        PopupSetting popup = PopupManager.Instance.ShowPopup<PopupSetting>();
+        popup.OnInit();
     }
 
     private void SFX_ClickSetting()

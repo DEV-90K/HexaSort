@@ -20,10 +20,9 @@ public class PopupGalleryRelic : PopupBase
 
     private GalleryRelicData _data;
     private RelicData _relicData;
-    public override void OnInit(object[] paras)
+    public void OnInit(GalleryRelicData inputData)
     {
-        base.OnInit(paras);
-        _data = (GalleryRelicData)paras[0];
+        _data = inputData;
         _relicData = ResourceManager.Instance.GetRelicDataByID(_data.IDRelic);
 
         UpdateArtRelic();
@@ -95,6 +94,6 @@ public class PopupGalleryRelic : PopupBase
 
     private void OnClickClose()
     {
-        Hide();
+        PopupManager.Instance.HidePopup<PopupGalleryRelic>();
     }
 }

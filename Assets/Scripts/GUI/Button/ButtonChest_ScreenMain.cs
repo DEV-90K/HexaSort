@@ -53,7 +53,7 @@ public class ButtonChest_ScreenMain : MonoBehaviour
     private void OnClickChestReward()
     {
         SFX_ClickChestReward();
-        GUIManager.Instance.ShowPopup<PopupChestReward>(this);
+        PopupManager.Instance.ShowPopup<PopupChestReward>();
     }
 
     public void SFX_ClickChestReward()

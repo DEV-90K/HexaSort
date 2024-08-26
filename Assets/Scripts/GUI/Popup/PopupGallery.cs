@@ -31,22 +31,10 @@ public class PopupGallery : PopupBase
     private int _amountCoin = 0;
     private Action _callback = null;
 
-    public override void OnInit(object[] paras = null)
+    public void OnInit(int IDGallery, Action callback = null)
     {
-        base.OnInit(paras);
-
-        if(paras.Length >= 1)
-        {
-            int IDGallery = (int)paras[0];
-            InitGallery(IDGallery);
-
-            _callback = null;
-        }        
-
-        if(paras.Length >= 2)
-        {
-            _callback = (Action)paras[1];
-        }
+        InitGallery(IDGallery);
+        _callback = callback;
     }
 
     private void InitGallery(int IDGallery)
@@ -128,7 +116,7 @@ public class PopupGallery : PopupBase
             _callback.Invoke();
             _callback = null;
         }
-        Hide();
+        PopupManager.Instance.HidePopup<PopupGallery>();
     }
 
     private void OnClickBtnCollect()

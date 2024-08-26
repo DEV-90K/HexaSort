@@ -16,10 +16,8 @@ public class PopupSetting : PopupBase
         _soundSetting = GetComponent<SoundSetting>();
     }
 
-    public override void OnInit(object[] paras)
+    public void OnInit()
     {
-        base.OnInit(paras);
-
         _audioData = MainPlayer.Instance.GetAudioData();
         _musicSetting.OnInit(_audioData.MusicVol, _audioData.CanMusic);
         _soundSetting.OnInit(_audioData.SoundVol, _audioData.CanSound);
@@ -34,6 +32,6 @@ public class PopupSetting : PopupBase
         _audioData.CanMusic = _musicSetting.CheckCanMusic();
 
         MainPlayer.Instance.UpdateAudioData(_audioData);
-        Hide();
+        PopupManager.Instance.HidePopup<PopupSetting>();
     }
 }

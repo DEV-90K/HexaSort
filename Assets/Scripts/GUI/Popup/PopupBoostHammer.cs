@@ -26,10 +26,9 @@ public class PopupBoostHammer : PopupBase
     private IBoostHammer _able;
     private LevelPresenterData _presenterData;
 
-    public override void OnInit(object[] paras)
+    public void OnInit(IBoostHammer able)
     {
-        base.OnInit(paras);
-        _able = (IBoostHammer)paras[0];
+        _able = able;
         _presenterData = LevelManager.Instance.GetPresenterData();
     }
 
@@ -42,17 +41,14 @@ public class PopupBoostHammer : PopupBase
         GameManager.Instance.ChangeState(GameState.PAUSE);
     }
 
-    public override void Hide()
-    {
-        base.Hide();
-        OnStackMoving?.Invoke(true);
-        _able.ExitBoostHammer();
-    }
-
     private void OnClickBtnClose()
     {
+        _able.ExitBoostHammer();
+        
         GUIManager.Instance.ShowScreen<ScreenLevel>(_presenterData);
-        Hide();
+        PopupManager.Instance.HidePopup<PopupBoostHammer>();
+        OnStackMoving?.Invoke(true);
+
     }
 
     private void Awake()
@@ -116,8 +112,11 @@ public class PopupBoostHammer : PopupBase
     private IEnumerator IE_OnBoostHammerCompleted()
     {
         yield return new WaitForSeconds(2f);
+        _able.ExitBoostHammer();
+
         GUIManager.Instance.ShowScreen<ScreenLevel>(_presenterData);
-        Hide();
+        PopupManager.Instance.HidePopup<PopupBoostHammer>();
+        OnStackMoving?.Invoke(true);
     }
 
     public override void OnSetup()

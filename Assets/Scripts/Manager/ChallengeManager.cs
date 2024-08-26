@@ -106,7 +106,7 @@ public class ChallengeManager : MonoSingleton<ChallengeManager>
 
         _galleryRelicData.State = GalleryRelicState.COLLECT;
         MainPlayer.instance.CollectGalleryRelic(_galleryRelicData);
-        GUIManager.instance.ShowPopup<PopupChallengeWoned>(_galleryRelicData);
+        //GUIManager.instance.ShowPopup<PopupChallengeWoned>(_galleryRelicData);
     }
 
     public void OnFinishLosed()
@@ -121,7 +121,7 @@ public class ChallengeManager : MonoSingleton<ChallengeManager>
 
         _galleryRelicData.State = GalleryRelicState.LOCK;
         MainPlayer.instance.CollectGalleryRelic(_galleryRelicData);
-        GUIManager.instance.ShowPopup<PopupChallengeLosed>(_galleryRelicData);
+        //GUIManager.instance.ShowPopup<PopupChallengeLosed>(_galleryRelicData);
     }
 
 

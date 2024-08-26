@@ -36,11 +36,9 @@ public class PopupGalleryRelicSelecter : PopupBase
     private GalleryRelicData _selectGalleryRelic;
     private RelicData _selectData;
 
-    public override void OnInit(object[] paras)
+    public void OnInit(GalleryRelicData inputData)
     {
-        base.OnInit(paras);
-
-        GalleryRelicData galleryRelicData = (GalleryRelicData)paras[0];
+        GalleryRelicData galleryRelicData = inputData;
         _GalleryData = ResourceManager.Instance.GetGalleryDataByID(galleryRelicData.IDGallery);
 
         GalleryRelicData[] galleryRelicCollected = MainPlayer.Instance.GetGalleryRelicByID(_GalleryData.ID);
@@ -115,7 +113,7 @@ public class PopupGalleryRelicSelecter : PopupBase
 
     private void OnClickBtnClose()
     {
-        Hide();
+        PopupManager.Instance.HidePopup<PopupGalleryRelicSelecter>();
     }
 
     private void OnClickBtnSelection()
@@ -125,8 +123,12 @@ public class PopupGalleryRelicSelecter : PopupBase
 
         _selectGalleryRelic.State = GalleryRelicState.COLLECT;
         MainPlayer.Instance.CollectGalleryRelic(_selectGalleryRelic);
-        //GUIManager.Instance.ShowPopup<PopupGallery>(_selectGalleryRelic.IDGallery);        
-        Hide();
+        //GUIManager.Instance.ShowPopup<PopupGallery>(_selectGalleryRelic.IDGallery);
+
+        PopupGallery popup = PopupManager.Instance.GetPopupEnable<PopupGallery>();
+        popup.OnInit(_selectGalleryRelic.IDGallery);
+
+        PopupManager.Instance.HidePopup<PopupGalleryRelicSelecter>();
     }
 
     private void SFX_Selection()

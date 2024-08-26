@@ -49,16 +49,20 @@ public class DialougeBox : MonoBehaviour
     {
         if (_data.Type == DialogueType.CHEST_REWARD)
         {
-            GUIManager.Instance.ShowPopup<PopupChestReward>();
+            //GUIManager.Instance.ShowPopup<PopupChestReward>();
+            PopupChestReward popup = PopupManager.Instance.ShowPopup<PopupChestReward>();
+            popup.OnInit();
         }
         else if (_data.Type == DialogueType.RELIC_COLLECT)
         {
             Debug.Log("Show Gallery no callback");
 
             GUIManager.Instance.HideScreen<ScreenLevel>();
-            GUIManager.Instance.HidePopup<PopupLevelWoned>();
+            PopupManager.Instance.HidePopup<PopupLevelWoned>();
+
             Action callback = () => LevelManager.Instance.OnInitCurrentLevel();
-            GUIManager.Instance.ShowPopup<PopupGallery>(1, callback);
+            PopupGallery popup = PopupManager.Instance.ShowPopup<PopupGallery>();
+            popup.OnInit(1, callback);
         }
 
         Destroy(gameObject);
@@ -127,15 +131,16 @@ public class DialougeBox : MonoBehaviour
         else if (_data.Type == DialogueType.RELIC_COLLECT)
         {
             GUIManager.Instance.HideScreen<ScreenLevel>();
-            GUIManager.Instance.HidePopup<PopupLevelWoned>();
+            PopupManager.Instance.HidePopup<PopupLevelWoned>();
 
             Debug.Log("Show Gallery with callback");
             Action callback = () => LevelManager.Instance.OnInitCurrentLevel();
-            GUIManager.Instance.ShowPopup<PopupGallery>(1, callback);
+            PopupGallery popup = PopupManager.Instance.ShowPopup<PopupGallery>();
+            popup.OnInit(1, callback);
         }
         else if (_data.Type == DialogueType.CHEST_REWARD)
         {
-            GUIManager.Instance.ShowPopup<PopupChestReward>();
+            PopupManager.Instance.ShowPopup<PopupChestReward>();
         }
 
         Destroy(gameObject);

@@ -16,9 +16,8 @@ public class PopupLevelConfig : PopupBase
 
     private LevelPresenterData _presenterData;
 
-    public override void OnInit(object[] paras)
+    public void OnInit()
     {
-        base.OnInit(paras);
         _presenterData = LevelManager.Instance.GetPresenterData();
         UpdateContentHexagonInput();
         UpdateContentLevelInput();
@@ -86,12 +85,12 @@ public class PopupLevelConfig : PopupBase
         presenterData.UpdateGoal(GetContentHexagonInput());
 
         LevelManager.Instance.UpdateCurrentLevel(presenterData);
-        Hide();
+        PopupManager.Instance.HidePopup<PopupLevelConfig>();
     }
 
     private void OnClickButtonClose()
     {
         GameManager.Instance.ChangeState(GameState.LEVEL_PLAYING);
-        Hide();
+        PopupManager.Instance.HidePopup<PopupLevelConfig>();
     }
 }

@@ -13,10 +13,9 @@ public class PopupChallengeWoned : PopupBase
     private Image _ArtRelic;
 
     private GalleryRelicData _GalleryRelicData;
-    public override void OnInit(object[] paras)
+    public void OnInit()
     {
-        base.OnInit(paras);
-        _GalleryRelicData = (GalleryRelicData)paras[0];
+        _GalleryRelicData = null;
 
         UpdateArtRelic();
     }
@@ -50,14 +49,15 @@ public class PopupChallengeWoned : PopupBase
         GameManager.Instance.ChangeState(GameState.FINISH);
         GUIManager.Instance.HideScreen<ScreenChallenge>();
         GUIManager.Instance.ShowScreen<ScreenMain>();
-        Hide();
+        PopupManager.Instance.HidePopup<PopupChallengeWoned>();
     }
 
     private void OnClickBtnGallery()
     {
         GameManager.Instance.ChangeState(GameState.FINISH);
         GUIManager.Instance.HideScreen<ScreenChallenge>();
-        GUIManager.Instance.ShowPopup<PopupGallery>(_GalleryRelicData.IDGallery);
-        Hide();
+        PopupGallery popup = PopupManager.Instance.ShowPopup<PopupGallery>();
+        popup.OnInit(_GalleryRelicData.IDGallery);
+        PopupManager.Instance.HidePopup<PopupChallengeWoned>();
     }
 }

@@ -180,7 +180,8 @@ namespace GUIScreenMain
         private void OnButtonClick()
         {
             Debug.Log("Show Gallery no callback");
-            GUIManager.Instance.ShowPopup<PopupGallery>(_gallery.ID);
+            PopupGallery popup = PopupManager.Instance.ShowPopup<PopupGallery>();
+            popup.OnInit(_gallery.ID);
         }
 
         private void UpdateTimeCounter(float minute)

@@ -36,16 +36,19 @@ public class StackController : MonoBehaviour
     {
         if(Input.GetMouseButtonDown(0))
         {
+            Debug.Log("Get Mouse Button Dowwn");
             OnStackMoving?.Invoke(true);
             ControlMouseDown();
         }
         else if(Input.GetMouseButton(0) && stackContact != null)
         {
+            Debug.Log("Get Mouse Button Drag");
             OnStackMoving?.Invoke(false);
             ControlMouseDrag();
         }
         else if (Input.GetMouseButtonUp(0) && stackContact != null) 
         {
+            Debug.Log("Get Mouse Button up");
             OnStackMoving?.Invoke(false);
             ControlMouseUp();
         }
@@ -55,6 +58,7 @@ public class StackController : MonoBehaviour
     {
         if(PopupManager.Instance.CheckAnyPopupShowed())
         {
+            Debug.Log("Return because popup show");
             return;
         }
 

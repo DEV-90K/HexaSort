@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Device;
 
 public class GUIManager : PersistentMonoSingleton<GUIManager>
 {
@@ -46,36 +45,30 @@ public class GUIManager : PersistentMonoSingleton<GUIManager>
         }
     }
 
-    public T ShowPopup<T>(params object[] paras) where T : PopupBase
-    {
-        PopupBase popup = popupManager.GetPopup<T>();
+    //public T ShowPopup<T>(params object[] paras) where T : PopupBase
+    //{
+    //    PopupBase popup = popupManager.GetPopup<T>();
 
-        popup.OnSetup();
-        popup.OnInit(paras);
-        popup.Show();
+    //    popup.OnSetup();
+    //    popup.Show();
 
-        return popup as T;
-    }
+    //    return popup as T;
+    //}
 
-    public void HidePopup<T>(float delay = 0) where T : PopupBase
-    {
-        if (popupManager.CheckPopupShowed<T>())
-        {
-            popupManager.GetPopup<T>().HideByDelay(delay);
-        }
-        else
-        {
-            Debug.Log("Error Hide Screen");
-        }
-    }
+    //public void HidePopup<T>(float delay = 0) where T : PopupBase
+    //{
+    //    if (popupManager.CheckPopupShowed<T>())
+    //    {
+    //        popupManager.GetPopup<T>().HideByDelay(delay);
+    //    }
+    //    else
+    //    {
+    //        Debug.Log("Error Hide Screen");
+    //    }
+    //}
 
     public void HideAllPopup()
     {
-        List<PopupBase> popupShowed = popupManager.GetPopupsShowed();
-
-        foreach (PopupBase popup in popupShowed)
-        {
-            popup.Hide();
-        }
+        popupManager.HideAllPopup();
     }
 }

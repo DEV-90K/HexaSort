@@ -70,7 +70,9 @@ public class ButtonBoostSwap : MonoBehaviour, IBoostTrick
         }
 
         SFX_ClickButton();
-        GUIManager.Instance.ShowPopup<PopupBoostSwap>(_able);
+        PopupBoostSwap popup = PopupManager.Instance.ShowPopup<PopupBoostSwap>();
+        popup.OnInit(_able);
+
         GUIManager.Instance.HideScreen<ScreenLevel>();
     }
 

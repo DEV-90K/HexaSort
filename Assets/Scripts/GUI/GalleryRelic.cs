@@ -188,7 +188,8 @@ public class GalleryRelic : MonoBehaviour
 
     private void OnClickSelecter()
     {
-        GUIManager.Instance.ShowPopup<PopupGalleryRelicSelecter>(_data);
+        PopupGalleryRelicSelecter popup = PopupManager.Instance.ShowPopup<PopupGalleryRelicSelecter>();
+        popup.OnInit(_data);
     }
 
     private void OnClickClaim()
@@ -218,7 +219,8 @@ public class GalleryRelic : MonoBehaviour
 
     private void OnClickInfo()
     {
-        GUIManager.Instance.ShowPopup<PopupGalleryRelic>(_data);
+        PopupGalleryRelic popup = PopupManager.Instance.ShowPopup<PopupGalleryRelic>();
+        popup.OnInit(_data);
     }
 
     private void OnCountdownStopped()

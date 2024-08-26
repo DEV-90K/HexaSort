@@ -1,6 +1,6 @@
 
 using Audio_System;
-using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PopupBase : MonoBehaviour
@@ -12,12 +12,17 @@ public class PopupBase : MonoBehaviour
 
     public virtual void Show()
     {
-        SFX_ShowPopup();
-
         gameObject.SetActive(true);
+
+        SFX_ShowPopup();
+        VFX_ShowPopup();            
+    }
+
+    public virtual void VFX_ShowPopup()
+    {
         LeanTween.scale(_Content, Vector3.one, 0.2f)
             .setFrom(Vector3.one * 0.63f)
-            .setEaseOutBack();            
+            .setEaseOutBack();
     }
 
     public virtual void SFX_ShowPopup()
@@ -26,26 +31,16 @@ public class PopupBase : MonoBehaviour
         SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(soundData);
     }
 
-    public virtual void HideByDelay(float delay)
+    public virtual void HideByDelay(float delay) 
     {
         //Anim in time delay
         Invoke(nameof(Hide), delay);
     }
 
-    public virtual void Hide()
+    private void Hide()
     {
         SFX_HidePopup();
-        LeanTween.scale(_Content, Vector3.one * 0.63f, 0.2f)
-            .setFrom(Vector3.one)
-            .setEaseInBack()
-            .setOnComplete(() =>
-            {
-                gameObject.SetActive(false);
-                if (!canReused)
-                {
-                    Destroy(gameObject);
-                }
-            });
+        VFX_HidePopup();
     }
 
     public virtual void SFX_HidePopup()
@@ -54,13 +49,28 @@ public class PopupBase : MonoBehaviour
         SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(soundData);
     }
 
+    public virtual void VFX_HidePopup()
+    {
+        LeanTween.scale(_Content, Vector3.one * 0.63f, 0.2f)
+            .setFrom(Vector3.one)
+            .setEaseInBack()
+            .setOnComplete(() =>
+            {
+                gameObject.SetActive(false);
+                if (!canReused)
+                {                    
+                    Destroy(gameObject);
+                }
+            });
+    }
+
     public virtual void OnSetup()
     {
         //throw new NotImplementedException();
     }
 
-    public virtual void OnInit(object[] paras)
-    {
-        //throw new NotImplementedException();
-    }
+    //public virtual void OnInit(object[] paras)
+    //{
+    //    //throw new NotImplementedException();
+    //}
 }
