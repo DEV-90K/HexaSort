@@ -44,7 +44,6 @@ public class GalleryRelic : MonoBehaviour
     private RelicData _relicData;
 
     private TimerUtils.CountdownTimer _timer = null;
-
     public void OnInit(GalleryRelicData galleryRelicData, int idGallery, int[] idRelics)
     {
         _data = galleryRelicData;

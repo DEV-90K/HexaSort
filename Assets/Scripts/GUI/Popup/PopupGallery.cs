@@ -1,5 +1,3 @@
-using GUIScreenMain;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -29,16 +27,21 @@ public class PopupGallery : PopupBase
 
     private GalleryRelic[] _rels;
     private int _amountCoin = 0;
-    private Action _callback = null;
 
     public void OnInit(int IDGallery, Action callback = null)
     {
+<<<<<<< HEAD
         InitGallery(IDGallery);
         _callback = callback;
     }
 
     private void InitGallery(int IDGallery)
     {
+=======
+        base.OnInit(paras);
+
+        int IDGallery = (int) paras[0];
+>>>>>>> parent of 99c86cc (Update)
         _data = ResourceManager.Instance.GetGalleryDataByID(IDGallery);
         _galleryRelicDatas = MainPlayer.Instance.GetGalleryRelicByID(_data.ID);
 
@@ -47,7 +50,7 @@ public class PopupGallery : PopupBase
         foreach (GalleryRelicData galleryRelicData in _galleryRelicDatas)
         {
             _rels[galleryRelicData.Position].OnInit(galleryRelicData, _data.ID, _data.IDRelics);
-        }
+        }        
 
         UpdateGalleryName();
         UpdateTxtRelics();
@@ -109,6 +112,7 @@ public class PopupGallery : PopupBase
 
     private void OnClickBtnBack()
     {
+<<<<<<< HEAD
         if (_callback == null)
             GUIManager.Instance.ShowScreen<ScreenMain>();
         else
@@ -117,6 +121,10 @@ public class PopupGallery : PopupBase
             _callback = null;
         }
         PopupManager.Instance.HidePopup<PopupGallery>();
+=======
+        GUIManager.Instance.ShowScreen<ScreenMain>();
+        Hide();
+>>>>>>> parent of 99c86cc (Update)
     }
 
     private void OnClickBtnCollect()
@@ -165,7 +173,7 @@ public class PopupGallery : PopupBase
             _TxtRelics.text = "You don't have any relics \n Collect it !!";
         }
         else
-            _TxtRelics.text = $"You have {_galleryRelicDatas.Length} / {_data.IDRelics.Length} Relics";
+            _TxtRelics.text = $"You have {_galleryRelicDatas.Length}/{_data.IDRelics.Length} Relics";
     }
 
     private void UpdateBtnCollectCoin()

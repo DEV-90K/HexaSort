@@ -8,15 +8,18 @@ public class PopupManager : MonoSingleton<PopupManager>
     #region Popup
     [SerializeField]
     private Transform popupRoot;
-
+    
     private PopupBase[] _popupPrefabs;
 
     Dictionary<System.Type, PopupBase> popups = new Dictionary<System.Type, PopupBase>();
     //Dictionary<System.Type, PopupBase> cachePopups = new Dictionary<System.Type, PopupBase>();
 
+<<<<<<< HEAD
     Dictionary<System.Type, PopupBase> cacheEnable = new Dictionary<System.Type, PopupBase>();
     Dictionary<System.Type, PopupBase> cacheDisable = new Dictionary<System.Type, PopupBase>();
 
+=======
+>>>>>>> parent of 99c86cc (Update)
     protected override void Awake()
     {
         base.Awake();
@@ -30,15 +33,20 @@ public class PopupManager : MonoSingleton<PopupManager>
             UnityEngine.Object.Destroy(popupRoot.GetChild(i).gameObject);
         }
 
+<<<<<<< HEAD
         //cachePopups.Clear();
 
         {
             cacheEnable.Clear();
             cacheDisable.Clear();
         }
+=======
+        cachePopups.Clear();
+>>>>>>> parent of 99c86cc (Update)
     }
 
-    private T CreatePopup<T>() where T : PopupBase
+
+    public T CreatePopup<T>() where T : PopupBase
     {
         PopupBase popup = Instantiate(GetPrefab<T>(), popupRoot);
         //cachePopups[typeof(T)] = popup;
@@ -47,15 +55,27 @@ public class PopupManager : MonoSingleton<PopupManager>
 
     public T ShowPopup<T>() where T : PopupBase
     {
+<<<<<<< HEAD
         T popup = GetPopup<T>();
         popup.OnSetup();
         popup.Show();
+=======
+        if(!CheckPopup<T>())
+        {
+            return CreatePopup<T>();
+        }
+>>>>>>> parent of 99c86cc (Update)
 
         CacheShowed<T>(popup);
         return popup;
     }
 
+<<<<<<< HEAD
     private void CacheShowed<T>(T popup) where T : PopupBase
+=======
+
+    public List<PopupBase> GetPopupsShowed()
+>>>>>>> parent of 99c86cc (Update)
     {
         cacheDisable[typeof(T)] = null;
         cacheEnable[typeof(T)] = popup;

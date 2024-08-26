@@ -59,19 +59,6 @@ public class GridUnit : MonoBehaviour, IGridPortability
         _SwipeScale.OnInit();
     }
 
-
-    public void FindCenter(Transform[] gridHexs)
-    {
-        Vector3 pos = Vector3.zero;
-        foreach (Transform gridHex in gridHexs)
-        {
-            pos += gridHex.position;
-        }
-        pos = pos / gridHexs.Length;
-        _GridContainer.transform.localPosition -= pos;
-    }
-
-
     public void OnSetup(GridData gridData)
     {   
         if(gridData == null)
