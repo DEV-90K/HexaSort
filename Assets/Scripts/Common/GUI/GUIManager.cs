@@ -11,30 +11,11 @@ public class GUIManager : PersistentMonoSingleton<GUIManager>
     [SerializeField]
     private ScreenManager screenManager;
 
-    private ScreenBase currentScreen; //Current Screen
-
     protected override void Awake()
     {
         base.Awake();
         popupManager = GetComponent<PopupManager>();
         screenManager = GetComponent<ScreenManager>();
-    }
-
-    public T ClearShowScreen<T>(params object[] paras) where T : ScreenBase
-    {
-        ScreenBase screen = null;
-        HideAllPopup();
-        if (currentScreen != null && currentScreen.GetType() is T)
-        {
-            screen = currentScreen;
-        }
-        else
-        {
-            HideAllScreen();
-            screen = ShowScreen<T>(paras);
-        }
-
-        return screen as T;
     }
 
     public T ShowScreen<T>(params object[] paras) where T : ScreenBase
@@ -44,7 +25,6 @@ public class GUIManager : PersistentMonoSingleton<GUIManager>
         screen.OnSetup();
         screen.OnInit(paras);
         screen.Show();
-        currentScreen = screen;
         return screen as T;
     }
 
@@ -96,16 +76,6 @@ public class GUIManager : PersistentMonoSingleton<GUIManager>
         foreach (PopupBase popup in popupShowed)
         {
             popup.Hide();
-        }
-    }
-
-    private void HideAllScreen()
-    {
-        List<ScreenBase> screenShowed = screenManager.GetSceensShowed();
-
-        foreach (ScreenBase screen in screenShowed)
-        {
-            screen.Hide();
         }
     }
 }

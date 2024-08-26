@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.ParticleSystem;
 
@@ -33,6 +34,11 @@ public class ParticleStackHexagon : MonoBehaviour
     {
         gameObject.SetActive(true);
         transform.position = _stackHexagon.GetTopPosition();
+
+        for(int i = 3; i < transform.childCount; i++)
+        {
+            Object.DestroyImmediate(transform.GetChild(i));
+        }
     }
 
     public void OnHide()

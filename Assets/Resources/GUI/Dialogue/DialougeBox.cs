@@ -53,9 +53,12 @@ public class DialougeBox : MonoBehaviour
         }
         else if (_data.Type == DialogueType.RELIC_COLLECT)
         {
+            Debug.Log("Show Gallery no callback");
+
             GUIManager.Instance.HideScreen<ScreenLevel>();
             GUIManager.Instance.HidePopup<PopupLevelWoned>();
-            GUIManager.Instance.ShowPopup<PopupGallery>(1);
+            Action callback = () => LevelManager.Instance.OnInitCurrentLevel();
+            GUIManager.Instance.ShowPopup<PopupGallery>(1, callback);
         }
 
         Destroy(gameObject);
@@ -125,7 +128,10 @@ public class DialougeBox : MonoBehaviour
         {
             GUIManager.Instance.HideScreen<ScreenLevel>();
             GUIManager.Instance.HidePopup<PopupLevelWoned>();
-            GUIManager.Instance.ShowPopup<PopupGallery>(1);
+
+            Debug.Log("Show Gallery with callback");
+            Action callback = () => LevelManager.Instance.OnInitCurrentLevel();
+            GUIManager.Instance.ShowPopup<PopupGallery>(1, callback);
         }
         else if (_data.Type == DialogueType.CHEST_REWARD)
         {

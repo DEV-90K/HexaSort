@@ -7,11 +7,14 @@ public class PopupManager : MonoSingleton<PopupManager>
     #region Popup
     [SerializeField]
     private Transform popupRoot;
-    
+
     private PopupBase[] _popupPrefabs;
 
     Dictionary<System.Type, PopupBase> popups = new Dictionary<System.Type, PopupBase>();
     Dictionary<System.Type, PopupBase> cachePopups = new Dictionary<System.Type, PopupBase>();
+
+    Dictionary<System.Type, PopupBase> active = new Dictionary<System.Type, PopupBase>();
+    Dictionary<System.Type, PopupBase> inactive = new Dictionary<System.Type, PopupBase>();
 
     protected override void Awake()
     {
@@ -27,10 +30,14 @@ public class PopupManager : MonoSingleton<PopupManager>
         }
 
         cachePopups.Clear();
+
+        {
+            active.Clear();
+            inactive.Clear();
+        }
     }
 
-
-    public T CreatePopup<T>() where T : PopupBase
+    private T CreatePopup<T>() where T : PopupBase
     {
         PopupBase popup = Instantiate(GetPrefab<T>(), popupRoot);
         cachePopups[typeof(T)] = popup;
@@ -39,7 +46,7 @@ public class PopupManager : MonoSingleton<PopupManager>
 
     public T GetPopup<T>() where T : PopupBase
     {
-        if(!CheckPopup<T>())
+        if (!CheckPopup<T>())
         {
             return CreatePopup<T>();
         }
@@ -47,6 +54,18 @@ public class PopupManager : MonoSingleton<PopupManager>
         return cachePopups[typeof(T)] as T;
     }
 
+    //private bool CheckPopupActive<T>()
+    //{
+    //    System.Type type = typeof(T);
+    //    if(active.ContainsKey(Ty))
+    //}
+
+    //private T GetPopupActive<T>()
+    //{
+    //    System.Type type = typeof(T);
+    //    //return cachePopups.ContainsKey(type) && cachePopups[type] != null;
+
+    //}
 
     public List<PopupBase> GetPopupsShowed()
     {

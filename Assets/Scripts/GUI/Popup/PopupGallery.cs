@@ -1,3 +1,5 @@
+using GUIScreenMain;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -27,12 +29,28 @@ public class PopupGallery : PopupBase
 
     private GalleryRelic[] _rels;
     private int _amountCoin = 0;
+    private Action _callback = null;
 
     public override void OnInit(object[] paras = null)
     {
         base.OnInit(paras);
 
-        int IDGallery = (int) paras[0];
+        if(paras.Length >= 1)
+        {
+            int IDGallery = (int)paras[0];
+            InitGallery(IDGallery);
+
+            _callback = null;
+        }        
+
+        if(paras.Length >= 2)
+        {
+            _callback = (Action)paras[1];
+        }
+    }
+
+    private void InitGallery(int IDGallery)
+    {
         _data = ResourceManager.Instance.GetGalleryDataByID(IDGallery);
         _galleryRelicDatas = MainPlayer.Instance.GetGalleryRelicByID(_data.ID);
 
@@ -41,7 +59,7 @@ public class PopupGallery : PopupBase
         foreach (GalleryRelicData galleryRelicData in _galleryRelicDatas)
         {
             _rels[galleryRelicData.Position].OnInit(galleryRelicData, _data.ID, _data.IDRelics);
-        }        
+        }
 
         UpdateGalleryName();
         UpdateTxtRelics();
@@ -103,7 +121,13 @@ public class PopupGallery : PopupBase
 
     private void OnClickBtnBack()
     {
-        GUIManager.Instance.ShowScreen<ScreenMain>();
+        if (_callback == null)
+            GUIManager.Instance.ShowScreen<ScreenMain>();
+        else
+        {
+            _callback.Invoke();
+            _callback = null;
+        }
         Hide();
     }
 
@@ -153,7 +177,7 @@ public class PopupGallery : PopupBase
             _TxtRelics.text = "You don't have any relics \n Collect it !!";
         }
         else
-            _TxtRelics.text = $"You have {_galleryRelicDatas.Length}/{_data.IDRelics.Length} Relics";
+            _TxtRelics.text = $"You have {_galleryRelicDatas.Length} / {_data.IDRelics.Length} Relics";
     }
 
     private void UpdateBtnCollectCoin()

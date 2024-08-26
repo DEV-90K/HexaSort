@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace GUI_ScreenMain
+namespace GUIScreenMain
 {
     public class Gallery : MonoBehaviour
     {
@@ -22,7 +22,8 @@ namespace GUI_ScreenMain
         private Slider _Slider;
         [SerializeField]
         private ParticleSystem _Particle;
-
+        [SerializeField]
+        private TMP_Text _TxtTimeCounter;
         [SerializeField]
         private GameObject _Deactive;
 
@@ -178,7 +179,23 @@ namespace GUI_ScreenMain
 
         private void OnButtonClick()
         {
+            Debug.Log("Show Gallery no callback");
             GUIManager.Instance.ShowPopup<PopupGallery>(_gallery.ID);
+        }
+
+        private void UpdateTimeCounter(float minute)
+        {
+            int h = (int) minute / 60;
+            int m = (int) minute % 60;
+
+            if(h == 0)
+            {
+                _TxtTimeCounter.text = m + "m";
+            }
+            else
+            {
+                _TxtTimeCounter.text = h + ":" + m;
+            }
         }
 
         private void Update()
@@ -187,6 +204,8 @@ namespace GUI_ScreenMain
             {
                 _timer.Tick(Time.deltaTime / 60f);
                 _Slider.value -= Time.deltaTime / 60f;
+
+                UpdateTimeCounter(_timer.GetTime());
             }
         }
     }

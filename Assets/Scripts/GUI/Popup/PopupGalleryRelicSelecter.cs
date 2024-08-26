@@ -122,9 +122,10 @@ public class PopupGalleryRelicSelecter : PopupBase
     {
         SFX_Selection();
         MainPlayer.Instance.SubMaterial(_selectData.Material);
+
         _selectGalleryRelic.State = GalleryRelicState.COLLECT;
         MainPlayer.Instance.CollectGalleryRelic(_selectGalleryRelic);
-        GUIManager.Instance.ShowPopup<PopupGallery>(_selectGalleryRelic.IDGallery);
+        //GUIManager.Instance.ShowPopup<PopupGallery>(_selectGalleryRelic.IDGallery);        
         Hide();
     }
 

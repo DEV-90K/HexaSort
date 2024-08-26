@@ -13,7 +13,7 @@ public class ScreenMain : ScreenBase
     [SerializeField]
     private Button _BtnPlay;
     [SerializeField]
-    private GUI_ScreenMain.Gallery[] _Galleries; 
+    private GUIScreenMain.Gallery[] _Galleries; 
     [SerializeField]
     private ButtonChest_ScreenMain _btnChest;
 

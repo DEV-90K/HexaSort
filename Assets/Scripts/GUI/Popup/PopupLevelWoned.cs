@@ -1,5 +1,6 @@
 using Audio_System;
 using CollectionSystem;
+using GUILevelWoned;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -19,6 +20,8 @@ public class PopupLevelWoned : PopupBase
     private TMP_Text _TextCoin;
     [SerializeField]
     private TMP_Text _TextMaterial;
+    [SerializeField]
+    private FireWorker[] _FireWorkers;
         
     private LevelPresenterData _presenterData;
 
@@ -31,6 +34,12 @@ public class PopupLevelWoned : PopupBase
     public override void Show()
     {
         base.Show();
+
+        foreach (FireWorker fireWorker in _FireWorkers)
+        {
+            fireWorker.PlayRepeat(3);
+        }
+
         UpdateTxtCoin(_presenterData.Coin);
         UpdateTxtMaterial(_presenterData.Material);
     }
@@ -47,6 +56,12 @@ public class PopupLevelWoned : PopupBase
 
     private void OnClickBtnReward()
     {
+        foreach (FireWorker fireWorker in _FireWorkers)
+        {
+            fireWorker.StopAllCoroutines();
+            fireWorker.StopParticle();
+        }
+
         SFX_ClickReward();
         StartCoroutine(IE_VFX_Claim());        
     }
