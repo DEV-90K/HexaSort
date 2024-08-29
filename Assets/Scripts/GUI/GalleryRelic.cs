@@ -44,9 +44,11 @@ public class GalleryRelic : MonoBehaviour
     private RelicData _relicData;
 
     private TimerUtils.CountdownTimer _timer = null;
+    private PopupGallery _popupGallery;
 
-    public void OnInit(GalleryRelicData galleryRelicData, int idGallery, int[] idRelics)
+    public void OnInit(PopupGallery popupGallery, GalleryRelicData galleryRelicData, int idGallery, int[] idRelics)
     {
+        _popupGallery = popupGallery;
         _data = galleryRelicData;
 
         if (_data == null)
@@ -188,7 +190,7 @@ public class GalleryRelic : MonoBehaviour
 
     private void OnClickSelecter()
     {
-        GUIManager.Instance.ShowPopup<PopupGalleryRelicSelecter>(_data);
+        GUIManager.Instance.ShowPopup<PopupGalleryRelicSelecter>(_popupGallery, _data);
     }
 
     private void OnClickClaim()

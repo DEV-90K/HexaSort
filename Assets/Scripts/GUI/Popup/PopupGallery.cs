@@ -26,7 +26,7 @@ public class PopupGallery : PopupBase
 
     private GalleryData _data;
     private GalleryRelicData[] _galleryRelicDatas;
-
+    
     private GalleryRelic[] _rels;
     private int _amountCoin = 0;
     private Action _callback = null;
@@ -49,6 +49,11 @@ public class PopupGallery : PopupBase
         }
     }
 
+    public void UpdateGallery()
+    {
+        InitGallery(_data.ID);
+    }
+
     private void InitGallery(int IDGallery)
     {
         _data = ResourceManager.Instance.GetGalleryDataByID(IDGallery);
@@ -58,7 +63,7 @@ public class PopupGallery : PopupBase
         _rels = InitGalleryRelics();
         foreach (GalleryRelicData galleryRelicData in _galleryRelicDatas)
         {
-            _rels[galleryRelicData.Position].OnInit(galleryRelicData, _data.ID, _data.IDRelics);
+            _rels[galleryRelicData.Position].OnInit(this, galleryRelicData, _data.ID, _data.IDRelics);
         }
 
         UpdateGalleryName();
@@ -84,7 +89,7 @@ public class PopupGallery : PopupBase
                 relic = _Contain.GetChild(i).GetComponent<GalleryRelic>();
 
             relic.gameObject.SetActive(true);
-            relic.OnInit(null, _data.ID, _data.IDRelics);
+            relic.OnInit(this, null, _data.ID, _data.IDRelics);
             list.Add(relic);
         }
 

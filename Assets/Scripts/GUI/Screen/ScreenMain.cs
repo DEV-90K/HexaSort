@@ -58,17 +58,17 @@ public class ScreenMain : ScreenBase
     }
 
 
-    private void Start()
-    {        
-        _BtnPlay.onClick.AddListener(OnClickBtnPlay);
-    }
+    //private void Start()
+    //{        
+    //    _BtnPlay.onClick.AddListener(OnClickBtnPlay);
+    //}
 
-    private void OnDestroy()
-    {
-        _BtnPlay.onClick.RemoveListener(OnClickBtnPlay);
-    }
+    //private void OnDestroy()
+    //{
+    //    _BtnPlay.onClick.RemoveListener(OnClickBtnPlay);
+    //}
 
-    private void OnClickBtnPlay()
+    public void OnClickBtnPlay()
     {
         LevelManager.Instance.OnInitCurrentLevel();
         Hide();

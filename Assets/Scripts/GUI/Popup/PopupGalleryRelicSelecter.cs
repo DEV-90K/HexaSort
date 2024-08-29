@@ -35,12 +35,15 @@ public class PopupGalleryRelicSelecter : PopupBase
 
     private GalleryRelicData _selectGalleryRelic;
     private RelicData _selectData;
+    private PopupGallery _popupGallery;
 
     public override void OnInit(object[] paras)
     {
         base.OnInit(paras);
 
-        GalleryRelicData galleryRelicData = (GalleryRelicData)paras[0];
+        _popupGallery = (PopupGallery)paras[0];
+
+        GalleryRelicData galleryRelicData = (GalleryRelicData)paras[1];
         _GalleryData = ResourceManager.Instance.GetGalleryDataByID(galleryRelicData.IDGallery);
 
         GalleryRelicData[] galleryRelicCollected = MainPlayer.Instance.GetGalleryRelicByID(_GalleryData.ID);
@@ -89,6 +92,7 @@ public class PopupGalleryRelicSelecter : PopupBase
             }
             else
                 gObj = this._RelicContain.GetChild(i).GetComponent<SelectionRelic>();
+
             gObj.gameObject.SetActive(true);
             gObj.OnInit(this, galleryRelicDatas[i], i == 0);
         }
@@ -125,7 +129,7 @@ public class PopupGalleryRelicSelecter : PopupBase
 
         _selectGalleryRelic.State = GalleryRelicState.COLLECT;
         MainPlayer.Instance.CollectGalleryRelic(_selectGalleryRelic);
-        //GUIManager.Instance.ShowPopup<PopupGallery>(_selectGalleryRelic.IDGallery);        
+        _popupGallery.UpdateGallery();
         Hide();
     }
 
