@@ -72,7 +72,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: Starts/Start
+    path: Content/MiddleCenter/Starts/Start
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -133,7 +133,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: Starts/Start (2)
+    path: Content/MiddleCenter/Starts/Start (2)
   m_CompressedRotationCurves: []
   m_EulerCurves: []
   m_PositionCurves: []
@@ -171,7 +171,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: Image
+    path: Content/MiddleCenter/Content/MiddleCenter/Image
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -196,7 +196,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: Starts/Start
+    path: Content/MiddleCenter/Starts/Start
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -221,7 +221,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: Starts/Start (1)
+    path: Content/MiddleCenter/Starts/Start (1)
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -246,7 +246,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: Starts/Start (2)
+    path: Content/MiddleCenter/Starts/Start (2)
   m_FloatCurves:
   - serializedVersion: 2
     curve:
@@ -301,7 +301,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_AnchoredPosition.y
-    path: Image
+    path: Content/MiddleCenter/Image
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -322,7 +322,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_AnchoredPosition.x
-    path: Starts/Start
+    path: Content/MiddleCenter/Starts/Start
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -343,7 +343,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_AnchoredPosition.y
-    path: Starts/Start
+    path: Content/MiddleCenter/Starts/Start
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -364,7 +364,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Pivot.x
-    path: Starts/Start
+    path: Content/MiddleCenter/Starts/Start
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -385,7 +385,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Pivot.y
-    path: Starts/Start
+    path: Content/MiddleCenter/Starts/Start
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -406,7 +406,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: Starts/Start
+    path: Content/MiddleCenter/Starts/Start
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -427,7 +427,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: Starts/Start
+    path: Content/MiddleCenter/Starts/Start
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -448,7 +448,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: Starts/Start
+    path: Content/MiddleCenter/Starts/Start
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -469,7 +469,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_AnchoredPosition.x
-    path: Starts/Start (2)
+    path: Content/MiddleCenter/Starts/Start (2)
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -490,7 +490,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Pivot.x
-    path: Starts/Start (2)
+    path: Content/MiddleCenter/Starts/Start (2)
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -511,7 +511,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_AnchoredPosition.y
-    path: Starts/Start (2)
+    path: Content/MiddleCenter/Starts/Start (2)
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -532,7 +532,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Pivot.y
-    path: Starts/Start (2)
+    path: Content/MiddleCenter/Starts/Start (2)
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -619,7 +619,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_AnchoredPosition.y
-    path: Image
+    path: Content/MiddleCenter/Image
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -658,7 +658,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.x
-    path: Image
+    path: Content/MiddleCenter/Image
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -697,7 +697,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.y
-    path: Image
+    path: Content/MiddleCenter/Image
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -736,7 +736,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.z
-    path: Image
+    path: Content/MiddleCenter/Image
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -757,7 +757,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_AnchoredPosition.x
-    path: Starts/Start
+    path: Content/MiddleCenter/Starts/Start
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -778,7 +778,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_AnchoredPosition.y
-    path: Starts/Start
+    path: Content/MiddleCenter/Starts/Start
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -799,7 +799,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Pivot.x
-    path: Starts/Start
+    path: Content/MiddleCenter/Starts/Start
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -820,7 +820,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Pivot.y
-    path: Starts/Start
+    path: Content/MiddleCenter/Starts/Start
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -841,7 +841,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: Starts/Start
+    path: Content/MiddleCenter/Starts/Start
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -862,7 +862,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: Starts/Start
+    path: Content/MiddleCenter/Starts/Start
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -883,7 +883,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: Starts/Start
+    path: Content/MiddleCenter/Starts/Start
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -913,7 +913,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.x
-    path: Starts/Start
+    path: Content/MiddleCenter/Starts/Start
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -943,7 +943,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.y
-    path: Starts/Start
+    path: Content/MiddleCenter/Starts/Start
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -973,7 +973,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.z
-    path: Starts/Start
+    path: Content/MiddleCenter/Starts/Start
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -1003,7 +1003,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.x
-    path: Starts/Start (1)
+    path: Content/MiddleCenter/Starts/Start (1)
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -1033,7 +1033,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.y
-    path: Starts/Start (1)
+    path: Content/MiddleCenter/Starts/Start (1)
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -1063,7 +1063,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.z
-    path: Starts/Start (1)
+    path: Content/MiddleCenter/Starts/Start (1)
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -1093,7 +1093,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.x
-    path: Starts/Start (2)
+    path: Content/MiddleCenter/Starts/Start (2)
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -1123,7 +1123,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.y
-    path: Starts/Start (2)
+    path: Content/MiddleCenter/Starts/Start (2)
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -1153,7 +1153,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalScale.z
-    path: Starts/Start (2)
+    path: Content/MiddleCenter/Starts/Start (2)
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -1174,7 +1174,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_AnchoredPosition.x
-    path: Starts/Start (2)
+    path: Content/MiddleCenter/Starts/Start (2)
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -1195,7 +1195,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Pivot.x
-    path: Starts/Start (2)
+    path: Content/MiddleCenter/Starts/Start (2)
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -1216,7 +1216,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_AnchoredPosition.y
-    path: Starts/Start (2)
+    path: Content/MiddleCenter/Starts/Start (2)
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -1237,7 +1237,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_Pivot.y
-    path: Starts/Start (2)
+    path: Content/MiddleCenter/Starts/Start (2)
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -1303,7 +1303,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.x
-    path: Starts/Start
+    path: Content/MiddleCenter/Starts/Start
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -1369,7 +1369,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.y
-    path: Starts/Start
+    path: Content/MiddleCenter/Starts/Start
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -1435,7 +1435,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.z
-    path: Starts/Start
+    path: Content/MiddleCenter/Starts/Start
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -1501,7 +1501,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.w
-    path: Starts/Start
+    path: Content/MiddleCenter/Starts/Start
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -1567,7 +1567,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.x
-    path: Starts/Start (2)
+    path: Content/MiddleCenter/Starts/Start (2)
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -1633,7 +1633,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.y
-    path: Starts/Start (2)
+    path: Content/MiddleCenter/Starts/Start (2)
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -1699,7 +1699,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.z
-    path: Starts/Start (2)
+    path: Content/MiddleCenter/Starts/Start (2)
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -1765,7 +1765,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.w
-    path: Starts/Start (2)
+    path: Content/MiddleCenter/Starts/Start (2)
     classID: 224
     script: {fileID: 0}
     flags: 0
@@ -1796,7 +1796,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAnglesBaked.x
-    path: Starts/Start
+    path: Content/MiddleCenter/Starts/Start
     classID: 224
     script: {fileID: 0}
     flags: 16
@@ -1826,7 +1826,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAnglesBaked.y
-    path: Starts/Start
+    path: Content/MiddleCenter/Starts/Start
     classID: 224
     script: {fileID: 0}
     flags: 16
@@ -1856,7 +1856,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAnglesBaked.z
-    path: Starts/Start
+    path: Content/MiddleCenter/Starts/Start
     classID: 224
     script: {fileID: 0}
     flags: 16
@@ -1886,7 +1886,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAnglesBaked.x
-    path: Starts/Start (2)
+    path: Content/MiddleCenter/Starts/Start (2)
     classID: 224
     script: {fileID: 0}
     flags: 16
@@ -1916,7 +1916,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAnglesBaked.y
-    path: Starts/Start (2)
+    path: Content/MiddleCenter/Starts/Start (2)
     classID: 224
     script: {fileID: 0}
     flags: 16
@@ -1946,7 +1946,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAnglesBaked.z
-    path: Starts/Start (2)
+    path: Content/MiddleCenter/Starts/Start (2)
     classID: 224
     script: {fileID: 0}
     flags: 16

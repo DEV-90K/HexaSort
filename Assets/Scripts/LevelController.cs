@@ -191,6 +191,11 @@ public class LevelController : MonoBehaviour
     }
     public void OnStackPlacedOnGridHexagon(GridHexagon gridHexagon)
     {
+        if(idxRootVisited > listGridHexagonNeedUpdate.Count)
+        {
+            idxRootVisited = listGridHexagonNeedUpdate.Count - 1;
+        }
+
         listGridHexagonNeedUpdate.Insert(idxRootVisited, gridHexagon);
 
         if (listGridHexagonNeedUpdate.Count == 1 && _hasProcessing == false)
@@ -202,9 +207,11 @@ public class LevelController : MonoBehaviour
     private IEnumerator IE_OnStackPlacedOnGridHexagon()
     {
         _hasProcessing = true;
+
+        idxRootVisited = listGridHexagonNeedUpdate.Count - 1;
         while (listGridHexagonNeedUpdate.Count > 0)
         {
-            idxRootVisited = listGridHexagonNeedUpdate.Count - 1;
+            //idxRootVisited = listGridHexagonNeedUpdate.Count - 1;
             GridHexagon merge = listGridHexagonNeedUpdate[idxRootVisited];
             listGridHexagonNeedUpdate.Remove(merge);
 
@@ -214,6 +221,8 @@ public class LevelController : MonoBehaviour
                 yield return IE_MergeTree(nodeVisited);
             }
         }
+
+        idxRootVisited = 0;
         _hasProcessing = false;
 
         if (!GameManager.Instance.IsState(GameState.FINISH))

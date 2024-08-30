@@ -118335,6 +118335,7 @@ MonoBehaviour:
   canvasStack: {fileID: 129173780815639187}
   particleStack: {fileID: 1731013737371990318}
   tf_Ray: {fileID: 1965027733075896381}
+  VFX_MagicBuffBlue: {fileID: 8776048335755308573, guid: bf6b0ad61ed8406489353a56e9c70ab4, type: 3}
 --- !u!1 &9059967627405870772
 GameObject:
   m_ObjectHideFlags: 0

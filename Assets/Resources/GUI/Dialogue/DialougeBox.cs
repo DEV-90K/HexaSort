@@ -34,7 +34,6 @@ public class DialougeBox : MonoBehaviour
     {
         _animator.SetBool("IsOpen", true);
         _actionSkip = actionSkip;
-        _BtnSkip.gameObject.SetActive(true);
         _data = data;
         _sequences.Clear();
         foreach (string sequence in _data.Sentences)
@@ -118,7 +117,6 @@ public class DialougeBox : MonoBehaviour
     private void OnClickSkip()
     {
         SFX_ClickSkip();
-        _BtnSkip.gameObject.SetActive(false);
 
         if (_actionSkip != null)
         {

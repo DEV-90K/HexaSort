@@ -56,7 +56,8 @@ public class PopupLevelLosed : PopupBase
 
     private void OnClickBtnRevice()
     {
-        LevelManager.Instance.OnRevice();
-        Hide();
+        //LevelManager.Instance.OnRevice();        
+        GUIManager.Instance.ShowPopup<PopupRevive>(_presenterData);
+        //Hide();
     }
 }

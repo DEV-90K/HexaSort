@@ -21,8 +21,13 @@ public class StackHexagon : PoolMember
     private ParticleStackHexagon particleStack;
     [SerializeField]
     private Transform tf_Ray;
+    [SerializeField]
+    private GameObject VFX_MagicBuffBlue;
+    private GameObject _InsVFX = null;
     public List<Hexagon> Hexagons { get; private set; }
     private StackHexagonData _data;
+
+    
 
     private void Awake()
     {
@@ -64,17 +69,25 @@ public class StackHexagon : PoolMember
 
     public void TweenShowTrick()
     {
-        foreach (Hexagon hex  in Hexagons)
-        {
-            hex.TweenShowTrick();
-        }
+        //foreach (Hexagon hex  in Hexagons)
+        //{
+        //    hex.TweenShowTrick();
+        //}
+
+        _InsVFX = Instantiate<GameObject>(VFX_MagicBuffBlue, transform.position, VFX_MagicBuffBlue.transform.rotation);
     }
 
     public void TweenHideTrick()
     {
-        foreach (Hexagon hex in Hexagons)
+        //foreach (Hexagon hex in Hexagons)
+        //{
+        //    hex.TweenHideTrick();
+        //}
+
+        if(_InsVFX != null)
         {
-            hex.TweenHideTrick();
+            Destroy(_InsVFX);
+            _InsVFX = null;
         }
     }
 

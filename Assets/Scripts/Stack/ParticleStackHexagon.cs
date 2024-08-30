@@ -37,7 +37,7 @@ public class ParticleStackHexagon : MonoBehaviour
 
         for(int i = 3; i < transform.childCount; i++)
         {
-            Object.DestroyImmediate(transform.GetChild(i));
+            Object.Destroy(transform.GetChild(i));
         }
     }
 

@@ -37,6 +37,9 @@ public class LevelPresenterData
     [JsonProperty]
     public int Goal { get; private set; }
     [JsonProperty]
+    public int CoinRevive { get; private set; } = 20; //Price of coin Revive
+
+    [JsonProperty]
     public int Coin { get; private set; } = 0;
     [JsonProperty]
     public int Material { get; private set; } = 0;

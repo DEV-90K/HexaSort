@@ -18,6 +18,11 @@ public class GridHexagon : PoolMember
     [SerializeField]
     private CanvasGridHexagon _Canvas;
 
+    [SerializeField]
+    private GameObject VFX_MagicAuraBlue;
+
+    private GameObject _insVfx = null;
+
     public Color Color
     {
         get => renderer.material.color;
@@ -76,23 +81,24 @@ public class GridHexagon : PoolMember
 
     public void TweenShowTrick()
     {
-        ParticleSystem.MainModule main = particle.main;
-        main.loop = true;
+        //ParticleSystem.MainModule main = particle.main;
+        //main.loop = true;
 
-        particle.Play();
+        //particle.Play();
 
-        //LeanTween.cancel(model);
-        //LeanTween.color(model, contactColor, 1f).setLoopPingPong();
+        _insVfx = Instantiate(VFX_MagicAuraBlue, transform) as GameObject;
     }
 
     public void TweenHideTrick()
     {
-        particle.Stop();
-        ParticleSystem.MainModule main = particle.main;
-        main.loop = false;
-
-        //LeanTween.cancel(model);
-        //Color = normalColor;
+        //particle.Stop();
+        //ParticleSystem.MainModule main = particle.main;
+        //main.loop = false;
+        if(_insVfx != null)
+        {
+            Destroy(_insVfx);
+            _insVfx = null;
+        }
     }
 
     public void CollectImmediate()
