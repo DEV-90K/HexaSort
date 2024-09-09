@@ -16,6 +16,8 @@ public class ChestReward : MonoBehaviour
     [SerializeField]
     private Transform _HidePoint;
     [SerializeField]
+    private Transform _ShowPoint;
+    [SerializeField]
     private Button _BtnReward;
     [SerializeField]
     private Vector3 _originPos;
@@ -35,11 +37,19 @@ public class ChestReward : MonoBehaviour
         _Icon.sprite = ResourceManager.Instance.GetRewardSpriteByType(data.Type);
         _Amount.text = "+ " + _rewardData.Amount.ToString() + " " + EnumUtils.ParseString(data.Type);
 
+        OnSetup();
+    }
+
+    private void OnSetup()
+    {
+        gameObject.SetActive(true);
         transform.localPosition = _originPos;
 
         _Animator.enabled = true;
         _Animator.SetBool("IsOpen", false);
         _Animator.Play("Chest_Show");
+
+        _BtnReward.interactable = true;
     }
 
     private void Start()
@@ -52,8 +62,9 @@ public class ChestReward : MonoBehaviour
         _BtnReward.onClick.RemoveListener(OnClickReward);
     }
 
-    private void OnClickReward()
+    public void OnClickReward()
     {
+        _BtnReward.interactable = false;
         StartCoroutine(IE_Reward());
     }
 
@@ -66,7 +77,9 @@ public class ChestReward : MonoBehaviour
         TweenMoveShow();
         yield return new WaitForSeconds(0.2f);
         yield return _Animator.IE_WaitAnimation();
-        _popup.ShowButtonClaim();
+        yield return new WaitForSeconds(1.5f);
+        _popup.OnInitReward();
+        gameObject.SetActive(false);
     }
 
     public void TweenMoveHide()
@@ -78,10 +91,11 @@ public class ChestReward : MonoBehaviour
     private void TweenMoveShow()
     {
         _Animator.enabled = true;
-        LeanTween.move(gameObject, transform.parent.position, 0.2f)
+        LeanTween.move(gameObject, _ShowPoint.position, 0.2f)
                 .setOnComplete(() =>
                 {
                     _Animator.SetBool("IsOpen", true);
+                    _popup.HideTutorial();
                 });
     }
 }

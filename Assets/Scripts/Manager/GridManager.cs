@@ -106,8 +106,9 @@ public class GridManager : MonoSingleton<GridManager>
             transforms.Add(grid.transform);
         }
 
-        _GridUnit.FindCenter(transforms.ToArray());
+        _GridUnit.FindCenter(transforms.ToArray());        
         //_GridUnit.OnSetup(_gridData);
+
 
         OnInitCompleted?.Invoke(GetMaxRadius());
     }
@@ -133,6 +134,48 @@ public class GridManager : MonoSingleton<GridManager>
         }
 
         return radius;
+    }
+
+    public float GetMaxWidth()
+    {
+        float max = Mathf.NegativeInfinity;
+        foreach (GridHexagon item in _gridHexagons)
+        {
+            if (Mathf.Abs(item.transform.position.x) > max)
+            {
+                max = Mathf.Abs(item.transform.position.x);
+            }
+        }
+
+        return max + 1.7321f / 2f; 
+    }
+
+    public float GetMaxWidthByAngle(float angle)
+    {
+        float max = Mathf.NegativeInfinity;
+        foreach (GridHexagon item in _gridHexagons)
+        {
+            if (Mathf.Abs(item.transform.position.x * Mathf.Cos(angle)) > max)
+            {
+                max = Mathf.Abs(item.transform.position.x * Mathf.Cos(angle));
+            }
+        }
+
+        return max + 1.7321f / 2f;
+    }
+
+    public float GetMaxHeight()
+    {
+        float max = Mathf.NegativeInfinity;
+        foreach (GridHexagon item in _gridHexagons)
+        {
+            if (Mathf.Abs(item.transform.position.z) > max)
+            {
+                max = Mathf.Abs(item.transform.position.z);
+            }
+        }
+
+        return max + 1f / 2f;
     }
 
     private List<GridHexagon> GetGridHexagonLock()
@@ -234,18 +277,31 @@ public class GridManager : MonoSingleton<GridManager>
     {
 
         GridHexagon grid = null;
-        int max = _gridHexagons.Length;
-        while (max > 0)
+
+        List<int> indexSuffle = new List<int>();
+        for(int i = 0; i < _gridHexagons.Length; i++)
         {
-            max--;
-            grid = GetRandomGridHexagon();
+            indexSuffle.Add(i);
+        }
+
+        indexSuffle.Shuffle();
+
+        for(int i = 0; i < indexSuffle.Count; i++)
+        {
+            grid = _gridHexagons[indexSuffle[i]];
             if (grid.CheckOccupied())
             {
-                if (grid.State == GridHexagonState.LOCK_BY_GOAL || grid.State == GridHexagonState.LOCK_BY_ADS)
+                if (grid.CheckLock())
                 {
                     grid = null;
                     continue;
-                }                
+                }
+
+                if (grid.CheckSameColorWithNeighbor())
+                {
+                    grid = null;
+                    continue;
+                }
 
                 break;
             }
@@ -254,6 +310,33 @@ public class GridManager : MonoSingleton<GridManager>
                 grid = null;
             }
         }
+
+        //int max = _gridHexagons.Length;
+        //while (max > 0)
+        //{
+        //    max--;
+        //    grid = GetRandomGridHexagon();
+        //    if (grid.CheckOccupied())
+        //    {
+        //        if (grid.CheckLock())
+        //        {
+        //            grid = null;
+        //            continue;
+        //        }      
+
+        //        if(grid.CheckSameColorWithNeighbor())
+        //        {
+        //            grid = null;
+        //            continue;
+        //        }
+
+        //        break;
+        //    }
+        //    else
+        //    {
+        //        grid = null;
+        //    }
+        //}
 
         return grid;
     }

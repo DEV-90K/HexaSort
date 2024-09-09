@@ -15,7 +15,7 @@ namespace Audio_System
         [SerializeField] bool collectionCheck = true;
         [SerializeField] int defaultCapacity = 10;
         [SerializeField] int maxPoolSize = 100;
-        [SerializeField] int maxSoundInstances = 30;
+        [SerializeField] int maxSoundInstances = 30;        
 
         void Start()
         {
@@ -112,11 +112,24 @@ namespace Audio_System
         [SerializeField]
         private AudioMixer audioMixer;
         public bool CanSound;
+        private float _volumne;
 
         public void Volumne(float sliderVal)
         {
+            _volumne = sliderVal;
+
             float val = sliderVal.ToLogarithmicVolume();
             audioMixer.SetFloat("SFXVolume", val);
+        }
+
+        public bool CheckCanSound()
+        {
+            return CanSound;
+        }
+
+        public float GetVolumne()
+        {
+            return _volumne;
         }
 
         #endregion Setting

@@ -92,7 +92,6 @@ public class PopupBoostSwap : PopupBase
 
     private void ControlMouseDown()
     {
-        Debug.Log("ControlMouseDown");
         RaycastHit hit;
         Physics.Raycast(CameraUtils.GetRayFromMouseClicked(), out hit, 500, playerHexagonLayerMask);
 
@@ -120,7 +119,6 @@ public class PopupBoostSwap : PopupBase
 
     private void ControlMouseDrag()
     {
-        Debug.Log("ControlMouseDrag");
         RaycastHit hit;
         Physics.Raycast(CameraUtils.GetRayFromMouseClicked(), out hit, 500, gridHexagonLayerMask);
 
@@ -146,7 +144,6 @@ public class PopupBoostSwap : PopupBase
 
     private void DraggingAboveGround()
     {
-        Debug.Log("DraggingAboveGround");
         RaycastHit hit;
         Physics.Raycast(CameraUtils.GetRayFromMouseClicked(), out hit, 500, groundLayerMask);
 
@@ -156,13 +153,12 @@ public class PopupBoostSwap : PopupBase
         }
 
         Vector3 stackTargetPos = hit.point.With(y: 1.5f);
-        stackContact.transform.position = Vector3.MoveTowards(stackContact.transform.position, stackTargetPos, Time.deltaTime * 30);
+        stackContact.transform.position = Vector3.MoveTowards(stackContact.transform.position, stackTargetPos, Time.deltaTime * 40);
         gridSwap = null;
     }
 
     private void DraggingAboveGridHexagon(RaycastHit hit)
-    {
-        Debug.Log("DraggingAboveGridHexagon");        
+    {       
 
         RaycastHit hit2;
         Physics.Raycast(CameraUtils.GetRayFromMouseClicked(), out hit2, 500, gridHexagonLayerMask);
@@ -173,7 +169,7 @@ public class PopupBoostSwap : PopupBase
         }
 
         Vector3 stackTargetPos = hit.point.With(y: 1.5f);
-        stackContact.transform.position = Vector3.MoveTowards(stackContact.transform.position, stackTargetPos, Time.deltaTime * 30);
+        stackContact.transform.position = Vector3.MoveTowards(stackContact.transform.position, stackTargetPos, Time.deltaTime * 40);
 
         GridHexagon gridHexagon = hit.collider.GetComponent<GridHexagon>();
 

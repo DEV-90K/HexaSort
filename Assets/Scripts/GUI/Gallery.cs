@@ -43,10 +43,9 @@ namespace GUIScreenMain
         public void OnInit(int idGallery)
         {
             _gallery = ResourceManager.Instance.GetGalleryDataByID(idGallery);
+            _Name.text = _gallery.Name;
 
             InitState();            
-
-            _Name.text = _gallery.Name;
         }
 
         private void InitState()
@@ -179,7 +178,6 @@ namespace GUIScreenMain
 
         private void OnButtonClick()
         {
-            Debug.Log("Show Gallery no callback");
             GUIManager.Instance.ShowPopup<PopupGallery>(_gallery.ID);
         }
 
@@ -188,7 +186,12 @@ namespace GUIScreenMain
             int h = (int) minute / 60;
             int m = (int) minute % 60;
 
-            if(h == 0)
+            if(h == 0 && m == 0)
+            {
+                int seconds = m * 60;
+                _TxtTimeCounter.text = seconds + "s";
+            }
+            else if(h == 0 && m != 0)
             {
                 _TxtTimeCounter.text = m + "m";
             }
@@ -202,10 +205,11 @@ namespace GUIScreenMain
         {
             if (_timer != null)
             {
+                UpdateTimeCounter(_timer.GetTime());
+
                 _timer.Tick(Time.deltaTime / 60f);
                 _Slider.value -= Time.deltaTime / 60f;
 
-                UpdateTimeCounter(_timer.GetTime());
             }
         }
     }

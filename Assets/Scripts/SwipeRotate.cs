@@ -7,6 +7,7 @@ public class SwipeRotate : MonoBehaviour
 {
     [SerializeField]
     private LayerMask groundLayerMask;
+    private Transform[] _followeres;
 
     #region With Mouse event
     private float speed = 5f;
@@ -24,9 +25,14 @@ public class SwipeRotate : MonoBehaviour
         transform.localEulerAngles = Vector3.zero;
     }
 
+    public void Register(Transform[] followeres)
+    {
+        _followeres = followeres;
+    }
+
     private void Update()
     {
-        if(Input.GetMouseButtonDown(0) && CheckZoneMouseDetech() && !PopupManager.Instance.CheckAnyPopupShowed())
+        if(Input.GetMouseButtonDown(0) && !IsPointerOverUIObject() && CheckZoneMouseDetech() && !PopupManager.Instance.CheckAnyPopupShowed())
         {            
             isRotating = true;            
             startPosX = Input.mousePosition.x;
@@ -92,17 +98,45 @@ public class SwipeRotate : MonoBehaviour
     }
     #endregion With Mouse event
 
+    //private bool CheckZoneMouseDetech()
+    //{
+    //    RaycastHit hit;
+    //    Physics.Raycast(CameraUtils.GetRayFromMouseClicked(), out hit, 500, groundLayerMask);
+    //    Vector3 mousePos = hit.point;
+
+    //    if(-6f < mousePos.z && mousePos.z < 6f)
+    //    {
+    //        return true;
+    //    }
+
+    //    return false;
+    //}
+
     private bool CheckZoneMouseDetech()
     {
         RaycastHit hit;
         Physics.Raycast(CameraUtils.GetRayFromMouseClicked(), out hit, 500, groundLayerMask);
         Vector3 mousePos = hit.point;
-
-        if(-6f < mousePos.z && mousePos.z < 6f)
+        if (mousePos.z > _followeres[0].position.z + 1.5f)
         {
             return true;
         }
 
         return false;
+    }
+
+    private bool IsPointerOverUIObject()
+    {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+
+        //for (int i = 0; i < results.Count; i++)
+        //{
+        //    Debug.Log("Raycast: " + results[i].gameObject.name);
+        //}
+
+        return results.Count > 0;
     }
 }

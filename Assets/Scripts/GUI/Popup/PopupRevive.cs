@@ -36,13 +36,15 @@ public class PopupRevive : PopupBase
         _BtnRevive.gameObject.SetActive(MainPlayer.Instance.GetCoin() >= _levelPresenterData.CoinRevive);
 
         UpdateCoin();
-        UpdateRatio();
-        UpdateSlider();
+        UpdateRatio(0);
+        UpdateSlider(0);
+
+        StartCoroutine(IE_UpdateSlider());
     }
 
-    private void UpdateRatio()
+    private void UpdateRatio(int amount)
     {
-        _TxtRatio.text = _currAmount + " / " + _levelPresenterData.Goal;
+        _TxtRatio.text = amount + " / " + _levelPresenterData.Goal;
     }
 
     private void UpdateCoin()
@@ -50,11 +52,22 @@ public class PopupRevive : PopupBase
         _TxtCoin.text = _levelPresenterData.CoinRevive.ToString();
     }
 
-    private void UpdateSlider()
+    private IEnumerator IE_UpdateSlider()
+    {
+        yield return new WaitForSeconds(0.2f); //Time tween show
+        for(int i = 0; i <= _currAmount; i++)
+        {
+            UpdateSlider(i);
+            UpdateRatio(i);
+            yield return null;
+        }
+    }
+
+    private void UpdateSlider(int amount)
     {
         _Slider.minValue = 0;
         _Slider.maxValue = _levelPresenterData.Goal;
-        _Slider.value = _currAmount;
+        _Slider.value = amount;
     }
 
     private void Start()

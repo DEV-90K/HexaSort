@@ -1,8 +1,6 @@
 using GUIScreenMain;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Security.Claims;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -63,6 +61,8 @@ public class PopupGallery : PopupBase
         _rels = InitGalleryRelics();
         foreach (GalleryRelicData galleryRelicData in _galleryRelicDatas)
         {
+            Debug.Log("Relic ID: " + _rels[galleryRelicData.Position].GetInstanceID());
+            Debug.Log("Position have relic: " + galleryRelicData.Position);
             _rels[galleryRelicData.Position].OnInit(this, galleryRelicData, _data.ID, _data.IDRelics);
         }
 
@@ -74,7 +74,7 @@ public class PopupGallery : PopupBase
 
     private GalleryRelic[] InitGalleryRelics()
     {
-        int itemsCount = _data == null || _data.IDRelics == null ? 0 : _data.IDRelics.Length;
+        int itemsCount = (_data == null || _data.IDRelics == null) ? 0 : _data.IDRelics.Length;
         int childCount = _Contain.childCount;
         List<GalleryRelic> list = new List<GalleryRelic>();
         for (int i=0; i< itemsCount; i ++)

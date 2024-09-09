@@ -1,6 +1,7 @@
 using Audio_System;
 using System;
 using System.Collections;
+using UnityEditor;
 using UnityEngine;
 
 public class LevelManager : MonoSingleton<LevelManager>
@@ -59,6 +60,31 @@ public class LevelManager : MonoSingleton<LevelManager>
         LevelController.OnTurnCompleted -= LevelController_OnTurnCompleted;
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyUp(KeyCode.RightArrow))
+        {
+            Debug.Log("Oninit next Level");
+            //OnFinish();
+            _gridManager.CollectGridImmediate();
+            _stackManager.CollectRandomImmediate();
+            amountHexagon = 0;
+
+            OnInitLevelByID(_presenterData.Level + 1);
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftArrow))
+        {
+            Debug.Log("On Init Pre Level");
+            //OnFinish();
+
+            _gridManager.CollectGridImmediate();
+            _stackManager.CollectRandomImmediate();
+            amountHexagon = 0;
+
+            OnInitLevelByID(_presenterData.Level - 1);
+        }
+    }
+
     public int GetAmountHexagon()
     {
         return amountHexagon;
@@ -107,6 +133,9 @@ public class LevelManager : MonoSingleton<LevelManager>
             return;
         }
 
+        Debug.Log("Load Level From Player");
+        playerLevelData.DebugLogObject();
+
         if (playerLevelData.Level == null)
         {
             _levelData = ResourceManager.instance.GetLevelByID(playerLevelData.IDLevel);
@@ -126,9 +155,11 @@ public class LevelManager : MonoSingleton<LevelManager>
 
     private void OnInit(LevelData levelData, LevelPresenterData presenterData)
     {
+        presenterData.DebugLogObject();
+        levelData.DebugLogObject();
+
         _levelData = levelData;
         _presenterData = presenterData;
-//        amountHexagon = 0;
 
         _gridManager.OnInit(_levelData.Grid);
         _stackManager.Configure(_presenterData.Amount, _presenterData.Probabilities);
@@ -143,9 +174,7 @@ public class LevelManager : MonoSingleton<LevelManager>
     {
         _gridManager.CollectGridImmediate();
         _stackManager.CollectRandomImmediate();
-        amountHexagon = 0;
-
-        OnInitCurrentLevel();
+        OnInitLevelByID(_presenterData.Level);
     }
 
     public void OnExit()
@@ -244,7 +273,8 @@ public class LevelManager : MonoSingleton<LevelManager>
             }
         }
 
-        _stackManager.DisableByBooster();
+        _stackManager.DisableControllerByBooster();
+        _stackManager.DisableColliderOfStacks();
     }
 
     public void OnBoostHammer(Hexagon hexagon)
@@ -277,7 +307,8 @@ public class LevelManager : MonoSingleton<LevelManager>
             }
         }
 
-        _stackManager.EnableByBooster();        
+        _stackManager.EnableControllerByBooster();
+        _stackManager.EnableColliderOfStacks();
     }
     #endregion Boost Hammer
 
@@ -298,7 +329,7 @@ public class LevelManager : MonoSingleton<LevelManager>
             }
         }
 
-        _stackManager.DisableByBooster();
+        _stackManager.DisableControllerByBooster();
     }
 
     public void OnBoostSwap(GridHexagon[] grids)
@@ -325,7 +356,7 @@ public class LevelManager : MonoSingleton<LevelManager>
             }
         }
         
-        _stackManager.EnableByBooster();
+        _stackManager.EnableControllerByBooster();
     }
     #endregion Boost Swap
 

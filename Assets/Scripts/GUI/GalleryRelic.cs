@@ -160,7 +160,7 @@ public class GalleryRelic : MonoBehaviour
     }
 
     private void Start()
-    {
+    {        
         _BtnSelecter.onClick.AddListener(OnClickSelecter);
         _BtnInfo.onClick.AddListener(OnClickInfo);
     }
@@ -194,7 +194,7 @@ public class GalleryRelic : MonoBehaviour
     }
 
     private void OnClickClaim()
-    {
+    {        
         _ObjCoinClaim.gameObject.SetActive(false);
         _ObjProgress.gameObject.SetActive(true);
 
@@ -225,6 +225,7 @@ public class GalleryRelic : MonoBehaviour
 
     private void OnCountdownStopped()
     {
+        Debug.Log("OnCountdownStopped");
         _timer.OnTimerStop -= OnCountdownStopped;
         _timer = null;
 
@@ -238,8 +239,9 @@ public class GalleryRelic : MonoBehaviour
     {
         if(_ObjCollect.activeSelf == true)
         {
-            if(_timer == null)
+            if (_timer == null)
             {
+                UpdateGalleryRelicData();
                 OnClickClaim();
             }
         }
@@ -252,5 +254,11 @@ public class GalleryRelic : MonoBehaviour
         TimeSpan subTime = targetTime.Subtract(currTime);
 
         return subTime;
+    }
+
+    private void UpdateGalleryRelicData()
+    {
+        _data.LastTimer = DateTime.Now.ToString();
+        MainPlayer.Instance.UpdateGalleryRelicData(_data);
     }
 }

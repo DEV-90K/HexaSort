@@ -22,7 +22,7 @@ public class PopupBoostHammer : PopupBase
     private LayerMask playerHexagon;
 
     private RectTransform m_RectTransform;
-
+    private Coroutine _hamming = null;
     private IBoostHammer _able;
     private LevelPresenterData _presenterData;
 
@@ -98,6 +98,9 @@ public class PopupBoostHammer : PopupBase
 
     private void ControlMouseUp()
     {
+        if (_hamming != null) 
+            return;
+
         RaycastHit hit;
         Physics.Raycast(CameraUtils.GetRayFromMouseClicked(), out hit, 500, playerHexagon);
 
@@ -110,12 +113,13 @@ public class PopupBoostHammer : PopupBase
         Hexagon hexagon = hit.collider.GetComponent<Hexagon>();
         _able.OnBoostHammer(hexagon);
 
-        StartCoroutine(IE_OnBoostHammerCompleted());
+        _hamming = StartCoroutine(IE_OnBoostHammerCompleted());
     }
 
     private IEnumerator IE_OnBoostHammerCompleted()
     {
         yield return new WaitForSeconds(2f);
+        _hamming = null;
         GUIManager.Instance.ShowScreen<ScreenLevel>(_presenterData);
         Hide();
     }

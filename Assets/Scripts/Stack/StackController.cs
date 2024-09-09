@@ -89,7 +89,7 @@ public class StackController : MonoBehaviour
         }
 
         Vector3 stackTargetPos = hitGround.point.With(y: GameConstants.StackHexagonConstants.CONTACT_HEIGHT);
-        stackContact.transform.position = Vector3.MoveTowards(stackContact.transform.position, stackTargetPos, Time.deltaTime * 30);
+        stackContact.transform.position = Vector3.MoveTowards(stackContact.transform.position, stackTargetPos, Time.deltaTime * 40);
     }
 
     private void GridDetection()

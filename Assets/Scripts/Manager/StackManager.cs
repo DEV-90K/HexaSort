@@ -142,20 +142,30 @@ public class StackManager : MonoSingleton<StackManager>, IStackOnPlaced
         OnResert();
     }
 
-    public void DisableByBooster()
+    public void DisableControllerByBooster()
     {
         stackController.enabled = false;
     }
 
-    public void EnableByBooster()
+    public void EnableControllerByBooster()
     {
         stackController.enabled = true;
     }
 
-    public Vector3 GetRadiusByGrid()
+    public void DisableColliderOfStacks()
     {
-        //Grid scale = Point Spawn stack Scale
-        return pointSpawns[0].localScale;
+        foreach(StackHexagon stack in stackHexagons)
+        {
+            stack.DisableCollider();
+        }
+    }
+
+    public void EnableColliderOfStacks()
+    {
+        foreach (StackHexagon stack in stackHexagons)
+        {
+            stack.EnableCollider();
+        }
     }
 
     public StackHexagon[] GetStackHexagonShowing()

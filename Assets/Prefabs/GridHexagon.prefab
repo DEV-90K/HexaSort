@@ -5224,7 +5224,7 @@ MonoBehaviour:
   model: {fileID: 7502301547133229559}
   particle: {fileID: 4411949298171570204}
   _Canvas: {fileID: 2586857339763482194}
-  VFX_MagicAuraBlue: {fileID: 3804323405448224861, guid: 6da3ccdb951d75644958df3bc36a7eb9, type: 3}
+  VFX_MagicAuraBlue: {fileID: 8776048335755308573, guid: bf6b0ad61ed8406489353a56e9c70ab4, type: 3}
   normalColor: {r: 0.5754717, g: 0.54018337, b: 0.54018337, a: 0}
 --- !u!1 &9210045726594149332
 GameObject:

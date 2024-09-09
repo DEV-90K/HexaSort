@@ -1,6 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using GUIChestReward;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,34 +6,56 @@ using UnityEngine.UI;
 public class PopupChestReward : PopupBase
 {
     [SerializeField]
-    private Button _btnClaim;
-    [SerializeField]
-    private Button _btnClose;
-    [SerializeField]
     private ChestController _chestControl;
     [SerializeField]
     private TMP_Text _txtTutorial;
     [SerializeField]
     private ChestReward[] _chestRewards;
+    [SerializeField]
+    private Button _BtnContinue;
+    [SerializeField]
+    private TMP_Text _TxtContinue;
+    [SerializeField]
+    private GUIChestReward.Reward _Reward;
+
+    [SerializeField]
+    private Transform _rewardStart;
+    [SerializeField]
+    private Transform _rewardEnd;
 
     private ChestRewardData _rewardData;
 
-    private void Start()
+    private void OnClickContinue()
     {
-        _btnClaim.onClick.AddListener(OnClickClaim);
-        _btnClose.onClick.AddListener(OnClickClose);
+        DisableEventClickContinue();
+        int random = Random.Range(0, _chestRewards.Length);
+        _chestRewards[random].OnClickReward();
     }
 
-    private void OnDestroy()
+    private void DisableEventClickContinue()
     {
-        _btnClaim.onClick.RemoveListener(OnClickClaim);
-        _btnClose.onClick.RemoveListener(OnClickClose);
+        _BtnContinue.onClick.RemoveListener(OnClickContinue);
+        _TxtContinue.gameObject.SetActive(false);
     }
 
-    public void OnClickClaim()
+    private void EnableEventClickContinue()
     {
+        _BtnContinue.onClick.AddListener(OnClickContinue);
+        _TxtContinue.gameObject.SetActive(true);
+    }
+
+    public void OnInitReward()
+    {
+        //GUIChestReward.Reward reward = Instantiate(_reward, transform);
+        _Reward.gameObject.SetActive(true);
+        _Reward.OnInit(_rewardData, _rewardStart.position, _rewardEnd.position);
         Claim();
-        Hide();
+
+        this.Invoke(() =>
+        {
+            _Reward.gameObject.SetActive(false);
+            Hide();
+        }, 2.5f);
     }
 
     private void Claim()
@@ -66,27 +86,19 @@ public class PopupChestReward : PopupBase
         GUIManager.Instance.GetScreen<ScreenMain>().Show();
     }
 
-    public void OnClickClose()
-    {
-        if(_btnClaim.gameObject.activeSelf)
-        {
-            Claim();
-        }
-
-        Hide();
-    }
     public void HideChests()
     {
+        DisableEventClickContinue();
+
         foreach (ChestReward chest in _chestRewards)
         {
             chest.TweenMoveHide();
         }
     }
 
-    public void ShowButtonClaim()
+    public void HideTutorial()
     {
-        _txtTutorial.gameObject.SetActive(false);
-        _btnClaim.gameObject.SetActive(true);
+        _txtTutorial.gameObject.SetActive(false);        
     }
 
     public override void OnInit(object[] paras)
@@ -103,7 +115,15 @@ public class PopupChestReward : PopupBase
     public override void Show()
     {
         base.Show();
+
+        EnableEventClickContinue();
         _txtTutorial.gameObject.SetActive(true);
-        _btnClaim.gameObject.SetActive(false);
+        _Reward.gameObject.SetActive(false);
+    }
+
+    public override void Hide()
+    {
+        base.Hide();
+        DisableEventClickContinue();
     }
 }

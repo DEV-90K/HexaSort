@@ -25,13 +25,16 @@ public class DialougeBox : MonoBehaviour
     [SerializeField]
     private AudioSource _audioSource;
 
+    private Coroutine _typing = null;
 
     private DialogueData _data;
     private Action _actionSkip;
     public Queue<string> _sequences = new Queue<string>();
+    private bool _isOpened = false;
 
     public void OnInit(DialogueData data, Action actionSkip = null)
     {
+        _isOpened = false;
         _animator.SetBool("IsOpen", true);
         _actionSkip = actionSkip;
         _data = data;
@@ -52,8 +55,6 @@ public class DialougeBox : MonoBehaviour
         }
         else if (_data.Type == DialogueType.RELIC_COLLECT)
         {
-            Debug.Log("Show Gallery no callback");
-
             GUIManager.Instance.HideScreen<ScreenLevel>();
             GUIManager.Instance.HidePopup<PopupLevelWoned>();
             Action callback = () => LevelManager.Instance.OnInitCurrentLevel();
@@ -61,6 +62,12 @@ public class DialougeBox : MonoBehaviour
         }
 
         Destroy(gameObject);
+    }
+
+    public void OnExitOpen()
+    {
+        _isOpened = true;
+        UpdateConversation();
     }
 
     private void UpdateName()
@@ -71,7 +78,13 @@ public class DialougeBox : MonoBehaviour
     public void UpdateConversation()
     {
         string sequence = _sequences.Dequeue();
-        StartCoroutine(IE_TypeSentence(sequence));
+
+        if(_typing != null)
+        {
+            StopCoroutine(_typing);
+        }
+
+        _typing = StartCoroutine(IE_TypeSentence(sequence));
     }
 
     private IEnumerator IE_TypeSentence(string sentence)
@@ -104,6 +117,8 @@ public class DialougeBox : MonoBehaviour
 
     private void OnClickNavigation()
     {
+        if (!_isOpened) return;
+
         if (_sequences.Count == 0)
         {
             _animator.SetBool("IsOpen", false);

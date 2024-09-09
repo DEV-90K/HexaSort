@@ -24,7 +24,6 @@ public class ChallengeController : MonoBehaviour
 
     private void StackController_OnStackPlaced(GridHexagon grid)
     {
-        Debug.Log("Challenge Controller StackController_OnStackPlaced");
         OnStackPlacedOnGridHexagon(grid);
     }
     private void OnStackPlacedOnGridHexagon(GridHexagon gridHexagon)

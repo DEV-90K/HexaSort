@@ -1,3 +1,4 @@
+using Audio_System;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,9 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
 
     private const string KEY_PLAYER = "PLAYER_DATA";
     private PlayerData _PlayerData;
+    private bool _Loaded = false;
 
-    private Dictionary<int, List<GalleryRelicData>> _DictGalleryRelic = new Dictionary<int, List<GalleryRelicData>>(); //int is ID of gallery    
+    //private Dictionary<int, List<GalleryRelicData>> _DictGalleryRelic = new Dictionary<int, List<GalleryRelicData>>(); //int is ID of gallery    
 
     private PlayerData GetPlayerData()
     {
@@ -56,21 +58,15 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
 
     public void LoadData()
     {
+        _Loaded = true;
         _PlayerData = LoadPlayerData();
-        Debug.Log("PlayerData Load");
-        _PlayerData.DebugLogObject();
-
-        //List<GalleryRelicData> listData = new List<GalleryRelicData>();
-        //listData.Add(new GalleryRelicData(1, 2, 4, DateTime.Now.ToString(), GalleryRelicState.COLLECT));
-        //listData.Add(new GalleryRelicData(1, 1, 6, DateTime.Now.AddMinutes(-20).ToString(), GalleryRelicState.COLLECT));
-        //_DictGalleryRelic[1] = listData;
     }
 
     public GalleryRelicData[] GetGalleryRelicByID(int IDGallery)
     {
-        if(_DictGalleryRelic.ContainsKey(IDGallery))
+        if(_PlayerData.DictGalleryRelic.ContainsKey(IDGallery))
         {
-            return _DictGalleryRelic[IDGallery].ToArray();
+            return _PlayerData.DictGalleryRelic[IDGallery].ToArray();
         }
 
         return Array.Empty<GalleryRelicData>();
@@ -79,13 +75,13 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
     public void CollectGalleryRelic(GalleryRelicData galleryRelicData)
     {
         galleryRelicData.LastTimer = DateTime.Now.ToString();
-        if(_DictGalleryRelic.ContainsKey(galleryRelicData.IDGallery))
+        if(_PlayerData.DictGalleryRelic.ContainsKey(galleryRelicData.IDGallery))
         {
-            _DictGalleryRelic[galleryRelicData.IDGallery].Add(galleryRelicData);
+            _PlayerData.DictGalleryRelic[galleryRelicData.IDGallery].Add(galleryRelicData);
         }
         else
         {
-            _DictGalleryRelic[galleryRelicData.IDGallery] = new List<GalleryRelicData> { galleryRelicData };
+            _PlayerData.DictGalleryRelic[galleryRelicData.IDGallery] = new List<GalleryRelicData> { galleryRelicData };
         }    
     }
 
@@ -166,6 +162,26 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
         _PlayerData.ChestLastTime = DateTime.Now.ToString();
     }
 
+    public void UpdateGalleryRelicData(GalleryRelicData data)
+    {
+        GalleryRelicData[] galleryRelicDatas = GetGalleryRelicByID(data.IDGallery);
+
+        for (int i = 0; i < galleryRelicDatas.Length; i++)
+        {
+            GalleryRelicData galleryRelicData = galleryRelicDatas[i];
+            
+            if(galleryRelicData.IDGallery == data.IDGallery && galleryRelicData.IDRelic == data.IDRelic && galleryRelicData.Position == data.Position)
+            {
+                galleryRelicDatas[i] = data;
+                break;
+            }
+        }
+        List<GalleryRelicData> listDatas = new List<GalleryRelicData>();
+        listDatas.AddRange(galleryRelicDatas);
+
+        _PlayerData.DictGalleryRelic[data.IDGallery] = listDatas;
+    }
+
     private void CachePlayerLevelData()
     {
         LevelData levelData = LevelManager.instance.GetLevelData();
@@ -176,6 +192,23 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
         _PlayerData.PlayerLevel.UpdateLevelPresenterData(levelPresenterData);
         _PlayerData.PlayerLevel.UpdateAmountCollected(amount);
     } 
+
+    private void CachePlayerAudioData()
+    {
+        bool canSound = SoundManager.instance.CheckCanSound();
+        float soundVol = SoundManager.instance.GetVolumne();
+
+        bool canMusic = MusicManager.instance.CheckCanMusic();
+        float musicVol = MusicManager.instance.GetVolumne();
+
+        PlayerAudioData audioData = new PlayerAudioData();
+        audioData.CanSound = canSound;
+        audioData.CanMusic = canMusic;
+        audioData.MusicVol = musicVol;
+        audioData.SoundVol = soundVol;
+
+        _PlayerData.PlayerAudio = audioData;
+    }
 
     public void CacheIDLevel(int IDLevel)
     {
@@ -212,17 +245,13 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
         {
             Debug.Log("Load From Remote");
             playerData = FirebaseManager.instance.LoadRemotePlayerData(); //Fisrt Time Install Game
-            //TEST
-            playerData = null;
+            playerData.ChestLastTime = DateTime.Now.AddMinutes(-11f).ToString();
         }
 
         if(playerData == null)
         {
             Debug.Log("Load From Local");
-            playerData = LoadLocalPlayerData();
-
-            //TEST
-            playerData = null;
+            playerData = LoadLocalPlayerData();            
         }
 
         if(playerData == null)
@@ -230,7 +259,7 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
             Debug.Log("Create New");
             playerData = CreatePlayerData();
         }
-
+        Debug.Log("bbbbb:" + JsonConvert.SerializeObject(playerData));
         return playerData;
     }
 
@@ -277,18 +306,20 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
     private PlayerData LoadPlayDataFromPlayerPrefab()
     {
         string txtData = PlayerPrefs.GetString(KEY_PLAYER);
-
+        
         if (string.IsNullOrEmpty(txtData))
         {
             return null;
         }
 
+       // txtData = CompressText.Decompress(txtData);
         return JsonConvert.DeserializeObject<PlayerData>(txtData.Trim());
     }
 
     private void SavePlayerDataFromPlayerPrefab(PlayerData data)
     {
-        PlayerPrefs.SetString(KEY_PLAYER, JsonConvert.SerializeObject(data));
+        string value = JsonConvert.SerializeObject(data);
+        PlayerPrefs.SetString(KEY_PLAYER, value);
     }
 
     private void DeletePlayerDataFromPlayerPrefab()
@@ -296,28 +327,70 @@ public class MainPlayer : PersistentMonoSingleton<MainPlayer>
         PlayerPrefs.DeleteKey(KEY_PLAYER);
     }
     #endregion PlayerPrefab Load
-
-    private void OnApplicationQuit()
+#if UNITY_ANDROID
+    private void OnApplicationPause(bool pause)
     {
-        Debug.Log("On Application Quit");
+        if (!pause)
+        {
+            return;
+        }
 
-        if(GameManager.instance.IsState(GameState.LEVEL_PLAYING))
+        Debug.Log("On Application Pause");
+        if (GameManager.instance.IsState(GameState.LEVEL_PLAYING))
         {
             LevelManager.instance.CacheCurrentLevelPlayingData();
         }
 
         CachePlayerLevelData();
+        CachePlayerAudioData();
+
         SavePlayerDataFromPlayerPrefab(_PlayerData);
+    }
+#endif
+
+#if UNITY_EDITOR
+    private void OnApplicationFocus(bool focus)
+    {
+        if (!focus || !_Loaded) return;
+        Debug.Log("On Application Focus");
+        if (GameManager.instance.IsState(GameState.LEVEL_PLAYING))
+        {
+            LevelManager.instance.CacheCurrentLevelPlayingData();
+        }
+
+        CachePlayerLevelData();
+        CachePlayerAudioData();
+
+        SavePlayerDataFromPlayerPrefab(_PlayerData);
+    }
+#endif
+
+    private void OnApplicationQuit()
+    {
+        Debug.Log("On Application Quit");
+
+        if (GameManager.instance.IsState(GameState.LEVEL_PLAYING))
+        {
+            LevelManager.instance.CacheCurrentLevelPlayingData();
+        }
+
+        CachePlayerLevelData();
+        CachePlayerAudioData();
+
+        SavePlayerDataFromPlayerPrefab(_PlayerData);
+
         Debug.Log("PlayerData Save");
         _PlayerData.DebugLogObject();
+
+        LoadPlayerData().DebugLogObject();
     }
 
-    [RuntimeInitializeOnLoadMethod]
-    private static void OnApplicationLoad()
-    {
-        Debug.Log("On Application Load");
-        Instance.DeletePlayerDataFromPlayerPrefab();
-    }
+    //[RuntimeInitializeOnLoadMethod]
+    //private static void OnApplicationLoad()
+    //{
+    //    Debug.Log("On Application Load");
+    //    Instance.DeletePlayerDataFromPlayerPrefab();
+    //}
 
     private TimeSpan GetTimeFromLastClick(string lastTime, int space)
     {

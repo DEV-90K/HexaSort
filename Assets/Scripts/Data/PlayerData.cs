@@ -1,32 +1,47 @@
+using System.Collections.Generic;
+
 public class PlayerData
 {
     public int Coin { get; set; }
     public int Material { get; set; }
-    public int Hammer = 23;
-    public int Swap = 24;
-    public int Refresh = 1054;
-    public string ChestLastTime;
-    public PlayerLevelData PlayerLevel;
-    public PlayerAudioData PlayerAudio;
+    public int Hammer { get; set; } = 23;
+    public int Swap { get; set; } = 24;
+    public int Refresh { get; set; } = 1054;
+    public string ChestLastTime { get; set; }
+    public PlayerLevelData PlayerLevel { get; set; }
+    public PlayerAudioData PlayerAudio { get; set; }
+    public Dictionary<int, List<GalleryRelicData>> DictGalleryRelic { get; set; }
     public PlayerData(int coin, int material, PlayerLevelData playerLevel)
     {
         Coin = coin;
         Material = material;
         PlayerLevel = playerLevel;
     }
+
+    public PlayerData()
+    {
+        this.PlayerLevel = new PlayerLevelData();
+        this.PlayerAudio = new PlayerAudioData();
+        this.DictGalleryRelic = new Dictionary<int, List<GalleryRelicData>>();
+    }
 }
 
 public class PlayerLevelData
 {
-    public int IDLevel { get; private set; } // Max Level Already Playing
-    public int AmountCollected { get; private set; } = 0;
-    public LevelData Level { get; private set; } //Data Of Current Player Playing
-    public LevelPresenterData LevelPresenter { get; private set; }
+    public int IDLevel { get;  set; } // Max Level Already Playing
+    public int AmountCollected { get;  set; }
+    public LevelData Level { get;  set; } //Data Of Current Player Playing
+    public LevelPresenterData LevelPresenter { get;  set; }
     public PlayerLevelData(int iDLevel, LevelData level, LevelPresenterData levelPresenter)
     {
         IDLevel = iDLevel;
         Level = level;
         LevelPresenter = levelPresenter;
+    }
+
+    public PlayerLevelData()
+    {
+
     }
 
     public void UpdateIDLevel(int id)

@@ -177,7 +177,7 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
     {
         if(_levelDataDict.ContainsKey(IDLevel))
         {
-            return _levelDataDict[IDLevel];
+            return _levelDataDict[IDLevel].CopyObject();
         }
 
         LevelData levelData = LoadLevelData(IDLevel);
@@ -189,7 +189,7 @@ public class ResourceManager : PersistentMonoSingleton<ResourceManager>
 
         _levelDataDict[IDLevel] = levelData;
 
-        return levelData;
+        return levelData.CopyObject();
     }
 
     private LevelData GetLevelDataByRandom(int IDMax)

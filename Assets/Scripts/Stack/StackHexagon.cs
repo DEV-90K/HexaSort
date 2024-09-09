@@ -35,6 +35,26 @@ public class StackHexagon : PoolMember
         canvasStack.OnInit(this);
     }
 
+    public void DisableCollider()
+    {
+        if (Hexagons == null) return;
+
+        foreach(Hexagon hex in Hexagons)
+        {
+            hex.DisableCollider();
+        }
+    }
+
+    public void EnableCollider()
+    {
+        if (Hexagons == null) return;
+
+        foreach (Hexagon hex in Hexagons)
+        {
+            hex.EnableCollider();
+        }
+    }
+
     public void OnInit(StackHexagonData data)
     {
         _data = data;

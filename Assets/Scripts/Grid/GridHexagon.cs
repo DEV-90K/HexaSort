@@ -1,7 +1,4 @@
 using Audio_System;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GridHexagon : PoolMember
@@ -22,7 +19,7 @@ public class GridHexagon : PoolMember
     private GameObject VFX_MagicAuraBlue;
 
     private GameObject _insVfx = null;
-
+    private LayerMask _layerMask;
     public Color Color
     {
         get => renderer.material.color;
@@ -53,7 +50,8 @@ public class GridHexagon : PoolMember
 
     private void Awake()
     {
-        ColorUtility.TryParseHtmlString("#525252", out contactColor);        
+        ColorUtility.TryParseHtmlString("#525252", out contactColor);
+        _layerMask = 1 << gameObject.layer;
     }
 
     public void OnInitialize(GridHexagonData gridHexagon, IGridPortability gridPortability)
@@ -143,6 +141,42 @@ public class GridHexagon : PoolMember
         }
 
         return true;
+    }
+
+    public bool CheckLock()
+    {
+        return State == GridHexagonState.LOCK_BY_GOAL || State == GridHexagonState.LOCK_BY_ADS;
+    }
+
+    public bool CheckSameColorWithNeighbor()
+    {
+        Debug.Log(transform.GetInstanceID());
+        if(!CheckOccupied()) 
+            return false;
+
+        Collider[] neighborGridCellColliders = Physics.OverlapSphere(transform.position, transform.localScale.x * 2f, _layerMask);
+        Color color = StackOfCell.GetTopHexagonColor();
+        for (int i = 0; i < neighborGridCellColliders.Length; i++)
+        {
+            Collider collider = neighborGridCellColliders[i];
+            GridHexagon neighborGridHexagon = collider.GetComponent<GridHexagon>();
+
+            if(gameObject.CompareObject(neighborGridHexagon.gameObject))
+            {
+                continue;
+            }
+
+            if (!neighborGridHexagon.CheckOccupied()) 
+                continue;
+            else if(ColorUtils.ColorEquals(neighborGridHexagon.StackOfCell.GetTopHexagonColor(), color))
+            {
+                Debug.Log("Color Equal: " + neighborGridHexagon.transform.GetInstanceID());
+                Debug.Log("T /////");
+                return true;
+            }
+        }
+        Debug.Log("F /////");
+        return false;
     }
 
     public void SetStackOfCell(StackHexagon stack)

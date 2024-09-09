@@ -142,6 +142,7 @@ namespace Audio_System
         [SerializeField]
         private AudioMixer audioMixer;
         private bool canMusic = true;
+        private float _volumne;
         public bool CanMusic
         {
             get
@@ -171,8 +172,20 @@ namespace Audio_System
 
         public void Volumne(float sliderVal)
         {
+            _volumne = sliderVal;
+
             float val = sliderVal.ToLogarithmicVolume();
             audioMixer.SetFloat("MusicVolume", val);
+        }
+
+        public bool CheckCanMusic()
+        {
+            return CanMusic;
+        }
+
+        public float GetVolumne()
+        {
+            return _volumne;
         }
 
         #endregion Setting

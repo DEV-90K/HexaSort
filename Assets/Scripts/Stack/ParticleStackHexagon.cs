@@ -6,23 +6,17 @@ using static UnityEngine.ParticleSystem;
 public class ParticleStackHexagon : MonoBehaviour
 {
     [SerializeField]
-    private ParticleSystem[] _Particles;
-    [SerializeField]
     private GameObject _AoEHolySword;
     [SerializeField]
     private GameObject _AoEIceStorm;
     [SerializeField]
     private GameObject _AoEStars;
+
     [SerializeField]
     private MeshCollider _MeshCollider;
 
     private StackHexagon _stackHexagon;
-    private ParticleSystem _particle;
-
-    private void Start()
-    {
-        _MeshCollider.enabled = false;
-    }
+    private GameObject _particle;
 
     public void OnInit(StackHexagon stack)
     {
@@ -34,11 +28,6 @@ public class ParticleStackHexagon : MonoBehaviour
     {
         gameObject.SetActive(true);
         transform.position = _stackHexagon.GetTopPosition();
-
-        for(int i = 3; i < transform.childCount; i++)
-        {
-            Object.Destroy(transform.GetChild(i));
-        }
     }
 
     public void OnHide()
@@ -52,32 +41,26 @@ public class ParticleStackHexagon : MonoBehaviour
         switch (type)
         {
             case VanishType.RANDOM:
-                //_particle = _Particles[0];
-                _particle = Instantiate(_AoEHolySword, transform).GetComponent<ParticleSystem>();
+                _particle = Instantiate(_AoEHolySword, transform);
                 break;
             case VanishType.AROUND:
-                //_particle = _Particles[1];
-                _particle = Instantiate(_AoEIceStorm, transform).GetComponent<ParticleSystem>();
+                _particle = Instantiate(_AoEIceStorm, transform);
                 break;
             case VanishType.CONTAIN_COLOR:
-                //_particle = _Particles[2];
-                _particle = Instantiate(_AoEStars, transform).GetComponent<ParticleSystem>();
+                _particle = Instantiate(_AoEStars, transform);
                 break;
         }
 
-        _particle.gameObject.SetActive(true);
-        _particle.playbackSpeed= 5f;
-        _particle.Play();
         _MeshCollider.enabled = true;
         yield return WaitUntilCompleted();
         _MeshCollider.enabled = false;
-        _particle.Stop();
+
         DestroyImmediate(_particle);
         OnHide();
     }
 
     public IEnumerator WaitUntilCompleted()
     {
-        yield return new WaitUntil(() => _particle.isPlaying == false);
+        yield return new WaitForSeconds(1f);
     }
 }

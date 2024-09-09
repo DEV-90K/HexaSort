@@ -51,7 +51,8 @@ public class LevelController : MonoBehaviour
 
     public void OnIdle()
     {
-        _trickCountdown.Pause();
+        _trickCountdown?.Pause();
+
         _hasShowedBoostTrick = false;
         _hasShowedGameTrick = false;
 
@@ -416,7 +417,7 @@ public class LevelController : MonoBehaviour
         soundBuilder.Play(sound);
         //SFX
         yield return stack.PlayParticles(VanishType.RANDOM);
-        soundBuilder.Stop();
+        soundBuilder.Stop();        
 
         List<Hexagon> hexagons = stack.Hexagons;
         int numberOfPlayerHexagon = hexagons.Count;
